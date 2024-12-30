@@ -8,7 +8,7 @@ constexpr float MAX_FPS = 100000.f;
 
 namespace eclipse::hacks::Global {
 class FPSBypass : public hack::Hack {
-public:
+ public:
   static void updateRefreshRate() {
     auto *gm = utils::get<GameManager>();
 
@@ -17,7 +17,7 @@ public:
     auto fpsBypassValue =
         config::get<float>("global.fpsbypass", gm->m_customFPSTarget);
     float actualFPS = std::clamp(fpsBypassValue, MIN_FPS,
-                                 MAX_FPS); // sometimes the value can be 0
+                                 MAX_FPS);  // sometimes the value can be 0
     gm->setGameVariable("0116", fpsBypassEnabled);
     gm->m_customFPSTarget = actualFPS;
 
@@ -39,7 +39,7 @@ public:
     auto *gm = utils::get<GameManager>();
     auto fpsBypassEnabled = gm->getGameVariable("0116");
     auto fpsBypassValue = gm->m_customFPSTarget;
-    if (fpsBypassValue == 0) // rare robtop bug
+    if (fpsBypassValue == 0)  // rare robtop bug
       fpsBypassValue = 60.f;
     config::set("global.fpsbypass", fpsBypassValue);
     config::set("global.fpsbypass.toggle", fpsBypassEnabled);
@@ -52,5 +52,5 @@ public:
 };
 
 REGISTER_HACK(FPSBypass)
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 #endif

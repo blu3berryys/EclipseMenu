@@ -1,10 +1,9 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/labels/variables.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -74,14 +73,12 @@ class $modify(NoClipPLHook, PlayLayer) {
     if (config::get<bool>("player.noclip.acclimit.toggle", false)) {
       auto acc = config::getTemp<float>("noclipAccuracy", 100.f);
       auto limit = config::get<float>("player.noclip.acclimit", 95.f);
-      if (acc < limit)
-        return PlayLayer::destroyPlayer(player, object);
+      if (acc < limit) return PlayLayer::destroyPlayer(player, object);
     }
     if (config::get<bool>("player.noclip.deathlimit.toggle", false)) {
       auto deaths = config::getTemp<int>("noclipDeaths", 0);
       auto limit = config::get<int>("player.noclip.deathlimit", 2);
-      if (deaths >= limit)
-        return PlayLayer::destroyPlayer(player, object);
+      if (deaths >= limit) return PlayLayer::destroyPlayer(player, object);
     }
 
     auto fields = m_fields.self();
@@ -97,14 +94,13 @@ class $modify(NoClipPLHook, PlayLayer) {
       fields->m_noclipTint->setID("nocliptint"_spr);
       if (auto uiMenu = utils::getEclipseUILayer()) {
         uiMenu->addChild(fields->m_noclipTint);
-      } else { // fallback
+      } else {  // fallback
         m_uiLayer->addChild(fields->m_noclipTint);
       }
     }
 
     bool noclipActive = config::get<bool>("player.noclip", false);
-    if (!noclipActive)
-      return PlayLayer::destroyPlayer(player, object);
+    if (!noclipActive) return PlayLayer::destroyPlayer(player, object);
 
     bool player1 =
         config::get<bool>("player.noclip.p1", true) && player == m_player1;
@@ -127,7 +123,7 @@ class $modify(NoClipPLHook, PlayLayer) {
     if (config::get<bool>("player.noclip.tint", false) &&
         fields->m_noclipTint && !m_hasCompletedLevel && !m_player1->m_isDead) {
       float time = config::get<float>("player.noclip.time", 0.f);
-      if (time == 0.f) { // this doesnt really work but ok ninx
+      if (time == 0.f) {  // this doesnt really work but ok ninx
         if (fields->m_wouldDie) {
           if (fields->m_tintOpacity < 1.f) {
             fields->m_tintOpacity += 0.25f;
@@ -159,8 +155,7 @@ class $modify(NoClipPLHook, PlayLayer) {
             fields->m_tintOpacity =
                 (255.F * (startOpacity / 100.F)) * (1.f - progress);
           }
-          if (fields->m_tintOpacity <= 0.0F)
-            fields->m_tintOpacity = 0.0F;
+          if (fields->m_tintOpacity <= 0.0F) fields->m_tintOpacity = 0.0F;
           fields->m_noclipTint->setOpacity(m_fields->m_tintOpacity);
         }
       }
@@ -194,8 +189,7 @@ if (!utils::get<PlayLayer>()) {
 }
 
 auto pl = reinterpret_cast<NoClipPLHook *>(this);
-if (pl->m_hasCompletedLevel || pl->m_levelEndAnimationStarted)
-  return;
+if (pl->m_hasCompletedLevel || pl->m_levelEndAnimationStarted) return;
 
 auto fields = pl->m_fields.self();
 if (fields->m_wouldDieFrame) {
@@ -223,7 +217,7 @@ if (frame > 0) {
   // config::get<float>("player.noclip.acclimit", 95.f) && !dead)
   // utils::get<PlayLayer>()->destroyPlayer(m_player1, (GameObject*)((int*)1));
 }
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

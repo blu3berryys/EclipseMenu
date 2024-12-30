@@ -1,9 +1,8 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -42,22 +41,20 @@ class $modify(AutoKillBGLHook, GJBaseGameLayer){
     ADD_HOOKS_DELEGATE("player.autokill")
 
         void killPlayer(){auto *playLayer = utils::get<PlayLayer>();
-if (!playLayer)
-  return;
+if (!playLayer) return;
 
 bool noclipEnabled = config::get<bool>("player.noclip", false);
 config::set("player.noclip", false);
 if (m_player1 && !m_player1->m_isDead)
   playLayer->PlayLayer::destroyPlayer(m_player1, m_player1);
 config::set("player.noclip", noclipEnabled);
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 
 void update(float p0) override {
   GJBaseGameLayer::update(p0);
 
   auto *playLayer = utils::get<PlayLayer>();
-  if (!playLayer)
-    return;
+  if (!playLayer) return;
 
   auto percentageEnabled =
       config::get<bool>("player.autokill.percentage.toggle", true);
@@ -70,8 +67,7 @@ void update(float p0) override {
       percentageEnabled && playLayer->getCurrentPercent() >= percentage;
   shouldKill |= timeEnabled && m_gameState.m_levelTime >= time;
 
-  if (shouldKill)
-    killPlayer();
+  if (shouldKill) killPlayer();
 }
 }
 ;

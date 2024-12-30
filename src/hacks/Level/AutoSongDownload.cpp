@@ -1,8 +1,7 @@
+#include <Geode/modify/LevelInfoLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/LevelInfoLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -30,7 +29,7 @@ class $modify(AutoSongDownloadLILHook, LevelInfoLayer){
 
 if (m_songWidget->m_downloadBtn->isVisible())
   m_songWidget->m_downloadBtn->activate();
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

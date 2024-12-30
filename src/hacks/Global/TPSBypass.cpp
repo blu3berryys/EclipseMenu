@@ -1,10 +1,9 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 #include <modules/labels/variables.hpp>
 
 #ifndef GEODE_IS_MACOS
@@ -13,7 +12,7 @@ constexpr float MAX_TPS = 100000.f;
 
 namespace eclipse::hacks::Global {
 class TPSBypass : public hack::Hack {
-public:
+ public:
   void init() override {
     config::setIfEmpty("global.tpsbypass", 240.f);
 
@@ -57,8 +56,7 @@ class $modify(TPSBypassGJBGLHook, GJBaseGameLayer) {
     auto timestep = std::min(m_gameState.m_timeWarp, 1.f) * spt;
     auto steps = std::round(totalDelta / timestep);
     auto newDelta = steps * timestep;
-    if (applyExtraDelta)
-      m_extraDelta = totalDelta - newDelta;
+    if (applyExtraDelta) m_extraDelta = totalDelta - newDelta;
     return static_cast<float>(newDelta);
   }
 
@@ -67,8 +65,7 @@ class $modify(TPSBypassGJBGLHook, GJBaseGameLayer) {
   }
 
   bool shouldContinue(const Fields *fields) const {
-    if (!fields->m_isEditor)
-      return true;
+    if (!fields->m_isEditor) return true;
 
     // in editor, player hitbox is removed from section when it dies,
     // so we need to check if it's still there
@@ -99,8 +96,7 @@ class $modify(TPSBypassGJBGLHook, GJBaseGameLayer) {
         GJBaseGameLayer::update(newDelta);
         auto end = utils::getTimestamp();
         // if the update took too long, break out of the loop
-        if (end - start > ms)
-          break;
+        if (end - start > ms) break;
         --steps;
       }
       fields->m_shouldHide = false;
@@ -125,17 +121,16 @@ class $modify(TPSBypassPLHook, PlayLayer){
     // PlayLayer postUpdate handles practice mode checkpoints, labels and also
     // calls updateVisibility
     void postUpdate(float dt) override{auto fields = getFields(this);
-if (fields->m_shouldHide)
-  return;
+if (fields->m_shouldHide) return;
 PlayLayer::postUpdate(fields->m_realDelta);
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 
 // we also would like to fix the percentage calculation, which uses constant 240
 // TPS to determine the progress
 int calculationFix() {
   auto timestamp = m_level->m_timestamp;
   auto currentProgress = m_gameState.m_currentProgress;
-  if (timestamp > 0) { // this is only an issue for 2.2+ levels
+  if (timestamp > 0) {  // this is only an issue for 2.2+ levels
     // recalculate m_currentProgress based on the actual time passed
     auto progress = utils::getActualProgress(this);
     m_gameState.m_currentProgress = timestamp * progress / 100.f;

@@ -1,25 +1,24 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-#include <modules/utils/GameCheckpoint.hpp>
-
 #include <Geode/modify/CheckpointObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
+#include <modules/utils/GameCheckpoint.hpp>
 
 using namespace geode::prelude;
 
 namespace eclipse::Hacks::Level {
 
 class PracticeFix : public hack::Hack {
-public:
+ public:
   static bool shouldEnable() {
     return config::get<bool>("bot.practicefix", false) ||
            config::get<int>("bot.state", 0) == 1;
   }
 
-private:
+ private:
   void init() override {
     auto tab = gui::MenuTab::find("tab.level");
 
@@ -33,22 +32,20 @@ private:
 REGISTER_HACK(PracticeFix)
 
 class CheckpointData {
-public:
+ public:
   CheckpointData() = default;
 
   CheckpointData(PlayerObject *player1, PlayerObject *player2) {
     m_checkpointPlayer1 = eclipse::utils::FixPlayerCheckpoint(player1);
-    if (player2)
-      m_checkpointPlayer2 = utils::FixPlayerCheckpoint(player2);
+    if (player2) m_checkpointPlayer2 = utils::FixPlayerCheckpoint(player2);
   }
 
   void apply(PlayerObject *player1, PlayerObject *player2) {
     m_checkpointPlayer1.apply(player1);
-    if (player2)
-      m_checkpointPlayer2.apply(player2);
+    if (player2) m_checkpointPlayer2.apply(player2);
   }
 
-private:
+ private:
   eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer1;
   eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer2;
 };
@@ -64,8 +61,7 @@ class $modify(FixPlayLayer, PlayLayer) {
   }
 
   void resetLevel() {
-    if (m_checkpointArray->count() <= 0)
-      m_fields->m_checkpoints.clear();
+    if (m_checkpointArray->count() <= 0) m_fields->m_checkpoints.clear();
 
     PlayLayer::resetLevel();
   }
@@ -97,21 +93,20 @@ if (auto *playLayer = static_cast<FixPlayLayer *>(utils::get<PlayLayer>()))
   playLayer->m_fields->m_checkpoints.clear();
 
 return result;
-} // namespace eclipse::Hacks::Level
+}  // namespace eclipse::Hacks::Level
 }
 ;
 
 class $modify(PracticeFixCOHook, CheckpointObject) {
 #ifdef GEODE_IS_ANDROID
-  static CheckpointObject *create() { // this is so dumb
+  static CheckpointObject *create() {  // this is so dumb
     auto result = CheckpointObject::create();
 #else
   bool init() override {
     auto result = CheckpointObject::init();
 #endif
 
-    if (!PracticeFix::shouldEnable())
-      return result;
+    if (!PracticeFix::shouldEnable()) return result;
 
     auto *playLayer = static_cast<FixPlayLayer *>(utils::get<PlayLayer>());
 

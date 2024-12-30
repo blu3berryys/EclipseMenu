@@ -1,7 +1,4 @@
 #include "variables.hpp"
-#include <modules/config/config.hpp>
-#include <modules/utils/SingletonCache.hpp>
-#include <utils.hpp>
 
 #include <Geode/Loader.hpp>
 #include <Geode/binding/GJGameLevel.hpp>
@@ -10,11 +7,12 @@
 #include <Geode/binding/PlayLayer.hpp>
 #include <Geode/binding/PlayerObject.hpp>
 #include <Geode/loader/Mod.hpp>
-
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
-
+#include <modules/config/config.hpp>
+#include <modules/utils/SingletonCache.hpp>
 #include <rift/config.hpp>
+#include <utils.hpp>
 
 namespace eclipse::labels {
 
@@ -25,16 +23,16 @@ rift::Value getConfigValue(std::string key) {
     return {};
   }
   switch (config::getType(key)) {
-  case nlohmann::detail::value_t::string:
-    return config::get<std::string>(key).unwrap();
-  case nlohmann::detail::value_t::boolean:
-    return config::get<bool>(key).unwrap();
-  case nlohmann::detail::value_t::number_integer:
-    return config::get<int>(key).unwrap();
-  case nlohmann::detail::value_t::number_float:
-    return config::get<float>(key).unwrap();
-  default:
-    return {};
+    case nlohmann::detail::value_t::string:
+      return config::get<std::string>(key).unwrap();
+    case nlohmann::detail::value_t::boolean:
+      return config::get<bool>(key).unwrap();
+    case nlohmann::detail::value_t::number_integer:
+      return config::get<int>(key).unwrap();
+    case nlohmann::detail::value_t::number_float:
+      return config::get<float>(key).unwrap();
+    default:
+      return {};
   }
 }
 
@@ -114,8 +112,7 @@ void VariableManager::setVariable(const std::string &name,
 
 rift::Value VariableManager::getVariable(const std::string &name) const {
   auto it = m_variables.find(name);
-  if (it == m_variables.end())
-    return {};
+  if (it == m_variables.end()) return {};
   return it->second;
 }
 
@@ -143,8 +140,7 @@ enum class LevelDifficulty {
 };
 
 static LevelDifficulty getLevelDifficulty(GJGameLevel *level) {
-  if (level->m_autoLevel)
-    return LevelDifficulty::Auto;
+  if (level->m_autoLevel) return LevelDifficulty::Auto;
   auto diff = level->m_difficulty;
 
   if (level->m_ratingsSum != 0)
@@ -152,102 +148,101 @@ static LevelDifficulty getLevelDifficulty(GJGameLevel *level) {
 
   if (level->m_demon > 0) {
     switch (level->m_demonDifficulty) {
-    case 3:
-      return LevelDifficulty::EasyDemon;
-    case 4:
-      return LevelDifficulty::MediumDemon;
-    case 5:
-      return LevelDifficulty::InsaneDemon;
-    case 6:
-      return LevelDifficulty::ExtremeDemon;
-    default:
-      return LevelDifficulty::HardDemon;
+      case 3:
+        return LevelDifficulty::EasyDemon;
+      case 4:
+        return LevelDifficulty::MediumDemon;
+      case 5:
+        return LevelDifficulty::InsaneDemon;
+      case 6:
+        return LevelDifficulty::ExtremeDemon;
+      default:
+        return LevelDifficulty::HardDemon;
     }
   }
 
   switch (diff) {
-  case GJDifficulty::Easy:
-    return LevelDifficulty::Easy;
-  case GJDifficulty::Normal:
-    return LevelDifficulty::Normal;
-  case GJDifficulty::Hard:
-    return LevelDifficulty::Hard;
-  case GJDifficulty::Harder:
-    return LevelDifficulty::Harder;
-  case GJDifficulty::Insane:
-    return LevelDifficulty::Insane;
-  case GJDifficulty::Demon:
-    return LevelDifficulty::HardDemon;
-  default:
-    return LevelDifficulty::NA;
+    case GJDifficulty::Easy:
+      return LevelDifficulty::Easy;
+    case GJDifficulty::Normal:
+      return LevelDifficulty::Normal;
+    case GJDifficulty::Hard:
+      return LevelDifficulty::Hard;
+    case GJDifficulty::Harder:
+      return LevelDifficulty::Harder;
+    case GJDifficulty::Insane:
+      return LevelDifficulty::Insane;
+    case GJDifficulty::Demon:
+      return LevelDifficulty::HardDemon;
+    default:
+      return LevelDifficulty::NA;
   }
 }
 
 const char *getLevelDifficultyString(LevelDifficulty diff) {
   switch (diff) {
-  case LevelDifficulty::NA:
-    return "N/A";
-  case LevelDifficulty::Auto:
-    return "Auto";
-  case LevelDifficulty::Easy:
-    return "Easy";
-  case LevelDifficulty::Normal:
-    return "Normal";
-  case LevelDifficulty::Hard:
-    return "Hard";
-  case LevelDifficulty::Harder:
-    return "Harder";
-  case LevelDifficulty::Insane:
-    return "Insane";
-  case LevelDifficulty::EasyDemon:
-    return "Easy Demon";
-  case LevelDifficulty::MediumDemon:
-    return "Medium Demon";
-  case LevelDifficulty::HardDemon:
-    return "Hard Demon";
-  case LevelDifficulty::InsaneDemon:
-    return "Insane Demon";
-  case LevelDifficulty::ExtremeDemon:
-    return "Extreme Demon";
-  default:
-    return "Unknown";
+    case LevelDifficulty::NA:
+      return "N/A";
+    case LevelDifficulty::Auto:
+      return "Auto";
+    case LevelDifficulty::Easy:
+      return "Easy";
+    case LevelDifficulty::Normal:
+      return "Normal";
+    case LevelDifficulty::Hard:
+      return "Hard";
+    case LevelDifficulty::Harder:
+      return "Harder";
+    case LevelDifficulty::Insane:
+      return "Insane";
+    case LevelDifficulty::EasyDemon:
+      return "Easy Demon";
+    case LevelDifficulty::MediumDemon:
+      return "Medium Demon";
+    case LevelDifficulty::HardDemon:
+      return "Hard Demon";
+    case LevelDifficulty::InsaneDemon:
+      return "Insane Demon";
+    case LevelDifficulty::ExtremeDemon:
+      return "Extreme Demon";
+    default:
+      return "Unknown";
   }
 }
 
 const char *getLevelDifficultyKey(LevelDifficulty diff) {
   switch (diff) {
-  case LevelDifficulty::NA:
-    return "na";
-  case LevelDifficulty::Auto:
-    return "auto";
-  case LevelDifficulty::Easy:
-    return "easy";
-  case LevelDifficulty::Normal:
-    return "normal";
-  case LevelDifficulty::Hard:
-    return "hard";
-  case LevelDifficulty::Harder:
-    return "harder";
-  case LevelDifficulty::Insane:
-    return "insane";
-  case LevelDifficulty::EasyDemon:
-    return "easy_demon";
-  case LevelDifficulty::MediumDemon:
-    return "medium_demon";
-  case LevelDifficulty::HardDemon:
-    return "hard_demon";
-  case LevelDifficulty::InsaneDemon:
-    return "insane_demon";
-  case LevelDifficulty::ExtremeDemon:
-    return "extreme_demon";
-  default:
-    return "unknown";
+    case LevelDifficulty::NA:
+      return "na";
+    case LevelDifficulty::Auto:
+      return "auto";
+    case LevelDifficulty::Easy:
+      return "easy";
+    case LevelDifficulty::Normal:
+      return "normal";
+    case LevelDifficulty::Hard:
+      return "hard";
+    case LevelDifficulty::Harder:
+      return "harder";
+    case LevelDifficulty::Insane:
+      return "insane";
+    case LevelDifficulty::EasyDemon:
+      return "easy_demon";
+    case LevelDifficulty::MediumDemon:
+      return "medium_demon";
+    case LevelDifficulty::HardDemon:
+      return "hard_demon";
+    case LevelDifficulty::InsaneDemon:
+      return "insane_demon";
+    case LevelDifficulty::ExtremeDemon:
+      return "extreme_demon";
+    default:
+      return "unknown";
   }
 }
 
 static std::string formatTime(int millis) {
-  if (millis == 0)
-    return "N/A";
+  if (millis == 0) return "N/A";
   double seconds = millis / 1000.0;
   return utils::formatTime(seconds);
 }
@@ -321,11 +316,9 @@ void VariableManager::fetchHacksData() {
 static std::string const &cachedBase64Decode(const std::string &str) {
   static std::string s_lastStr;
   static std::string s_lastDecoded;
-  if (str == s_lastStr)
-    return s_lastDecoded;
+  if (str == s_lastStr) return s_lastDecoded;
   s_lastStr = str;
-  if (str.empty())
-    return s_lastDecoded = "";
+  if (str.empty()) return s_lastDecoded = "";
   s_lastDecoded = cocos2d::ZipUtils::base64URLDecode(str);
   return s_lastDecoded;
 }
@@ -426,7 +419,7 @@ void VariableManager::fetchGameplayData(GJBaseGameLayer *gameLayer) {
   m_variables["isDead"] = gameLayer->m_player1->m_isDead;
   m_variables["isDualMode"] =
       gameLayer->m_player2 != nullptr &&
-      gameLayer->m_player2->isRunning(); // can m_isDualMode be added already
+      gameLayer->m_player2->isRunning();  // can m_isDualMode be added already
   m_variables["noclipDeaths"] = config::getTemp("noclipDeaths", 0);
   m_variables["noclipAccuracy"] = config::getTemp("noclipAccuracy", 100.f);
   m_variables["progress"] = utils::getActualProgress(gameLayer);
@@ -520,7 +513,7 @@ if (diff >= interval) {
   s_lastUpdate = now;
   s_frames = 0;
 }
-} // namespace eclipse::labels
+}  // namespace eclipse::labels
 
 void pickupItem(EffectGameObject *obj) {
   GJBaseGameLayer::pickupItem(obj);
@@ -547,8 +540,7 @@ class $modify(VariablesPLHook, PlayLayer) {
 
   bool init(GJGameLevel * level, bool useReplay, bool dontCreateObjects) {
     s_coins.clear();
-    if (!PlayLayer::init(level, useReplay, dontCreateObjects))
-      return false;
+    if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 
     auto &manager = VariableManager::get();
     manager.setVariable("runFrom", 0.f);

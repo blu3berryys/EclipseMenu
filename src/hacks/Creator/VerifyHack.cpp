@@ -1,8 +1,7 @@
+#include <Geode/modify/EditLevelLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditLevelLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -23,7 +22,7 @@ class $modify(VerifyHackELLHook, EditLevelLayer){
 
         bool init(GJGameLevel * gl){gl->m_isVerified = true;
 return EditLevelLayer::init(gl);
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

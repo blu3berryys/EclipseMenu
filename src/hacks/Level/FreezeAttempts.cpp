@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -48,4 +47,4 @@ class $modify(FreezeAttemptsPLHook, PlayLayer) {
     PlayLayer::onQuit();
   }
 };
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level

@@ -1,18 +1,17 @@
 #ifdef GEODE_IS_DESKTOP
+#include <discord_rpc.h>
+
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/labels/variables.hpp>
-
-#include <discord_rpc.h>
 #include <rift.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Global {
 
 class DiscordRPC : public hack::Hack {
-public:
+ public:
   constexpr static auto DEFAULT_CLIENT_ID = "1212016614325624852";
   static time_t startTimestamp, levelTimestamp;
 
@@ -25,33 +24,32 @@ public:
   static GameState getGameState() {
     if (auto *pl = utils::get<PlayLayer>())
       return pl->m_isPlatformer ? GameState::Platformer : GameState::Level;
-    if (auto *ed = utils::get<LevelEditorLayer>())
-      return GameState::Editor;
+    if (auto *ed = utils::get<LevelEditorLayer>()) return GameState::Editor;
     return GameState::Menu;
   }
 
   void refreshPresence() {
     auto gameState = getGameState();
-    auto getScript = [this,
-                      gameState](const std::string &key,
-                                 bool addPrefix = true) -> rift::Script * {
+    auto getScript = [this, gameState](
+                         const std::string &key,
+                         bool addPrefix = true) -> rift::Script * {
       static auto nullScript =
-          rift::compile("").unwrap(); // Script that returns empty string
+          rift::compile("").unwrap();  // Script that returns empty string
       std::string keyStr;
       if (addPrefix) {
         switch (gameState) {
-        case GameState::Menu:
-          keyStr = "menu.";
-          break;
-        case GameState::Editor:
-          keyStr = "editor.";
-          break;
-        case GameState::Level:
-          keyStr = "level.";
-          break;
-        case GameState::Platformer:
-          keyStr = "plat.";
-          break;
+          case GameState::Menu:
+            keyStr = "menu.";
+            break;
+          case GameState::Editor:
+            keyStr = "editor.";
+            break;
+          case GameState::Level:
+            keyStr = "level.";
+            break;
+          case GameState::Platformer:
+            keyStr = "plat.";
+            break;
         }
       }
       keyStr += key;
@@ -64,7 +62,7 @@ public:
         smallImageText, button1Text, button2Text, button1URL, button2URL;
 
     auto &varManager = labels::VariableManager::get();
-    varManager.refetch(); // collect all variables
+    varManager.refetch();  // collect all variables
     const auto &vars = varManager.getVariables();
     state = getScript("state")->run(vars).unwrapOrDefault();
     details = getScript("details")->run(vars).unwrapOrDefault();
@@ -96,20 +94,20 @@ public:
 
     // Time mode
     switch (config::get<int>("global.discordrpc.timemode", 1)) {
-    default:
-      break;
-    case 1: { // Total playtime
-      presence.startTimestamp = startTimestamp;
-    } break;
-    case 2:
-      if (gameState != GameState::Menu) { // Level playtime
-        presence.startTimestamp = levelTimestamp;
-      }
-      break;
-    case 3: { // Total+Level playtime
-      presence.startTimestamp =
-          gameState == GameState::Menu ? startTimestamp : levelTimestamp;
-    } break;
+      default:
+        break;
+      case 1: {  // Total playtime
+        presence.startTimestamp = startTimestamp;
+      } break;
+      case 2:
+        if (gameState != GameState::Menu) {  // Level playtime
+          presence.startTimestamp = levelTimestamp;
+        }
+        break;
+      case 3: {  // Total+Level playtime
+        presence.startTimestamp =
+            gameState == GameState::Menu ? startTimestamp : levelTimestamp;
+      } break;
     }
 
     Discord_UpdatePresence(&presence);
@@ -279,9 +277,9 @@ public:
                         config::get<int>("global.discordrpc.timemode", 1))
               ->setDescription();
 
-#define ADD_SCRIPT(name, id)                                                   \
-  opt->addInputText(name, "global.discordrpc." id)->callback([this](auto) {    \
-    compileScript(id);                                                         \
+#define ADD_SCRIPT(name, id)                                                \
+  opt->addInputText(name, "global.discordrpc." id)->callback([this](auto) { \
+    compileScript(id);                                                      \
   })
 
           opt->addLabel("global.discordrpc.menus");
@@ -345,8 +343,7 @@ public:
   }
 
   void update() override {
-    if (!config::get<bool>("global.discordrpc", false))
-      return;
+    if (!config::get<bool>("global.discordrpc", false)) return;
     auto interval = config::get<float>("global.discordrpc.interval", 200.0f);
     auto now = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -373,7 +370,7 @@ class $modify(DiscordRPCGJBGLHook, GJBaseGameLayer){
     bool init() override{if (!GJBaseGameLayer::init()) return false;
 DiscordRPC::levelTimestamp = std::time(nullptr);
 return true;
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 }
 ;
 }

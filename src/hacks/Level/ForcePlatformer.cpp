@@ -1,9 +1,8 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -35,7 +34,7 @@ int originalLength = m_levelSettings->m_level->m_levelLength;
 GJBaseGameLayer::loadLevelSettings();
 m_levelSettings->m_level->m_levelLength = originalLength;
 m_levelSettings->m_platformerMode = false;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 

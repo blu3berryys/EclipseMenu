@@ -116,4 +116,4 @@ void Recorder::stopAudio() {
 std::vector<std::string> Recorder::getAvailableCodecs() {
   return ffmpeg::Recorder::getAvailableCodecs();
 }
-} // namespace eclipse::recorder
+}  // namespace eclipse::recorder

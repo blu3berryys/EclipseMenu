@@ -1,9 +1,8 @@
+#include <Geode/modify/EditLevelLayer.hpp>
+#include <Geode/modify/LevelInfoLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditLevelLayer.hpp>
-#include <Geode/modify/LevelInfoLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -24,7 +23,7 @@ class $modify(AutoLDMELLHook, EditLevelLayer){
 
         bool init(GJGameLevel * level){level->m_lowDetailModeToggled = true;
 return EditLevelLayer::init(level);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 

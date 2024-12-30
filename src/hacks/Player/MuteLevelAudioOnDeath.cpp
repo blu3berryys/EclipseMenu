@@ -1,9 +1,8 @@
+#include <Geode/modify/EffectGameObject.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EffectGameObject.hpp>
-#include <Geode/modify/PlayerObject.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -34,8 +33,7 @@ class $modify(MuteLevelAudioOnDeathPOHook, PlayerObject){
     void playerDestroyed(bool p0){PlayLayer *pl = utils::get<PlayLayer>();
 
 // do nothing if playlayer is nullptr
-if (!pl)
-  return PlayerObject::playerDestroyed(p0);
+if (!pl) return PlayerObject::playerDestroyed(p0);
 
 // avoid accidental sfx muting with deaths from others in globed
 if (this != pl->m_player1 && this != pl->m_player2)
@@ -84,7 +82,7 @@ to call stopAllEffects to get the death SFX playing.
 fmod->stopAllEffects();
 
 PlayerObject::playerDestroyed(p0);
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 
@@ -101,8 +99,7 @@ class $modify(MuteLevelAudioOnDeathEGOHook, EffectGameObject){
         PlayLayer *pl = utils::get<PlayLayer>();
 
 // do nothing if playlayer is nullptr
-if (!pl)
-  return EffectGameObject::triggerObject(p0, p1, p2);
+if (!pl) return EffectGameObject::triggerObject(p0, p1, p2);
 
 PlayerObject *player = pl->m_player1;
 

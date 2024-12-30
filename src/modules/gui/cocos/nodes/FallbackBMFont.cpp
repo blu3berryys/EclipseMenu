@@ -1,4 +1,5 @@
 #include "FallbackBMFont.hpp"
+
 #include <modules/utils/SingletonCache.hpp>
 
 namespace eclipse::gui::cocos {
@@ -176,8 +177,7 @@ FallbackBMFont *FallbackBMFont::create(const std::string &text,
 
 bool FallbackBMFont::init(const std::string &text, const std::string &font,
                           const std::string &fallbackFont) {
-  if (!CCNode::init())
-    return false;
+  if (!CCNode::init()) return false;
 
   m_fallbackConfiguration = cocos2d::FNTConfigLoadFile(fallbackFont.c_str());
   m_fallbackConfiguration->retain();
@@ -205,8 +205,7 @@ static uint64_t getEmoji(const std::u16string &str, uint32_t &index,
                          uint32_t len) {
   uint64_t emoji = str[index];
   if (isEmojiHeader(str[index])) {
-    if (index + 1 >= len)
-      return 0;
+    if (index + 1 >= len) return 0;
     emoji = (emoji << 16) | str[index + 1];
     index++;
 
@@ -432,4 +431,4 @@ bool EmojiLabel::init(const std::string &text, const std::string &font) {
 
   return true;
 }
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

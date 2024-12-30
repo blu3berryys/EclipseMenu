@@ -1,8 +1,7 @@
+#include <Geode/modify/EffectGameObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EffectGameObject.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -28,7 +27,7 @@ class $modify(MuteLevelSFXEGOHook, EffectGameObject){
                  this->m_objectID !=
                      3603)) return EffectGameObject::triggerObject(gjbgl, p1,
                                                                    p2);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

@@ -16,8 +16,7 @@ Color::operator ImU32() const {
 }
 
 Color &Color::operator=(const Color &other) {
-  if (this == &other)
-    return *this;
+  if (this == &other) return *this;
   r = other.r;
   g = other.g;
   b = other.b;
@@ -26,8 +25,7 @@ Color &Color::operator=(const Color &other) {
 }
 
 Color &Color::operator=(Color &&other) noexcept {
-  if (this == &other)
-    return *this;
+  if (this == &other) return *this;
   r = other.r;
   g = other.g;
   b = other.b;
@@ -97,14 +95,14 @@ Color Color::fromInt(int color, Color::IntType type) {
   v4 = (float)(color & 0xFF) / 255.0f;
 
   switch (type) {
-  default:
-    return {v1, v2, v3, v4};
-  case IntType::ARGB:
-    return {v2, v3, v4, v1};
-  case IntType::ABGR:
-    return {v4, v3, v2, v1};
-  case IntType::BGRA:
-    return {v3, v2, v1, v4};
+    default:
+      return {v1, v2, v3, v4};
+    case IntType::ARGB:
+      return {v2, v3, v4, v1};
+    case IntType::ABGR:
+      return {v4, v3, v2, v1};
+    case IntType::BGRA:
+      return {v3, v2, v1, v4};
   }
 }
 
@@ -115,14 +113,14 @@ int Color::toInt(Color::IntType type) const {
   bv = static_cast<int>(this->b * 255);
   av = static_cast<int>(this->a * 255);
   switch (type) {
-  default:
-    return (rv << 24) | (gv << 16) | (bv << 8) | av;
-  case IntType::ARGB:
-    return (av << 24) | (rv << 16) | (gv << 8) | bv;
-  case IntType::ABGR:
-    return (av << 24) | (bv << 16) | (gv << 8) | rv;
-  case IntType::BGRA:
-    return (bv << 24) | (gv << 16) | (rv << 8) | av;
+    default:
+      return (rv << 24) | (gv << 16) | (bv << 8) | av;
+    case IntType::ARGB:
+      return (av << 24) | (rv << 16) | (gv << 8) | bv;
+    case IntType::ABGR:
+      return (av << 24) | (bv << 16) | (gv << 8) | rv;
+    case IntType::BGRA:
+      return (bv << 24) | (gv << 16) | (rv << 8) | av;
   }
 }
 
@@ -146,16 +144,11 @@ cocos2d::ccColor3B Color::toCCColor3B() const {
 }
 
 constexpr float hue2rgb(float p, float q, float t) {
-  if (t < 0)
-    t += 1;
-  if (t > 1)
-    t -= 1;
-  if (t < 1.0f / 6)
-    return p + (q - p) * 6 * t;
-  if (t < 1.0f / 2)
-    return q;
-  if (t < 2.0f / 3)
-    return p + (q - p) * (2.0f / 3 - t) * 6;
+  if (t < 0) t += 1;
+  if (t > 1) t -= 1;
+  if (t < 1.0f / 6) return p + (q - p) * 6 * t;
+  if (t < 1.0f / 2) return q;
+  if (t < 2.0f / 3) return p + (q - p) * (2.0f / 3 - t) * 6;
   return p;
 }
 
@@ -232,4 +225,4 @@ void to_json(nlohmann::json &j, const Color &e) {
 void from_json(const nlohmann::json &j, Color &e) {
   e = Color::fromString(j.get<std::string>());
 }
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

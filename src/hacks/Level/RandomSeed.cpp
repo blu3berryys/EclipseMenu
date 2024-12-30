@@ -1,10 +1,9 @@
+#include <Geode/modify/GameToolbox.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 
-#include <Geode/modify/GameToolbox.hpp>
-
-#ifndef GEODE_IS_WINDOWS // TODO: Make a patch for Windows
+#ifndef GEODE_IS_WINDOWS  // TODO: Make a patch for Windows
 namespace eclipse::hacks::Level {
 
 class RandomSeed : public hack::Hack {
@@ -39,7 +38,7 @@ class $modify(GameToolbox){
                           2'531'011;
 
 return ((newSeed >> 16) & 0x7FFF) / 32767.f;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

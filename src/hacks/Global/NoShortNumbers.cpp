@@ -1,8 +1,7 @@
+#include <Geode/modify/GameToolbox.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GameToolbox.hpp>
 
 namespace eclipse::hacks::Global {
 
@@ -34,7 +33,7 @@ class $modify(NoShortNumbersGTHook, GameToolbox){
 gd::string str = thousands ? fmt::format("{}", fmt::group_digits(value))
                            : fmt::format("{}", value);
 return str;
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 }
 ;
 }

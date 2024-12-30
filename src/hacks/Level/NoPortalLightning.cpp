@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -34,7 +33,7 @@ flash = false;
 GJBaseGameLayer::lightningFlash(from, to, color, lineWidth, duration,
                                 displacement, flash, opacity);
 gm->m_performanceMode = perfMode;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

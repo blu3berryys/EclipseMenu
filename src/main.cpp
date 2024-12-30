@@ -2,7 +2,6 @@
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/UILayer.hpp>
-
 #include <imgui-cocos.hpp>
 #include <modules/config/config.hpp>
 #include <modules/debug/trace.hpp>
@@ -39,8 +38,7 @@ class $modify(EclipseButtonMLHook, MenuLayer){
 //     menu->updateLayout();
 // }
 
-if (s_isInitialized)
-  return true;
+if (s_isInitialized) return true;
 
 // Compile blur shader
 gui::blur::init();
@@ -76,15 +74,14 @@ void onToggleRenderer(CCObject *sender) {
 ;
 
 class HackUpdater : public cocos2d::CCObject {
-public:
+ public:
   static HackUpdater *get() {
     static HackUpdater instance;
     return &instance;
   }
 
   void update(float dt) override {
-    for (const auto &hack : hack::Hack::getHacks())
-      hack->update();
+    for (const auto &hack : hack::Hack::getHacks()) hack->update();
 
     // Add ability for ImGui to capture right click
     if (s_isInitialized &&
@@ -161,8 +158,7 @@ $on_mod(Loaded) {
         ->disableSaving();
     tab->addInputFloat("interface.font-size", "fontSize", 10.f, 64.f)
         ->callback([](float value) {
-          if (value >= 10.f)
-            ThemeManager::get()->setFontSize(value);
+          if (value >= 10.f) ThemeManager::get()->setFontSize(value);
         })
         ->disableSaving();
     tab->addButton("interface.reload-fonts")->callback([fontCombo] {
@@ -232,8 +228,7 @@ $on_mod(Loaded) {
                             i18n::get_("interface.font-not-found"),
                             i18n::get_("common.yes"), i18n::get_("common.no"),
                             [charset = std::move(meta.charset)](bool yes) {
-                              if (!yes)
-                                return;
+                              if (!yes) return;
                               i18n::DownloadPopup::create(charset)->show();
                             });
             }

@@ -1,4 +1,5 @@
 #include "manager.hpp"
+
 #include <Geode/Loader.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <filesystem>
@@ -14,8 +15,7 @@ int getDefaultThemeIndex(std::vector<ThemeMeta> const &themes) {
   static auto defaultPath =
       geode::Mod::get()->getResourcesDir() / "megaoverlay.json";
   for (auto i = 0; i < themes.size(); i++) {
-    if (themes[i].path == defaultPath)
-      return i;
+    if (themes[i].path == defaultPath) return i;
   }
   return 0;
 }
@@ -83,10 +83,8 @@ void ThemeManager::reloadTheme() {
 
 template <typename T>
 std::optional<T> json_try_get(nlohmann::json const &j, std::string_view key) {
-  if (!j.is_object())
-    return std::nullopt;
-  if (!j.contains(key))
-    return std::nullopt;
+  if (!j.is_object()) return std::nullopt;
+  if (!j.contains(key)) return std::nullopt;
   return j.at(key).get<T>();
 }
 
@@ -100,23 +98,19 @@ void try_assign(T &v, nlohmann::json const &j, std::string_view key) {
 }
 
 bool ThemeManager::loadTheme(const std::filesystem::path &path) {
-  if (!std::filesystem::exists(path))
-    return false;
+  if (!std::filesystem::exists(path)) return false;
   std::ifstream file(path);
-  if (!file.is_open())
-    return false;
+  if (!file.is_open()) return false;
 
   auto json = nlohmann::json::parse(file, nullptr, false);
-  if (json.is_discarded())
-    return false;
+  if (json.is_discarded()) return false;
 
   setDefaults();
   auto details = json["details"];
 
   int schemaVersion = 0;
   try_assign(schemaVersion, details, "schema");
-  if (schemaVersion != THEME_SCHEMA_VERSION)
-    return false;
+  if (schemaVersion != THEME_SCHEMA_VERSION) return false;
   m_schemaVersion = schemaVersion;
 
   try_assign(m_themeName, details, "name");
@@ -127,10 +121,8 @@ bool ThemeManager::loadTheme(const std::filesystem::path &path) {
   auto layout = json_try_get<int>(details, "layout");
   auto theme = json_try_get<int>(details, "style");
 
-  if (renderer)
-    this->setRenderer(static_cast<RendererType>(*renderer));
-  if (layout)
-    this->setLayoutMode(static_cast<imgui::LayoutMode>(*layout));
+  if (renderer) this->setRenderer(static_cast<RendererType>(*renderer));
+  if (layout) this->setLayoutMode(static_cast<imgui::LayoutMode>(*layout));
   if (theme)
     this->setComponentTheme(static_cast<imgui::ComponentTheme>(*theme));
 
@@ -141,8 +133,7 @@ bool ThemeManager::loadTheme(const std::filesystem::path &path) {
   float fontSize = m_fontSize;
   try_assign(fontSize, other, "fontSize");
   this->setFontSize(fontSize);
-  if (auto imgui = imgui::ImGuiRenderer::get())
-    imgui->reload();
+  if (auto imgui = imgui::ImGuiRenderer::get()) imgui->reload();
 
   try_assign(m_borderSize, other, "borderSize");
   try_assign(m_framePadding, other, "framePadding");
@@ -190,8 +181,7 @@ bool ThemeManager::loadTheme(const std::filesystem::path &path) {
 
 void ThemeManager::saveTheme(const std::filesystem::path &path) const {
   std::ofstream file(path);
-  if (!file.is_open())
-    return;
+  if (!file.is_open()) return;
 
   nlohmann::json json;
   applyValues(json);
@@ -257,7 +247,7 @@ void ThemeManager::applyValues(nlohmann::json &json, bool flatten) const {
   colors["buttonActivatedColor"] = m_buttonActivatedColor;
   colors["buttonActiveForeground"] = m_buttonActiveForeground;
 
-  if (flatten) { // flatten is only ever used for temp config
+  if (flatten) {  // flatten is only ever used for temp config
     json["accent"] = m_titleBackgroundColor;
     json["background"] = m_backgroundColor;
   }
@@ -274,22 +264,18 @@ float ThemeManager::getGlobalScale() const {
          imgui::DEFAULT_SCALE;
 }
 
-std::optional<ThemeMeta>
-ThemeManager::checkTheme(const std::filesystem::path &path) {
-  if (!std::filesystem::exists(path))
-    return std::nullopt;
+std::optional<ThemeMeta> ThemeManager::checkTheme(
+    const std::filesystem::path &path) {
+  if (!std::filesystem::exists(path)) return std::nullopt;
   std::ifstream file(path);
-  if (!file.is_open())
-    return std::nullopt;
+  if (!file.is_open()) return std::nullopt;
 
   auto json = nlohmann::json::parse(file, nullptr, false);
-  if (json.is_discarded())
-    return std::nullopt;
+  if (json.is_discarded()) return std::nullopt;
 
   auto details = json["details"];
   auto name = json_try_get<std::string>(details, "name");
-  if (!name)
-    return std::nullopt;
+  if (!name) return std::nullopt;
 
   return ThemeMeta{name.value(), path};
 }
@@ -299,10 +285,8 @@ std::vector<ThemeMeta> ThemeManager::listAvailableThemes() {
   auto globThemes = [&](std::filesystem::path const &path) {
     std::filesystem::create_directories(path);
     for (auto &entry : std::filesystem::directory_iterator(path)) {
-      if (entry.path().extension() != ".json")
-        continue;
-      if (auto theme = checkTheme(entry.path()))
-        themes.push_back(*theme);
+      if (entry.path().extension() != ".json") continue;
+      if (auto theme = checkTheme(entry.path())) themes.push_back(*theme);
     }
   };
 
@@ -375,8 +359,7 @@ void ThemeManager::setSelectedFont(const std::string &value) {
 
 void ThemeManager::setSelectedFont(int index) {
   auto fonts = getFontNames();
-  if (fonts.size() <= index)
-    return;
+  if (fonts.size() <= index) return;
   setSelectedFont(fonts[index]);
 }
 
@@ -391,4 +374,4 @@ std::vector<std::string> ThemeManager::getFontNames() {
 }
 
 void ThemeManager::setFontSize(float value) { m_fontSize = value; }
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

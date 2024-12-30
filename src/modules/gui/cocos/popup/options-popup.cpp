@@ -66,4 +66,4 @@ OptionsPopup *OptionsPopup::create(std::shared_ptr<MenuTab> const &tab) {
   delete ret;
   return nullptr;
 }
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -40,8 +39,7 @@ for (int i = 0; i < objectCount; i++) {
 
   // check if the player is colliding with the object
   auto objectRect = obj->getObjectRect();
-  if (!playerRect.intersectsRect(objectRect))
-    continue;
+  if (!playerRect.intersectsRect(objectRect)) continue;
 
   // reconstruction of the original code
   if (!this->canBeActivatedByPlayer(player,
@@ -73,7 +71,7 @@ for (int i = 0; i < objectCount; i++) {
 }
 
 GJBaseGameLayer::collisionCheckObjects(player, sectionObjects, objectCount, dt);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

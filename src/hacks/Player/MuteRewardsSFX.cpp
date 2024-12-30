@@ -1,8 +1,7 @@
+#include <Geode/modify/FMODAudioEngine.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/FMODAudioEngine.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -28,7 +27,7 @@ class $modify(MuteRewardsSFXFMODAEHook,
     FIRST_PRIORITY("FMODAudioEngine::playEffect");
 // change to FIRST_PRIORITY so ControlVanillaSFX (also by RayDeeUx) doesnt bork
 HOOKS_TOGGLE_ALL("player.muterewardssfx");
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 
 void playEffect(gd::string path, float speed, float p2, float volume) {
   auto *pl = utils::get<PlayLayer>();

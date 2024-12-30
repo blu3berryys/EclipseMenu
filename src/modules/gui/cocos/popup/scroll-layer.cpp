@@ -1,4 +1,5 @@
 #include "scroll-layer.hpp"
+
 #include <modules/utils/SingletonCache.hpp>
 // all thanks to https://github.com/CallocGD/GD-2.205-Decompiled
 // and also from https://github.com/geode-sdk/geode
@@ -31,8 +32,7 @@ bool ScrollLayer::ccTouchBegan(cocos2d::CCTouch *touch,
 }
 void ScrollLayer::ccTouchCancelled(cocos2d::CCTouch *touch,
                                    cocos2d::CCEvent *event) {
-  if (m_cancellingTouches)
-    return;
+  if (m_cancellingTouches) return;
   if (m_touchMoved == true) {
     CCScrollLayerExt::ccTouchCancelled(touch, event);
     touchFinish(touch);
@@ -185,4 +185,4 @@ void ScrollLayer::touchFinish(cocos2d::CCTouch *touch) {
   m_touchStartPosition2 = m_touchPosition2;
   m_touchMoved = false;
 }
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

@@ -1,9 +1,8 @@
+#include <Geode/modify/MoreSearchLayer.hpp>
+#include <Geode/modify/SongSelectNode.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/MoreSearchLayer.hpp>
-#include <Geode/modify/SongSelectNode.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -29,7 +28,7 @@ class $modify(DefaultSongBypassSSNHook, SongSelectNode){
         void audioPrevious(cocos2d::CCObject * sender){
             this->m_selectedSongID = std::max(0, this->m_selectedSongID - 1);
 this->updateAudioLabel();
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 
 void audioNext(cocos2d::CCObject *sender) {
   this->m_selectedSongID = std::max(0, this->m_selectedSongID + 1);

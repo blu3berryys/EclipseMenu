@@ -1,9 +1,8 @@
 #include <Geode/platform/platform.hpp>
 #ifdef GEODE_IS_ANDROID
+#include <Geode/modify/CCTouchDispatcher.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/keybinds/manager.hpp>
-
-#include <Geode/modify/CCTouchDispatcher.hpp>
 
 namespace eclipse::keybinds {
 
@@ -14,11 +13,9 @@ class $modify(MouseKeybindingsManagerCCTDHook,
 
 void touches(cocos2d::CCSet *touches, cocos2d::CCEvent *event,
              unsigned int type) {
-  if (!touches)
-    return CCTouchDispatcher::touches(touches, event, type);
+  if (!touches) return CCTouchDispatcher::touches(touches, event, type);
   auto *touch = static_cast<cocos2d::CCTouch *>(touches->anyObject());
-  if (!touch)
-    return CCTouchDispatcher::touches(touches, event, type);
+  if (!touch) return CCTouchDispatcher::touches(touches, event, type);
 
   auto manager = Manager::get();
   if (type == cocos2d::CCTOUCHBEGAN)

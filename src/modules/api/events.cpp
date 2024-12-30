@@ -6,20 +6,21 @@
 namespace eclipse::api {
 using namespace geode::prelude;
 
-template <config::SupportedType T> void createGetConfigListener() {
+template <config::SupportedType T>
+void createGetConfigListener() {
   new EventListener<EventFilter<events::RequestConfigValueEvent<T>>>(
       +[](events::RequestConfigValueEvent<T> *e) {
         auto useInternal = e->getUseInternal();
         auto res = useInternal ? config::get<T>(e->getKey())
                                : config::getTemp<T>(e->getKey());
-        if (!res)
-          return ListenerResult::Stop;
+        if (!res) return ListenerResult::Stop;
         e->setValue(res.unwrap());
         return ListenerResult::Stop;
       });
 }
 
-template <config::SupportedType T> void createSetConfigListener() {
+template <config::SupportedType T>
+void createSetConfigListener() {
   new EventListener<EventFilter<events::SetConfigValueEvent<T>>>(
       +[](events::SetConfigValueEvent<T> *e) {
         if (e->getUseInternal()) {
@@ -31,17 +32,18 @@ template <config::SupportedType T> void createSetConfigListener() {
       });
 }
 
-template <label::SupportedType T> void createGetRiftVariableListener() {
+template <label::SupportedType T>
+void createGetRiftVariableListener() {
   new EventListener<EventFilter<events::GetRiftVariableEvent<T>>>(
       +[](events::GetRiftVariableEvent<T> *e) {
         auto val = labels::VariableManager::get().getVariable(
             std::string(e->getName()));
 
-#define HANDLE_CASE(type)                                                      \
-  if (val.is##type()) {                                                        \
-    e->setResult(Ok(val.get##type()));                                         \
-  } else {                                                                     \
-    e->setResult(Err("Value is not a " #type));                                \
+#define HANDLE_CASE(type)                       \
+  if (val.is##type()) {                         \
+    e->setResult(Ok(val.get##type()));          \
+  } else {                                      \
+    e->setResult(Err("Value is not a " #type)); \
   }
 
         if constexpr (std::same_as<T, std::string>) {
@@ -67,7 +69,8 @@ template <label::SupportedType T> void createGetRiftVariableListener() {
       });
 }
 
-template <label::SupportedType T> void createSetRiftVariableListener() {
+template <label::SupportedType T>
+void createSetRiftVariableListener() {
   new EventListener<EventFilter<events::SetRiftVariableEvent<T>>>(
       +[](events::SetRiftVariableEvent<T> *e) {
         if constexpr (std::same_as<T, label::null_t>) {
@@ -124,8 +127,7 @@ $execute {
   new EventListener<EventFilter<events::SetComponentDescriptionEvent>>(
       +[](events::SetComponentDescriptionEvent *e) {
         auto component = gui::Component::find(e->getID());
-        if (!component)
-          return ListenerResult::Stop;
+        if (!component) return ListenerResult::Stop;
         component->setDescription(e->getDescription());
         return ListenerResult::Stop;
       });
@@ -164,4 +166,4 @@ $execute {
   createSetRiftVariableListener<label::null_t>();
 }
 
-} // namespace eclipse::api
+}  // namespace eclipse::api

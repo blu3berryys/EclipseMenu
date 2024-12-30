@@ -1,10 +1,9 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -70,7 +69,7 @@ class $modify(AlwaysShowCoinsGOHook, GameObject){
         void playDestroyObjectAnim(GJBaseGameLayer * p0){skipUniqueCoin = true;
 GameObject::playDestroyObjectAnim(p0);
 skipUniqueCoin = false;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 

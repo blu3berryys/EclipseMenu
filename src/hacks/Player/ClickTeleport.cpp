@@ -1,4 +1,5 @@
 #include <imgui.h>
+
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
@@ -53,16 +54,14 @@ class ClickTeleport : public hack::Hack {
   }
 
   void update() override {
-    if (!config::get<bool>("player.clicktp", false))
-      return;
+    if (!config::get<bool>("player.clicktp", false)) return;
 
     // Force the cursor to be visible
     PlatformToolbox::showCursor();
 
     if (keybinds::isKeyPressed(keybinds::Keys::MouseRight)) {
       auto playLayer = utils::get<PlayLayer>();
-      if (!playLayer)
-        return;
+      if (!playLayer) return;
       auto gamePos = screenToGame(geode::cocos::getMousePos(), playLayer);
 
       playLayer->m_player1->m_position = gamePos;
@@ -77,6 +76,6 @@ class ClickTeleport : public hack::Hack {
 
 REGISTER_HACK(ClickTeleport)
 
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 
 #endif

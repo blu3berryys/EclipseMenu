@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Global {
 class AccuratePercentage : public hack::Hack {
@@ -40,16 +39,14 @@ class $modify(AccuratePercentagePLHook, PlayLayer){
             if (config::get<bool>("level.accuratepercent.bugfix",
                                   true)) return utils::getActualProgress(this);
 return this->getCurrentPercent();
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 
 void updateProgressbar() {
   PlayLayer::updateProgressbar();
-  if (m_percentageLabel == nullptr)
-    return;
+  if (m_percentageLabel == nullptr) return;
 
   if (m_level->isPlatformer()) {
-    if (!config::get<bool>("level.accuratepercent.show_minutes", true))
-      return;
+    if (!config::get<bool>("level.accuratepercent.show_minutes", true)) return;
     auto time = utils::formatTime(m_timePlayed);
     m_percentageLabel->setString(time.c_str());
   } else if (config::get<bool>("level.accuratepercent.normal_mode", true)) {
@@ -59,8 +56,7 @@ void updateProgressbar() {
         fmt::format("{:.{}f}%", percent, numDigits).c_str());
 
     // If bugfix is active, also fix the progress bar
-    if (!config::get<bool>("level.accuratepercent.bugfix", true))
-      return;
+    if (!config::get<bool>("level.accuratepercent.bugfix", true)) return;
     m_progressFill->setTextureRect(
         {0, 0,
          (m_progressBar->getTextureRect().getMaxX() - 5) * percent / 100.f,

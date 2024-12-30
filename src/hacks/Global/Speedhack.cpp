@@ -1,8 +1,7 @@
+#include <Geode/modify/CCScheduler.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/CCScheduler.hpp>
 
 namespace eclipse::hacks::Global {
 
@@ -37,13 +36,12 @@ class $modify(SpeedhackSchedulerHook, cocos2d::CCScheduler){
         void update(float dt)
             override{auto speed = config::get<float>("global.speedhack", 1.f);
 
-if (speed <= 0)
-  speed = 1.f;
+if (speed <= 0) speed = 1.f;
 
 dt *= speed;
 
 CCScheduler::update(dt);
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 }
 ;
 }

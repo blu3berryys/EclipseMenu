@@ -1,8 +1,7 @@
+#include <Geode/modify/HardStreak.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/HardStreak.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -63,7 +62,7 @@ auto value = config::get<float>("player.customwavetrail.value", 100.f);
 this->setColor(utils::getRainbowColor(speed / 10.f, saturation / 100.f,
                                       value / 100.f)
                    .toCCColor3B());
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 else if (config::get<bool>("player.customwavetrail.customcolor", false)) {
   auto color = config::get<gui::Color>("player.customwavetrail.color",
                                        gui::Color::WHITE);

@@ -1,15 +1,15 @@
 #include "LabelContainer.hpp"
 
-#include "Label.hpp"
 #include <algorithm>
 #include <modules/config/config.hpp>
 #include <modules/utils/SingletonCache.hpp>
 
+#include "Label.hpp"
+
 namespace eclipse::hacks::Labels {
 
 bool LabelsContainer::init(Alignment alignment) {
-  if (!cocos2d::CCNode::init())
-    return false;
+  if (!cocos2d::CCNode::init()) return false;
 
   m_alignment = alignment;
   updatePosition();
@@ -22,42 +22,42 @@ bool LabelsContainer::init(Alignment alignment) {
                      ->setGap(0.f);
   layout->ignoreInvisibleChildren(true);
 
-#define SET_ALIGNMENT(axis, crossAxis, crossAxisLine)                          \
-  layout->setAxisAlignment(geode::AxisAlignment::axis);                        \
-  layout->setCrossAxisAlignment(geode::AxisAlignment::crossAxis);              \
+#define SET_ALIGNMENT(axis, crossAxis, crossAxisLine)             \
+  layout->setAxisAlignment(geode::AxisAlignment::axis);           \
+  layout->setCrossAxisAlignment(geode::AxisAlignment::crossAxis); \
   layout->setCrossAxisLineAlignment(geode::AxisAlignment::crossAxisLine);
 
   switch (m_alignment) {
-  case Alignment::TopLeft:
-    SET_ALIGNMENT(End, Start, Start);
-    break;
-  case Alignment::TopCenter:
-    SET_ALIGNMENT(End, Center, Center);
-    break;
-  case Alignment::TopRight:
-    SET_ALIGNMENT(End, End, End);
-    break;
-  case Alignment::CenterLeft:
-    SET_ALIGNMENT(Center, Start, Start);
-    break;
-  case Alignment::Center:
-    SET_ALIGNMENT(Center, Center, Center);
-    break;
-  case Alignment::CenterRight:
-    SET_ALIGNMENT(Center, End, End);
-    break;
-  case Alignment::BottomLeft:
-    layout->setAxisReverse(false);
-    SET_ALIGNMENT(Start, Start, Start);
-    break;
-  case Alignment::BottomCenter:
-    layout->setAxisReverse(false);
-    SET_ALIGNMENT(Start, Center, Center);
-    break;
-  case Alignment::BottomRight:
-    layout->setAxisReverse(false);
-    SET_ALIGNMENT(Start, End, End);
-    break;
+    case Alignment::TopLeft:
+      SET_ALIGNMENT(End, Start, Start);
+      break;
+    case Alignment::TopCenter:
+      SET_ALIGNMENT(End, Center, Center);
+      break;
+    case Alignment::TopRight:
+      SET_ALIGNMENT(End, End, End);
+      break;
+    case Alignment::CenterLeft:
+      SET_ALIGNMENT(Center, Start, Start);
+      break;
+    case Alignment::Center:
+      SET_ALIGNMENT(Center, Center, Center);
+      break;
+    case Alignment::CenterRight:
+      SET_ALIGNMENT(Center, End, End);
+      break;
+    case Alignment::BottomLeft:
+      layout->setAxisReverse(false);
+      SET_ALIGNMENT(Start, Start, Start);
+      break;
+    case Alignment::BottomCenter:
+      layout->setAxisReverse(false);
+      SET_ALIGNMENT(Start, Center, Center);
+      break;
+    case Alignment::BottomRight:
+      layout->setAxisReverse(false);
+      SET_ALIGNMENT(Start, End, End);
+      break;
   }
 
   this->setLayout(layout, false);
@@ -74,42 +74,42 @@ void LabelsContainer::updatePosition() {
   setContentSize({winSize.width - padding * 2, winSize.height - padding * 2});
 
   switch (m_alignment) {
-  case Alignment::TopLeft:
-    setPosition(padding, winSize.height - padding);
-    setAnchorPoint({0, 1});
-    break;
-  case Alignment::TopCenter:
-    setPosition(winSize.width / 2, winSize.height - padding);
-    setAnchorPoint({0.5, 1});
-    break;
-  case Alignment::TopRight:
-    setPosition(winSize.width - padding, winSize.height - padding);
-    setAnchorPoint({1, 1});
-    break;
-  case Alignment::CenterLeft:
-    setPosition(padding, winSize.height / 2);
-    setAnchorPoint({0, 0.5});
-    break;
-  case Alignment::Center:
-    setPosition(winSize.width / 2, winSize.height / 2);
-    setAnchorPoint({0.5, 0.5});
-    break;
-  case Alignment::CenterRight:
-    setPosition(winSize.width - padding, winSize.height / 2);
-    setAnchorPoint({1, 0.5});
-    break;
-  case Alignment::BottomLeft:
-    setPosition(padding, padding);
-    setAnchorPoint({0, 0});
-    break;
-  case Alignment::BottomCenter:
-    setPosition(winSize.width / 2, padding);
-    setAnchorPoint({0.5, 0});
-    break;
-  case Alignment::BottomRight:
-    setPosition(winSize.width - padding, padding);
-    setAnchorPoint({1, 0});
-    break;
+    case Alignment::TopLeft:
+      setPosition(padding, winSize.height - padding);
+      setAnchorPoint({0, 1});
+      break;
+    case Alignment::TopCenter:
+      setPosition(winSize.width / 2, winSize.height - padding);
+      setAnchorPoint({0.5, 1});
+      break;
+    case Alignment::TopRight:
+      setPosition(winSize.width - padding, winSize.height - padding);
+      setAnchorPoint({1, 1});
+      break;
+    case Alignment::CenterLeft:
+      setPosition(padding, winSize.height / 2);
+      setAnchorPoint({0, 0.5});
+      break;
+    case Alignment::Center:
+      setPosition(winSize.width / 2, winSize.height / 2);
+      setAnchorPoint({0.5, 0.5});
+      break;
+    case Alignment::CenterRight:
+      setPosition(winSize.width - padding, winSize.height / 2);
+      setAnchorPoint({1, 0.5});
+      break;
+    case Alignment::BottomLeft:
+      setPosition(padding, padding);
+      setAnchorPoint({0, 0});
+      break;
+    case Alignment::BottomCenter:
+      setPosition(winSize.width / 2, padding);
+      setAnchorPoint({0.5, 0});
+      break;
+    case Alignment::BottomRight:
+      setPosition(winSize.width - padding, padding);
+      setAnchorPoint({1, 0});
+      break;
   }
 
   this->recalculateLayout();
@@ -124,33 +124,33 @@ void LabelsContainer::addLabel(
 
   // set anchor point
   switch (m_alignment) {
-  case Alignment::TopLeft:
-    label->setAnchorPoint({0, 1});
-    break;
-  case Alignment::TopCenter:
-    label->setAnchorPoint({0.5, 1});
-    break;
-  case Alignment::TopRight:
-    label->setAnchorPoint({1, 1});
-    break;
-  case Alignment::CenterLeft:
-    label->setAnchorPoint({0, 0.5});
-    break;
-  case Alignment::Center:
-    label->setAnchorPoint({0.5, 0.5});
-    break;
-  case Alignment::CenterRight:
-    label->setAnchorPoint({1, 0.5});
-    break;
-  case Alignment::BottomLeft:
-    label->setAnchorPoint({0, 0});
-    break;
-  case Alignment::BottomCenter:
-    label->setAnchorPoint({0.5, 0});
-    break;
-  case Alignment::BottomRight:
-    label->setAnchorPoint({1, 0});
-    break;
+    case Alignment::TopLeft:
+      label->setAnchorPoint({0, 1});
+      break;
+    case Alignment::TopCenter:
+      label->setAnchorPoint({0.5, 1});
+      break;
+    case Alignment::TopRight:
+      label->setAnchorPoint({1, 1});
+      break;
+    case Alignment::CenterLeft:
+      label->setAnchorPoint({0, 0.5});
+      break;
+    case Alignment::Center:
+      label->setAnchorPoint({0.5, 0.5});
+      break;
+    case Alignment::CenterRight:
+      label->setAnchorPoint({1, 0.5});
+      break;
+    case Alignment::BottomLeft:
+      label->setAnchorPoint({0, 0});
+      break;
+    case Alignment::BottomCenter:
+      label->setAnchorPoint({0.5, 0});
+      break;
+    case Alignment::BottomRight:
+      label->setAnchorPoint({1, 0});
+      break;
   }
 
   addChild(label);
@@ -167,8 +167,7 @@ void LabelsContainer::removeLabel(SmartLabel *label) {
 }
 
 void LabelsContainer::update() {
-  if (!isVisible())
-    return;
+  if (!isVisible()) return;
 
   for (auto &[label, updater] : m_labels) {
     updater(label);
@@ -181,4 +180,4 @@ void LabelsContainer::update() {
   }
 }
 
-} // namespace eclipse::hacks::Labels
+}  // namespace eclipse::hacks::Labels

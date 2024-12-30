@@ -1,9 +1,8 @@
+#include <Geode/modify/LevelSettingsObject.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/LevelSettingsObject.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -18,8 +17,7 @@ class $modify(LegacyPhysicsPlayLayer, PlayLayer) {
   }
 
   bool init(GJGameLevel * level, bool useReplay, bool dontCreateObjects) {
-    if (!PlayLayer::init(level, useReplay, dontCreateObjects))
-      return false;
+    if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
     m_fields->originalFixGravityVal = m_levelSettings->m_fixGravityBug;
     if (config::get<bool>("level.legacyreversephysics", false))
       m_levelSettings->m_fixGravityBug = false;
@@ -45,11 +43,9 @@ class LegacyReversePhysics : public hack::Hack {
   // player would be cheating only if level is new physics and legacy physics is
   // active otherwise the hack being on doesn't matter
   [[nodiscard]] bool isCheating() override {
-    if (!config::get<bool>("level.legacyreversephysics", false))
-      return false;
+    if (!config::get<bool>("level.legacyreversephysics", false)) return false;
     auto pl = utils::get<PlayLayer>();
-    if (!pl)
-      return false;
+    if (!pl) return false;
 
     return static_cast<LegacyPhysicsPlayLayer *>(pl)
         ->m_fields->originalFixGravityVal;
@@ -61,4 +57,4 @@ class LegacyReversePhysics : public hack::Hack {
 };
 
 REGISTER_HACK(LegacyReversePhysics)
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level

@@ -1,4 +1,5 @@
 #include "DSPRecorder.hpp"
+
 #include <modules/utils/SingletonCache.hpp>
 
 DSPRecorder *DSPRecorder::get() {
@@ -12,8 +13,7 @@ DSPRecorder *DSPRecorder::get() {
 }
 
 void DSPRecorder::start() {
-  if (m_recording)
-    return;
+  if (m_recording) return;
 
   m_masterGroup->addDSP(0, m_dsp);
   std::lock_guard lock(m_lock);
@@ -22,10 +22,8 @@ void DSPRecorder::start() {
 }
 
 void DSPRecorder::stop() {
-  if (!m_recording)
-    return;
-  if (m_useLocking)
-    unlock();
+  if (!m_recording) return;
+  if (m_useLocking) unlock();
 
   m_masterGroup->removeDSP(m_dsp);
   std::lock_guard lock(m_lock);
@@ -52,8 +50,7 @@ void DSPRecorder::init() {
   desc.read = [](FMOD_DSP_STATE *, float *inbuffer, float *outbuffer,
                  unsigned int length, int, int *outchannels) {
     auto recorder = DSPRecorder::get();
-    if (!recorder->m_recording)
-      return FMOD_OK;
+    if (!recorder->m_recording) return FMOD_OK;
 
     auto channels = *outchannels;
 

@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -30,7 +29,7 @@ if ((m_player1 && m_player1->m_isDead) || (m_player2 && m_player2->m_isDead))
   return;
 
 GJBaseGameLayer::update(dt);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

@@ -1,12 +1,12 @@
 #include "utils.hpp"
 
+#include <fmt/format.h>
+
 #include <Geode/binding/GJGameLevel.hpp>
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/binding/PlatformToolbox.hpp>
 #include <Geode/binding/PlayLayer.hpp>
 #include <Geode/loader/Mod.hpp>
-#include <fmt/format.h>
-
 #include <modules/config/config.hpp>
 #include <modules/utils/SingletonCache.hpp>
 
@@ -32,8 +32,7 @@ std::string getClock(bool useTwelveHours) {
 bool hasOpenGLExtension(std::string_view extension) {
   static auto extensions =
       reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
-  if (!extensions)
-    return false;
+  if (!extensions) return false;
   static std::string_view extensionsString = extensions;
   return extensionsString.find(extension) != std::string_view::npos;
 }
@@ -109,62 +108,55 @@ PlayerMode getGameMode(PlayerObject *player) {
   if (!player) {
     auto gm = utils::get<GameManager>();
     switch (gm->m_playerIconType) {
-    case IconType::Cube:
-    default:
-      return PlayerMode::Cube;
-    case IconType::Ship:
-    case IconType::Jetpack:
-      return PlayerMode::Ship;
-    case IconType::Ball:
-      return PlayerMode::Ball;
-    case IconType::Ufo:
-      return PlayerMode::UFO;
-    case IconType::Wave:
-      return PlayerMode::Wave;
-    case IconType::Robot:
-      return PlayerMode::Robot;
-    case IconType::Spider:
-      return PlayerMode::Spider;
-    case IconType::Swing:
-      return PlayerMode::Swing;
+      case IconType::Cube:
+      default:
+        return PlayerMode::Cube;
+      case IconType::Ship:
+      case IconType::Jetpack:
+        return PlayerMode::Ship;
+      case IconType::Ball:
+        return PlayerMode::Ball;
+      case IconType::Ufo:
+        return PlayerMode::UFO;
+      case IconType::Wave:
+        return PlayerMode::Wave;
+      case IconType::Robot:
+        return PlayerMode::Robot;
+      case IconType::Spider:
+        return PlayerMode::Spider;
+      case IconType::Swing:
+        return PlayerMode::Swing;
     }
   }
 
-  if (player->m_isShip)
-    return PlayerMode::Ship;
-  if (player->m_isBall)
-    return PlayerMode::Ball;
-  if (player->m_isBird)
-    return PlayerMode::UFO;
-  if (player->m_isDart)
-    return PlayerMode::Wave;
-  if (player->m_isRobot)
-    return PlayerMode::Robot;
-  if (player->m_isSpider)
-    return PlayerMode::Spider;
-  if (player->m_isSwing)
-    return PlayerMode::Swing;
+  if (player->m_isShip) return PlayerMode::Ship;
+  if (player->m_isBall) return PlayerMode::Ball;
+  if (player->m_isBird) return PlayerMode::UFO;
+  if (player->m_isDart) return PlayerMode::Wave;
+  if (player->m_isRobot) return PlayerMode::Robot;
+  if (player->m_isSpider) return PlayerMode::Spider;
+  if (player->m_isSwing) return PlayerMode::Swing;
   return PlayerMode::Cube;
 }
 
 const char *gameModeName(PlayerMode mode) {
   switch (mode) {
-  case PlayerMode::Cube:
-    return "Cube";
-  case PlayerMode::Ship:
-    return "Ship";
-  case PlayerMode::Ball:
-    return "Ball";
-  case PlayerMode::UFO:
-    return "UFO";
-  case PlayerMode::Wave:
-    return "Wave";
-  case PlayerMode::Robot:
-    return "Robot";
-  case PlayerMode::Spider:
-    return "Spider";
-  case PlayerMode::Swing:
-    return "Swing";
+    case PlayerMode::Cube:
+      return "Cube";
+    case PlayerMode::Ship:
+      return "Ship";
+    case PlayerMode::Ball:
+      return "Ball";
+    case PlayerMode::UFO:
+      return "UFO";
+    case PlayerMode::Wave:
+      return "Wave";
+    case PlayerMode::Robot:
+      return "Robot";
+    case PlayerMode::Spider:
+      return "Spider";
+    case PlayerMode::Swing:
+      return "Swing";
   }
   return "Unknown";
 }
@@ -172,36 +164,34 @@ const char *gameModeName(PlayerMode mode) {
 int getPlayerIcon(PlayerMode mode) {
   auto gm = utils::get<GameManager>();
   switch (mode) {
-  case PlayerMode::Cube:
-    return gm->m_playerFrame;
-  case PlayerMode::Ship:
-    return gm->m_playerShip;
-  case PlayerMode::Ball:
-    return gm->m_playerBall;
-  case PlayerMode::UFO:
-    return gm->m_playerBird;
-  case PlayerMode::Wave:
-    return gm->m_playerDart;
-  case PlayerMode::Robot:
-    return gm->m_playerRobot;
-  case PlayerMode::Spider:
-    return gm->m_playerSpider;
-  case PlayerMode::Swing:
-    return gm->m_playerSwing;
+    case PlayerMode::Cube:
+      return gm->m_playerFrame;
+    case PlayerMode::Ship:
+      return gm->m_playerShip;
+    case PlayerMode::Ball:
+      return gm->m_playerBall;
+    case PlayerMode::UFO:
+      return gm->m_playerBird;
+    case PlayerMode::Wave:
+      return gm->m_playerDart;
+    case PlayerMode::Robot:
+      return gm->m_playerRobot;
+    case PlayerMode::Spider:
+      return gm->m_playerSpider;
+    case PlayerMode::Swing:
+      return gm->m_playerSwing;
   }
   return 1;
 }
 
 float getTPS() {
-  if (!config::get("global.tpsbypass.toggle", false))
-    return 240;
+  if (!config::get("global.tpsbypass.toggle", false)) return 240;
   return config::get("global.tpsbypass", 240.f);
 }
 
 cocos2d::CCMenu *getEclipseUILayer() {
   auto uiLayer = utils::get<UILayer>();
-  if (!uiLayer)
-    return nullptr;
+  if (!uiLayer) return nullptr;
 
   if (auto menu = uiLayer->getChildByID("eclipse-ui"_spr))
     return static_cast<cocos2d::CCMenu *>(menu);
@@ -220,4 +210,4 @@ bool matchesStringFuzzy(std::string_view haystack, std::string_view needle) {
 
   return (it != haystack.end());
 }
-} // namespace eclipse::utils
+}  // namespace eclipse::utils

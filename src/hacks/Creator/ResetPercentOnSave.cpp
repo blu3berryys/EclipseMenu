@@ -1,8 +1,7 @@
+#include <Geode/modify/EditorPauseLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditorPauseLayer.hpp>
 
 namespace eclipse::hacks::Creator {
 class ResetPercentOnSave : public hack::Hack {
@@ -25,7 +24,7 @@ class $modify(ResetPercentEPLHook, EditorPauseLayer){
         if (m_editorLayer->m_level->m_levelType == GJLevelType::Editor)
             m_editorLayer->m_level->m_normalPercent = 0;
 EditorPauseLayer::saveLevel();
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 }
 ;
 }

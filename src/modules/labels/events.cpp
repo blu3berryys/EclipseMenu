@@ -1,4 +1,5 @@
 #include "events.hpp"
+
 #include <modules/gui/imgui/animation/easing.hpp>
 
 #include "setting.hpp"
@@ -8,11 +9,11 @@ LabelEvent::~LabelEvent() { EventManager::get().removeEvent(this); }
 
 float Event::getProgress() const {
   auto now = std::chrono::steady_clock::now();
-  auto delay = event->delay * 1000; // how long to wait after the event starts
+  auto delay = event->delay * 1000;  // how long to wait after the event starts
   auto duration =
-      event->duration * 1000; // how long the event should last after the
-                              // condition is no longer met
-  auto easing = event->easing * 1000; // smoothing for the animation
+      event->duration * 1000;  // how long the event should last after the
+                               // condition is no longer met
+  auto easing = event->easing * 1000;  // smoothing for the animation
 
   if (event->type == LabelEvent::Type::Always) {
     return 1.f;
@@ -23,8 +24,7 @@ float Event::getProgress() const {
           .count();
 
   // if we're still in the delay, return 0%
-  if (timePassed <= delay)
-    return 0.f;
+  if (timePassed <= delay) return 0.f;
 
   if (ended) {
     auto timePassedExit =
@@ -37,8 +37,7 @@ float Event::getProgress() const {
     //     (100%)     (100%)  (50%)  (0%)
 
     // if we're still in the exit duration, return 100%
-    if (timePassedExit <= duration)
-      return 1.f;
+    if (timePassedExit <= duration) return 1.f;
 
     // otherwise, calculate the easing
     auto progress =
@@ -142,4 +141,4 @@ Event *EventManager::getEvent(size_t labelId, size_t eventId) {
   }
   return nullptr;
 }
-} // namespace eclipse::labels
+}  // namespace eclipse::labels

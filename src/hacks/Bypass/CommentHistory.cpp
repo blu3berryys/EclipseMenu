@@ -1,8 +1,7 @@
+#include <Geode/modify/ProfilePage.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/ProfilePage.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -28,7 +27,7 @@ class $modify(CommentHistoryPPHook, ProfilePage){
 score->m_commentHistoryStatus = 0;
 ProfilePage::loadPageFromUserInfo(score);
 score->m_commentHistoryStatus = originalCommentHistory;
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

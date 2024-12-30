@@ -1,11 +1,10 @@
+#include <Geode/modify/CCMotionStreak.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 
-#include <Geode/modify/CCMotionStreak.hpp>
-#include <Geode/modify/PlayerObject.hpp>
-
-#if defined(GEODE_IS_ANDROID) || defined(GEODE_IS_ARM_MAC) ||                  \
+#if defined(GEODE_IS_ANDROID) || defined(GEODE_IS_ARM_MAC) || \
     defined(GEODE_IS_IOS)
 #define GEODE_IS_ARM 1
 #endif
@@ -47,19 +46,15 @@ HOOKS_TOGGLE("player.alwaystrail", PlayerObject, "deactivateStreak");
 }
 
 void deactivateStreak(bool p0) {
-  if (!this->m_streakRelated4)
-    return;
+  if (!this->m_streakRelated4) return;
   this->m_streakRelated4 = false;
   this->fadeOutStreak2(this->m_playEffects ? 0.2f : 0.6f);
 }
 
 void activateStreak() {
-  if (this->levelFlipping())
-    return;
-  if (utils::get<GameManager>()->m_editorEnabled)
-    return;
-  if (this->m_isHidden)
-    return;
+  if (this->levelFlipping()) return;
+  if (utils::get<GameManager>()->m_editorEnabled) return;
+  if (this->m_isHidden) return;
 
   this->m_streakRelated4 = true;
   if (this->m_isDart) {

@@ -1,8 +1,7 @@
+#include <Geode/modify/CCTextInputNode.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/CCTextInputNode.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -25,7 +24,7 @@ class $modify(CharacterLimitCCTINHook, CCTextInputNode){
 
         void updateLabel(gd::string str){this->setMaxLabelLength(99999);
 CCTextInputNode::updateLabel(str);
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

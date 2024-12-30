@@ -1,8 +1,7 @@
+#include <Geode/modify/GameStatsManager.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GameStatsManager.hpp>
 
 namespace eclipse::hacks::Cosmetic {
 
@@ -54,7 +53,7 @@ if (config::get<bool>("bypass.musiccustomizer", false))
   return type == UnlockType::GJItem && key == 16;
 
 return false;
-} // namespace eclipse::hacks::Cosmetic
+}  // namespace eclipse::hacks::Cosmetic
 }
 ;
 }

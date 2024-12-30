@@ -1,8 +1,7 @@
+#include <Geode/modify/GameManager.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GameManager.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -25,11 +24,10 @@ class $modify(UnlockIconsGMHook, GameManager){
             if (GameManager::isColorUnlocked(key, type)) return true;
 
 return config::get<bool>("bypass.unlockicons", false);
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 
 bool isIconUnlocked(int key, IconType type) {
-  if (GameManager::isIconUnlocked(key, type))
-    return true;
+  if (GameManager::isIconUnlocked(key, type)) return true;
 
   return config::get<bool>("bypass.unlockicons", false);
 }

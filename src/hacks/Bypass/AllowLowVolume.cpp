@@ -1,9 +1,8 @@
+#include <Geode/modify/OptionsLayer.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/OptionsLayer.hpp>
-#include <Geode/modify/PauseLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -21,10 +20,9 @@ class AllowLowVolume : public hack::Hack {
 
 REGISTER_HACK(AllowLowVolume)
 
-#define GET_SLIDER(sender)                                                     \
-  geode::cast::typeinfo_cast<SliderThumb *>(sender);                           \
-  if (!slider)                                                                 \
-  return
+#define GET_SLIDER(sender)                           \
+  geode::cast::typeinfo_cast<SliderThumb *>(sender); \
+  if (!slider) return
 
 class $modify(AllowLowVolumeOLHook, OptionsLayer){
     ALL_DELEGATES_AND_SAFE_PRIO("bypass.allowlowvolume")
@@ -37,7 +35,7 @@ float originalVolume = audioEngine->getBackgroundMusicVolume();
 audioEngine->setBackgroundMusicVolume(value);
 if (originalVolume <= 0.f && value > 0.f)
   utils::get<GameManager>()->playMenuMusic();
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 
 void sfxSliderChanged(cocos2d::CCObject *sender) {
   auto slider = GET_SLIDER(sender);

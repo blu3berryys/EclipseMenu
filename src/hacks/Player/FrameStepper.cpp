@@ -1,9 +1,8 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/UILayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/UILayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -12,7 +11,7 @@ static bool s_frameStepperPressed = false;
 static bool s_frameStepperDown = false;
 
 class FrameStepper : public hack::Hack {
-public:
+ public:
   static bool isPressed() {
     auto stepKey = config::get<keybinds::Keys>("player.framestepper.step_key",
                                                keybinds::Keys::C);
@@ -25,7 +24,7 @@ public:
     return s_frameStepperDown || keybinds::isKeyDown(stepKey);
   }
 
-private:
+ private:
   void init() override {
     config::setIfEmpty("player.framestepper", false);
     config::setIfEmpty("player.framestepper.step_key", keybinds::Keys::C);
@@ -64,10 +63,10 @@ static uint32_t s_holdAdvanceTimer = 0;
 
 class $modify(FrameStepperSchedulerHook,
               GJBaseGameLayer){static void onModify(auto &self){
-    FIRST_PRIORITY("cocos2d::CCScheduler::update"); // required to avoid
-                                                    // conflict with speedhack
+    FIRST_PRIORITY("cocos2d::CCScheduler::update");  // required to avoid
+                                                     // conflict with speedhack
 HOOKS_TOGGLE_ALL("player.framestepper");
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 
 void update(float dt) override {
   // for playlayer, check if the level is not paused/finished (maybe add loading
@@ -81,8 +80,7 @@ void update(float dt) override {
   else if (auto editor = utils::get<LevelEditorLayer>())
     usable = editor->m_playbackMode == PlaybackMode::Playing;
 
-  if (!usable)
-    return GJBaseGameLayer::update(dt);
+  if (!usable) return GJBaseGameLayer::update(dt);
 
   auto step = utils::getTPS();
 
@@ -92,8 +90,7 @@ void update(float dt) override {
     s_holdDelayTimer += dt;
     bool firstPress = FrameStepper::isPressed();
 
-    if (firstPress)
-      s_holdDelayTimer = 0;
+    if (firstPress) s_holdDelayTimer = 0;
 
     // Add a grace period after the first press to allow for holding
     auto delay = config::get<float>("player.framestepper.hold_delay", 0.25f);
@@ -120,7 +117,7 @@ void update(float dt) override {
 
 /// @brief A button with callbacks for holding and releasing
 class HoldingMenuItem : public CCMenuItemSpriteExtra {
-public:
+ public:
   static HoldingMenuItem *create(cocos2d::CCSprite *sprite,
                                  const std::function<void()> &onHold,
                                  const std::function<void()> &onRelease) {
@@ -154,15 +151,14 @@ public:
     m_onRelease();
   }
 
-private:
+ private:
   std::function<void()> m_onHold;
   std::function<void()> m_onRelease;
 };
 
 class FrameStepControl : public cocos2d::CCMenu {
   bool init() override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setPosition(0, 0);
 
@@ -189,7 +185,7 @@ class FrameStepControl : public cocos2d::CCMenu {
     this->setVisible(config::get<bool>("player.framestepper", false));
   }
 
-public:
+ public:
   static FrameStepControl *create() {
     auto ret = new FrameStepControl();
     if (ret->init()) {
@@ -200,7 +196,7 @@ public:
     return nullptr;
   }
 
-private:
+ private:
   HoldingMenuItem *m_stepForward = nullptr;
 };
 

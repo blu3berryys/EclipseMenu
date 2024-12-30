@@ -1,4 +1,5 @@
 #include "tab.hpp"
+
 #include <modules/config/config.hpp>
 
 namespace eclipse::gui::imgui {
@@ -31,4 +32,4 @@ void Tab::setOpen(bool open) { m_isOpen = open; }
 const std::string &Tab::getTitle() const { return m_title; }
 
 void Tab::setTitle(const std::string &title) { m_title = title; }
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

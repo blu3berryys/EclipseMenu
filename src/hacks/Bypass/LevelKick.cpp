@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -22,7 +21,7 @@ class $modify(LevelKickGJBGLHook,
               GJBaseGameLayer){ALL_DELEGATES_AND_SAFE_PRIO("bypass.levelkick")
 
                                    bool shouldExitHackedLevel(){return false;
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

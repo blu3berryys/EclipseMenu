@@ -1,10 +1,9 @@
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/UILayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/keybinds/manager.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
-#include <Geode/modify/UILayer.hpp>
 #include <modules/labels/variables.hpp>
 
 namespace eclipse::hacks::Level {
@@ -13,7 +12,7 @@ static std::vector<StartPosObject *> startPosObjects;
 static int32_t currentStartPosIndex = 0;
 
 class StartPosSwitcher : public hack::Hack {
-public:
+ public:
   void init() override {
     config::setIfEmpty("level.startpos_switcher", false);
     config::setIfEmpty("level.startpos_switcher.reset_camera", false);
@@ -59,30 +58,23 @@ public:
 
     auto manager = keybinds::Manager::get();
     manager->addListener("level.startpos_switcher.previous", [](bool down) {
-      if (!down)
-        return;
+      if (!down) return;
       auto *playLayer = utils::get<PlayLayer>();
-      if (!playLayer)
-        return;
-      if (!config::get<bool>("level.startpos_switcher", false))
-        return;
+      if (!playLayer) return;
+      if (!config::get<bool>("level.startpos_switcher", false)) return;
       pickStartPos(playLayer, currentStartPosIndex - 1);
     });
     manager->addListener("level.startpos_switcher.next", [](bool down) {
-      if (!down)
-        return;
+      if (!down) return;
       auto *playLayer = utils::get<PlayLayer>();
-      if (!playLayer)
-        return;
-      if (!config::get<bool>("level.startpos_switcher", false))
-        return;
+      if (!playLayer) return;
+      if (!config::get<bool>("level.startpos_switcher", false)) return;
       pickStartPos(playLayer, currentStartPosIndex + 1);
     });
   }
 
   static void pickStartPos(PlayLayer *playLayer, int32_t index) {
-    if (startPosObjects.empty())
-      return;
+    if (startPosObjects.empty()) return;
 
     auto count = static_cast<int32_t>(startPosObjects.size());
     if (index >= count)
@@ -114,7 +106,7 @@ public:
 REGISTER_HACK(StartPosSwitcher)
 
 class StartposSwitcherNode : public cocos2d::CCMenu {
-public:
+ public:
   static StartposSwitcherNode *create(PlayLayer *playLayer) {
     auto *ret = new StartposSwitcherNode;
     if (ret->init(playLayer)) {
@@ -126,8 +118,7 @@ public:
   }
 
   bool init(PlayLayer *playLayer) {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     m_playLayer = playLayer;
 
@@ -238,7 +229,7 @@ public:
     }
   }
 
-private:
+ private:
   CCMenuItemSpriteExtra *m_previous{};
   CCMenuItemSpriteExtra *m_next{};
   cocos2d::CCLabelBMFont *m_label{};
@@ -252,7 +243,7 @@ class $modify(StartPosSwitcherPLHook, PlayLayer){
               bool dontCreateObjects){startPosObjects.clear();
 
 return PlayLayer::init(level, useReplay, dontCreateObjects);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 
 void resetLevel() {
   PlayLayer::resetLevel();
@@ -273,8 +264,7 @@ void addObject(GameObject *object) {
 
 void createObjectsFromSetupFinished() {
   PlayLayer::createObjectsFromSetupFinished();
-  if (startPosObjects.empty())
-    return;
+  if (startPosObjects.empty()) return;
 
   std::ranges::sort(startPosObjects, [](GameObject *a, GameObject *b) {
     return a->getPositionX() < b->getPositionX();
@@ -289,12 +279,11 @@ void createObjectsFromSetupFinished() {
   }
 
   auto *switcher = StartposSwitcherNode::create(this);
-  if (!switcher)
-    return;
+  if (!switcher) return;
   switcher->setID("startpos-switcher"_spr);
   if (auto uiMenu = utils::getEclipseUILayer()) {
     uiMenu->addChild(switcher, 1000);
-  } else { // fallback
+  } else {  // fallback
     m_uiLayer->addChild(switcher, 1000);
   }
 }

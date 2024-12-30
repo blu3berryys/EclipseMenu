@@ -10,8 +10,7 @@ class Shortcuts : public hack::Hack {
   static void openSettings() {
     if (auto *options = OptionsLayer::create()) {
       auto scene = utils::get<cocos2d::CCScene>();
-      if (!scene)
-        return;
+      if (!scene) return;
       auto zOrder = scene->getHighestChildZ();
       scene->addChild(options, zOrder + 1);
       options->showLayer(false);
@@ -21,8 +20,8 @@ class Shortcuts : public hack::Hack {
   static void uncompleteLevel() {
     auto scene = utils::get<cocos2d::CCScene>();
     if (!scene)
-      return; // sometimes people frget CCScene can sometimes be nullptr for no
-              // reason
+      return;  // sometimes people frget CCScene can sometimes be nullptr for no
+               // reason
     GJGameLevel *level = nullptr;
 
     // try to find it from either PlayLayer or LevelInfoLayer
@@ -40,8 +39,7 @@ class Shortcuts : public hack::Hack {
         i18n::get_("shortcuts.uncomplete-level.title"),
         i18n::format("shortcuts.uncomplete-level.msg", level->m_levelName),
         i18n::get_("common.yes"), i18n::get_("common.no"), [level](bool yes) {
-          if (!yes)
-            return;
+          if (!yes) return;
           auto gsm = utils::get<GameStatsManager>();
           auto glm = utils::get<GameLevelManager>();
           // if level had been completed, ensure that their stars are also
@@ -49,7 +47,7 @@ class Shortcuts : public hack::Hack {
           if (level->m_normalPercent >= 100 && gsm->hasCompletedLevel(level)) {
             int levelid = level->m_levelID.value();
             // Delete completion
-            gsm->setStat("4", gsm->getStat("4") - 1); // completed levels
+            gsm->setStat("4", gsm->getStat("4") - 1);  // completed levels
             gsm->m_completedLevels->removeObjectForKey(
                 fmt::format("c_{}", levelid));
             if (level->m_stars > 0) {
@@ -61,12 +59,12 @@ class Shortcuts : public hack::Hack {
                   fmt::format("demon_{}", levelid));
               if (level->isPlatformer()) {
                 gsm->setStat("28",
-                             gsm->getStat("28") - level->m_stars); // moons
+                             gsm->getStat("28") - level->m_stars);  // moons
               } else {
-                gsm->setStat("6", gsm->getStat("6") - level->m_stars); // stars
+                gsm->setStat("6", gsm->getStat("6") - level->m_stars);  // stars
               }
               if (level->m_demon > 0) {
-                gsm->setStat("5", gsm->getStat("5") - 1); // demons
+                gsm->setStat("5", gsm->getStat("5") - 1);  // demons
               }
               gsm->setStat("8", gsm->getStat("8") - level->m_coinsVerified);
             }
@@ -101,8 +99,7 @@ class Shortcuts : public hack::Hack {
   }
 
   static void restartLevel() {
-    if (auto *pl = utils::get<PlayLayer>())
-      pl->resetLevel();
+    if (auto *pl = utils::get<PlayLayer>()) pl->resetLevel();
   }
 
   static void togglePracticeMode() {
@@ -112,15 +109,13 @@ class Shortcuts : public hack::Hack {
 
   static void placeCheckpoint() {
     if (auto *pl = utils::get<PlayLayer>()) {
-      if (pl->m_isPracticeMode)
-        pl->markCheckpoint();
+      if (pl->m_isPracticeMode) pl->markCheckpoint();
     }
   }
 
   static void removeCheckpoint() {
     if (auto *pl = utils::get<PlayLayer>()) {
-      if (pl->m_isPracticeMode)
-        pl->removeCheckpoint(false);
+      if (pl->m_isPracticeMode) pl->removeCheckpoint(false);
     }
   }
 
@@ -134,13 +129,11 @@ class Shortcuts : public hack::Hack {
     m_listener.bind([](FileEvent::Event *event) {
       if (auto value = event->getValue()) {
         auto path = value->unwrapOr("");
-        if (path.empty() || !std::filesystem::exists(path))
-          return;
+        if (path.empty() || !std::filesystem::exists(path)) return;
 
         geode::log::warn("Injecting DLL: {}", path);
         HMODULE module = LoadLibraryA(path.string().c_str());
-        if (!module)
-          return geode::log::error("Failed to inject DLL: {}", path);
+        if (!module) return geode::log::error("Failed to inject DLL: {}", path);
 
         // Call DLLMain with DLL_PROCESS_ATTACH
         bool success = module > (HMODULE)HINSTANCE_ERROR;
@@ -211,14 +204,12 @@ class Shortcuts : public hack::Hack {
     auto manager = keybinds::Manager::get();
     manager->addListener("shortcut.p1jump", [](bool down) {
       auto gameLayer = utils::get<GJBaseGameLayer>();
-      if (!gameLayer)
-        return;
+      if (!gameLayer) return;
       gameLayer->handleButton(down, 1, true);
     });
     manager->addListener("shortcut.p2jump", [](bool down) {
       auto gameLayer = utils::get<GJBaseGameLayer>();
-      if (!gameLayer)
-        return;
+      if (!gameLayer) return;
       gameLayer->handleButton(down, 1, false);
     });
   }
@@ -228,4 +219,4 @@ class Shortcuts : public hack::Hack {
 
 REGISTER_HACK(Shortcuts)
 
-} // namespace eclipse::hacks::Shortcuts
+}  // namespace eclipse::hacks::Shortcuts

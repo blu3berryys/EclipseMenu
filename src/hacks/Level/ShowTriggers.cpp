@@ -1,10 +1,9 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -49,7 +48,7 @@ this->m_editorEnabled =
 
 GameObject::customSetup();
 this->m_editorEnabled = editorEnabled;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 
@@ -76,7 +75,7 @@ if (isTrigger && !idsCheck && config::get<bool>("level.showtriggers", false)) {
        !static_cast<EffectGameObject *>(obj)->m_isTouchTriggered) &&
       obj->m_objectID != 2063) {
     s_lastEditedTrigger =
-        obj; // this will queue the trigger to be added to the section
+        obj;  // this will queue the trigger to be added to the section
     s_originalSectionIndex = obj->m_outerSectionIndex;
   }
 }

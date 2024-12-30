@@ -1,8 +1,8 @@
+#include "bot.hpp"
+
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include "bot.hpp"
 
 using namespace geode::prelude;
 
@@ -27,8 +27,7 @@ void Bot::recordInput(int frame, PlayerButton button, bool player2,
 }
 
 std::optional<gdr::Input> Bot::poll(int frame) {
-  if (m_inputIndex >= m_replay.inputs.size())
-    return std::nullopt;
+  if (m_inputIndex >= m_replay.inputs.size()) return std::nullopt;
 
   if (m_replay.inputs[m_inputIndex].frame <= frame)
     return m_replay.inputs[m_inputIndex++];
@@ -38,8 +37,7 @@ std::optional<gdr::Input> Bot::poll(int frame) {
 
 std::optional<gdr::Input> Bot::getPrevious(bool player1) {
   for (int i = m_inputIndex - 2; i >= 0; i--) {
-    if (m_replay.inputs[i].player2 == !player1)
-      return m_replay.inputs[i];
+    if (m_replay.inputs[i].player2 == !player1) return m_replay.inputs[i];
   }
 
   return std::nullopt;
@@ -81,4 +79,4 @@ Result<> Bot::load(std::filesystem::path path) {
   return Ok();
 }
 
-} // namespace eclipse::bot
+}  // namespace eclipse::bot

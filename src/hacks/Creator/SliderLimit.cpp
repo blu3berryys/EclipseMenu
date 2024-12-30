@@ -1,9 +1,8 @@
+#include <Geode/modify/GJScaleControl.hpp>
+#include <Geode/modify/SliderTouchLogic.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJScaleControl.hpp>
-#include <Geode/modify/SliderTouchLogic.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -30,20 +29,18 @@ auto position = touchPos - this->m_position;
 // auto delta = this->m_length / 2.f;
 if (this->m_rotated) {
   // auto clamped = std::clamp(position.y, -delta, delta);
-  auto clamped = position.y; // Remove the clamping
+  auto clamped = position.y;  // Remove the clamping
   this->m_thumb->setPosition({0.f, clamped});
 } else {
   // auto clamped = std::clamp(position.x, -delta, delta);
-  auto clamped = position.x; // Remove the clamping
+  auto clamped = position.x;  // Remove the clamping
   this->m_thumb->setPosition({clamped, 0.f});
 }
 
-if (this->m_activateThumb)
-  this->m_thumb->activate();
+if (this->m_activateThumb) this->m_thumb->activate();
 
-if (auto *slider = this->m_slider)
-  slider->updateBar();
-} // namespace eclipse::hacks::Creator
+if (auto *slider = this->m_slider) slider->updateBar();
+}  // namespace eclipse::hacks::Creator
 }
 ;
 

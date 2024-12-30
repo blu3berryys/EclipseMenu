@@ -1,4 +1,5 @@
 #include "window.hpp"
+
 #include <modules/config/config.hpp>
 #include <modules/gui/imgui/imgui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -15,8 +16,7 @@ Window::Window(const std::string &title, std::function<void()> onDraw) {
 }
 
 void Window::draw() {
-  if (!isOnScreen())
-    return;
+  if (!isOnScreen()) return;
 
   auto tm = ThemeManager::get();
   auto scale = tm->getGlobalScale();
@@ -26,7 +26,7 @@ void Window::draw() {
   auto maxSizeH = MAX_SIZE.y * scale;
   auto bottomMargin = tm->getWindowMargin();
   if (m_position.y + m_size.y >
-      screenSize.y - bottomMargin - 1) // -1 to prevent flickering
+      screenSize.y - bottomMargin - 1)  // -1 to prevent flickering
     maxSizeH = screenSize.y - m_position.y - bottomMargin;
 
   ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale},
@@ -83,14 +83,13 @@ const ImVec2 &Window::getSize() const { return m_size; }
 
 void Window::setSize(const ImVec2 &size) { m_size = size; }
 
-std::shared_ptr<animation::MoveAction>
-Window::animateTo(const ImVec2 &target, double duration,
-                  animation::EasingFunction easing, bool useRealPosition) {
+std::shared_ptr<animation::MoveAction> Window::animateTo(
+    const ImVec2 &target, double duration, animation::EasingFunction easing,
+    bool useRealPosition) {
   auto action =
       animation::MoveAction::create(duration, &m_drawPosition, target, easing);
 
-  if (useRealPosition)
-    m_position = target;
+  if (useRealPosition) m_position = target;
 
   return action;
 }
@@ -108,4 +107,4 @@ void from_json(const nlohmann::json &j, Window &e) {
   e.setTitle(j.at("title").get<std::string>());
 }
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayerObject.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -23,4 +22,4 @@ REGISTER_HACK(NoRespawnFlash)
 class $modify(NoRespawnFlashPOHook, PlayerObject){ALL_DELEGATES_AND_SAFE_PRIO(
     "player.norespawnflash") void playSpawnEffect(){}};
 
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player

@@ -1,8 +1,7 @@
+#include <Geode/modify/CCTextInputNode.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/CCTextInputNode.hpp>
 #include <utility>
 
 namespace eclipse::hacks::Bypass {
@@ -32,7 +31,7 @@ class $modify(CharacterFilterCCTINHook, CCTextInputNode){
                                   " ");
 
 CCTextInputNode::updateLabel(std::move(str));
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

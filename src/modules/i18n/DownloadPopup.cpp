@@ -63,7 +63,7 @@ void DownloadPopup::startDownloadFile(std::filesystem::path const &path,
       file.close();
 
       this->m_filesDownloaded++;
-      this->handleFileDownloaded(); // begin next download or close
+      this->handleFileDownloaded();  // begin next download or close
     } else if (web::WebProgress *progress = e->getProgress()) {
       auto p = progress->downloadProgress().value_or(0.f);
       auto totalProgress = (m_filesDownloaded * 100.f + p) / m_totalFiles;
@@ -85,9 +85,10 @@ void DownloadPopup::handleFileDownloaded() {
   auto path = geode::Mod::get()->getConfigDir() / "bmfonts" / GEODE_MOD_ID /
               fmt::format("font_{}{}", m_charset, ext);
 
-  auto url = fmt::format("https://raw.githubusercontent.com/EclipseMenu/"
-                         "EclipseMenu/refs/heads/main/resources/BitmapFonts/{}",
-                         path.filename().string());
+  auto url = fmt::format(
+      "https://raw.githubusercontent.com/EclipseMenu/"
+      "EclipseMenu/refs/heads/main/resources/BitmapFonts/{}",
+      path.filename().string());
   this->startDownloadFile(path, url);
 }
 
@@ -119,4 +120,4 @@ DownloadPopup *DownloadPopup::create(std::string const &charset) {
   delete ret;
   return nullptr;
 }
-} // namespace eclipse::i18n
+}  // namespace eclipse::i18n

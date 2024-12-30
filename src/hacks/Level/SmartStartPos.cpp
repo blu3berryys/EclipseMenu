@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -34,10 +33,8 @@ class $modify(SmartStartPosPLHook, PlayLayer) {
     });
 
     for (auto obj : vec) {
-      if (obj->getPositionX() - 10 > startPos->getPositionX())
-        break;
-      if (obj->getPositionX() - 10 < startPos->getPositionX())
-        closest = obj;
+      if (obj->getPositionX() - 10 > startPos->getPositionX()) break;
+      if (obj->getPositionX() - 10 < startPos->getPositionX()) closest = obj;
     }
 
     return closest;
@@ -54,37 +51,36 @@ class $modify(SmartStartPosPLHook, PlayLayer) {
     startPosSettings->m_startSpeed = levelSettings->m_startSpeed;
 
     GameObject *obj = getClosestObject(m_fields->m_dualPortals, startPos);
-    if (obj)
-      startPosSettings->m_startDual = obj->m_objectID == 286;
+    if (obj) startPosSettings->m_startDual = obj->m_objectID == 286;
 
     obj = getClosestObject(m_fields->m_gamemodePortals, startPos);
 
     if (obj) {
       switch (obj->m_objectID) {
-      case 12:
-        startPosSettings->m_startMode = 0;
-        break;
-      case 13:
-        startPosSettings->m_startMode = 1;
-        break;
-      case 47:
-        startPosSettings->m_startMode = 2;
-        break;
-      case 111:
-        startPosSettings->m_startMode = 3;
-        break;
-      case 660:
-        startPosSettings->m_startMode = 4;
-        break;
-      case 745:
-        startPosSettings->m_startMode = 5;
-        break;
-      case 1331:
-        startPosSettings->m_startMode = 6;
-        break;
-      case 1933:
-        startPosSettings->m_startMode = 7;
-        break;
+        case 12:
+          startPosSettings->m_startMode = 0;
+          break;
+        case 13:
+          startPosSettings->m_startMode = 1;
+          break;
+        case 47:
+          startPosSettings->m_startMode = 2;
+          break;
+        case 111:
+          startPosSettings->m_startMode = 3;
+          break;
+        case 660:
+          startPosSettings->m_startMode = 4;
+          break;
+        case 745:
+          startPosSettings->m_startMode = 5;
+          break;
+        case 1331:
+          startPosSettings->m_startMode = 6;
+          break;
+        case 1933:
+          startPosSettings->m_startMode = 7;
+          break;
       }
     }
 
@@ -92,27 +88,26 @@ class $modify(SmartStartPosPLHook, PlayLayer) {
 
     obj = getClosestObject(fields->m_miniPortals, startPos);
 
-    if (obj)
-      startPosSettings->m_startMini = obj->m_objectID == 101;
+    if (obj) startPosSettings->m_startMini = obj->m_objectID == 101;
 
     obj = getClosestObject(fields->m_speedChanges, startPos);
     if (obj) {
       switch (obj->m_objectID) {
-      case 200:
-        startPosSettings->m_startSpeed = Speed::Slow;
-        break;
-      case 201:
-        startPosSettings->m_startSpeed = Speed::Normal;
-        break;
-      case 202:
-        startPosSettings->m_startSpeed = Speed::Fast;
-        break;
-      case 203:
-        startPosSettings->m_startSpeed = Speed::Faster;
-        break;
-      case 1334:
-        startPosSettings->m_startSpeed = Speed::Fastest;
-        break;
+        case 200:
+          startPosSettings->m_startSpeed = Speed::Slow;
+          break;
+        case 201:
+          startPosSettings->m_startSpeed = Speed::Normal;
+          break;
+        case 202:
+          startPosSettings->m_startSpeed = Speed::Fast;
+          break;
+        case 203:
+          startPosSettings->m_startSpeed = Speed::Faster;
+          break;
+        case 1334:
+          startPosSettings->m_startSpeed = Speed::Fastest;
+          break;
       }
     }
   }
@@ -132,8 +127,7 @@ class $modify(SmartStartPosPLHook, PlayLayer) {
 
   void resetLevel() {
     if (config::get<bool>("level.smartstartpos", false)) {
-      for (StartPosObject *obj : m_fields->m_startPositions)
-        setupStartPos(obj);
+      for (StartPosObject *obj : m_fields->m_startPositions) setupStartPos(obj);
     }
 
     PlayLayer::resetLevel();
@@ -143,39 +137,40 @@ class $modify(SmartStartPosPLHook, PlayLayer) {
     PlayLayer::addObject(obj);
 
     switch (obj->m_objectID) {
-    case 31:
-      m_fields->m_startPositions.push_back(static_cast<StartPosObject *>(obj));
-      break;
-    case 12:
-    case 13:
-    case 47:
-    case 111:
-    case 660:
-    case 745:
-    case 1331:
-    case 1933:
-      m_fields->m_gamemodePortals.push_back(obj);
-      break;
-    case 45:
-    case 46:
-      m_fields->m_mirrorPortals.push_back(obj);
-      break;
-    case 99:
-    case 101:
-      m_fields->m_miniPortals.push_back(obj);
-      break;
-    case 286:
-    case 287:
-      m_fields->m_dualPortals.push_back(obj);
-      break;
-    case 200:
-    case 201:
-    case 202:
-    case 203:
-    case 1334:
-      m_fields->m_speedChanges.push_back(obj);
-      break;
+      case 31:
+        m_fields->m_startPositions.push_back(
+            static_cast<StartPosObject *>(obj));
+        break;
+      case 12:
+      case 13:
+      case 47:
+      case 111:
+      case 660:
+      case 745:
+      case 1331:
+      case 1933:
+        m_fields->m_gamemodePortals.push_back(obj);
+        break;
+      case 45:
+      case 46:
+        m_fields->m_mirrorPortals.push_back(obj);
+        break;
+      case 99:
+      case 101:
+        m_fields->m_miniPortals.push_back(obj);
+        break;
+      case 286:
+      case 287:
+        m_fields->m_dualPortals.push_back(obj);
+        break;
+      case 200:
+      case 201:
+      case 202:
+      case 203:
+      case 1334:
+        m_fields->m_speedChanges.push_back(obj);
+        break;
     }
   }
 };
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level

@@ -86,4 +86,4 @@ void Popup::prompt(const std::string &title, const std::string &message,
   popup.m_promptCallback = callback;
   gui::Engine::get()->showPopup(popup);
 }
-} // namespace eclipse
+}  // namespace eclipse

@@ -1,9 +1,8 @@
+#include <Geode/modify/CustomListView.hpp>
+#include <Geode/modify/LevelCell.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/CustomListView.hpp>
-#include <Geode/modify/LevelCell.hpp>
 
 namespace eclipse::hacks::Global {
 
@@ -48,15 +47,15 @@ class $modify(CompactLevelsCommentsCLVHook, CustomListView){
     */
     static CustomListView *
     create(cocos2d::CCArray * a, TableViewCellDelegate *b, float c, float d,
-           int e, BoomListType f,
-           float g){if (f == BoomListType::Level2 &&
-                        config::get<bool>("global.compacteditorlevels", false))
-                        f = BoomListType::Level4; // Level4 = compact level view
+           int e, BoomListType f, float g){
+        if (f == BoomListType::Level2 &&
+            config::get<bool>("global.compacteditorlevels", false))
+            f = BoomListType::Level4;  // Level4 = compact level view
 else if (f == BoomListType::Comment4 &&
          config::get<bool>("global.compactprofilecomments", false)) f =
-    BoomListType::Comment2; // Comment2 = compact comment view
+    BoomListType::Comment2;  // Comment2 = compact comment view
 return CustomListView::create(a, b, c, d, e, f, g);
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 }
 ;
 

@@ -1,11 +1,10 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/OBB2D.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -13,8 +12,7 @@ static GameObject *s_rotatedGameObject = nullptr;
 static std::deque<GameObject *> s_affectedGameObjects;
 
 float getMultiplier(GameObject *gameObject) {
-  if (!utils::get<GJBaseGameLayer>())
-    return 1.f;
+  if (!utils::get<GJBaseGameLayer>()) return 1.f;
 
   if ((gameObject == utils::get<GJBaseGameLayer>()->m_player1 ||
        gameObject == utils::get<GJBaseGameLayer>()->m_player2))
@@ -108,7 +106,7 @@ REGISTER_HACK(HitboxMultiplier)
 class $modify(HitboxMultiplierPLHook, PlayLayer){
     bool init(GJGameLevel * level, bool unk, bool dontCreateObjects){reset();
 return PlayLayer::init(level, unk, dontCreateObjects);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 
 void resetLevel() {
   forceHitboxRecalculation();

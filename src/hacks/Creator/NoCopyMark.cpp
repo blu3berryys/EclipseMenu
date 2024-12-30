@@ -1,8 +1,7 @@
+#include <Geode/modify/EditLevelLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditLevelLayer.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -23,7 +22,7 @@ class $modify(NoCopyMarkELLHook, EditLevelLayer){
 
         void onShare(CCObject * sender){this->m_level->m_originalLevel = 0;
 EditLevelLayer::onShare(sender);
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 }
 ;
 }

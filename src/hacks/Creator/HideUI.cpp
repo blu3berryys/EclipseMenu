@@ -1,8 +1,7 @@
+#include <Geode/modify/EditorUI.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditorUI.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -22,16 +21,14 @@ static bool s_lastState = false;
 
 class $modify(HideUIEUIHook, EditorUI){void onUpdate(float){
     const bool isHidden = config::get<bool>("creator.hideui", false);
-if (s_lastState == isHidden)
-  return;
+if (s_lastState == isHidden) return;
 
 s_lastState = isHidden;
 this->setVisible(!isHidden);
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 
 bool init(LevelEditorLayer *editorLayer) {
-  if (!EditorUI::init(editorLayer))
-    return false;
+  if (!EditorUI::init(editorLayer)) return false;
 
   this->schedule(schedule_selector(HideUIEUIHook::onUpdate), 0.f);
   return true;

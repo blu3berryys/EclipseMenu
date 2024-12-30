@@ -1,13 +1,11 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
-#include <modules/labels/setting.hpp>
-#include <modules/labels/variables.hpp>
-
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 #include <Geode/modify/UILayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
+#include <modules/labels/setting.hpp>
+#include <modules/labels/variables.hpp>
 
 #include "Label.hpp"
 
@@ -67,17 +65,17 @@ struct ClickStorage {
   void addClick(const PlayerButton btn) {
     ClickInfo *clickInfo;
     switch (btn) {
-    case PlayerButton::Jump:
-      clickInfo = &jumpClicks;
-      break;
-    case PlayerButton::Left:
-      clickInfo = &leftClicks;
-      break;
-    case PlayerButton::Right:
-      clickInfo = &rightClicks;
-      break;
-    default:
-      return;
+      case PlayerButton::Jump:
+        clickInfo = &jumpClicks;
+        break;
+      case PlayerButton::Left:
+        clickInfo = &leftClicks;
+        break;
+      case PlayerButton::Right:
+        clickInfo = &rightClicks;
+        break;
+      default:
+        return;
     }
 
     clickInfo->first.push_back(getTimestamp());
@@ -86,57 +84,57 @@ struct ClickStorage {
 
   int getCPS(const PlayerButton btn) const {
     switch (btn) {
-    case PlayerButton::Jump:
-      return jumpClicks.first.size();
-    case PlayerButton::Left:
-      return leftClicks.first.size();
-    case PlayerButton::Right:
-      return rightClicks.first.size();
-    default:
-      return 0;
+      case PlayerButton::Jump:
+        return jumpClicks.first.size();
+      case PlayerButton::Left:
+        return leftClicks.first.size();
+      case PlayerButton::Right:
+        return rightClicks.first.size();
+      default:
+        return 0;
     }
   }
 
   int getMaxCPS(const PlayerButton btn) const {
     switch (btn) {
-    case PlayerButton::Jump:
-      return jumpMaxCPS;
-    case PlayerButton::Left:
-      return leftMaxCPS;
-    case PlayerButton::Right:
-      return rightMaxCPS;
-    default:
-      return 0;
+      case PlayerButton::Jump:
+        return jumpMaxCPS;
+      case PlayerButton::Left:
+        return leftMaxCPS;
+      case PlayerButton::Right:
+        return rightMaxCPS;
+      default:
+        return 0;
     }
   }
 
   void updateMaxCPS(const PlayerButton btn) {
     auto cps = getCPS(btn);
     switch (btn) {
-    case PlayerButton::Jump:
-      jumpMaxCPS = std::max(cps, jumpMaxCPS);
-      break;
-    case PlayerButton::Left:
-      leftMaxCPS = std::max(cps, leftMaxCPS);
-      break;
-    case PlayerButton::Right:
-      rightMaxCPS = std::max(cps, rightMaxCPS);
-      break;
-    default:
-      break;
+      case PlayerButton::Jump:
+        jumpMaxCPS = std::max(cps, jumpMaxCPS);
+        break;
+      case PlayerButton::Left:
+        leftMaxCPS = std::max(cps, leftMaxCPS);
+        break;
+      case PlayerButton::Right:
+        rightMaxCPS = std::max(cps, rightMaxCPS);
+        break;
+      default:
+        break;
     }
   }
 
   int getClicks(const PlayerButton btn) const {
     switch (btn) {
-    case PlayerButton::Jump:
-      return jumpClicks.second;
-    case PlayerButton::Left:
-      return leftClicks.second;
-    case PlayerButton::Right:
-      return rightClicks.second;
-    default:
-      return 0;
+      case PlayerButton::Jump:
+        return jumpClicks.second;
+      case PlayerButton::Left:
+        return leftClicks.second;
+      case PlayerButton::Right:
+        return rightClicks.second;
+      default:
+        return 0;
     }
   }
 };
@@ -147,8 +145,7 @@ class $modify(LabelsPOHook, PlayerObject){bool pushButton(PlayerButton btn){
     bool result = PlayerObject::pushButton(btn);
 
 const auto *gjbgl = utils::get<GJBaseGameLayer>();
-if (!gjbgl)
-  return result;
+if (!gjbgl) return result;
 
 const bool isP1 = this == gjbgl->m_player1;
 const bool isP2 = this == gjbgl->m_player2;
@@ -159,7 +156,7 @@ else if (isP2)
   s_clicksP2.addClick(btn);
 
 return result;
-} // namespace eclipse::hacks::Labels
+}  // namespace eclipse::hacks::Labels
 }
 ;
 
@@ -261,7 +258,7 @@ class $modify(LabelsUILHook, UILayer) {
       auto winSize = utils::get<cocos2d::CCDirector>()->getWinSize();
       for (auto &setting : s_labels) {
         if (!setting.visible && !setting.hasEvents())
-          continue; // Skip invisible labels
+          continue;  // Skip invisible labels
 
         auto label = SmartLabel::create(setting.text, setting.font);
         label->setID(fmt::format("label-{}", i++));
@@ -273,46 +270,46 @@ class $modify(LabelsUILHook, UILayer) {
         if (setting.absolutePosition) {
           auto offset = setting.offset;
           switch (setting.alignment) {
-          case LabelsContainer::Alignment::TopLeft:
-            label->setPosition(offset.x, winSize.height - offset.y);
-            label->setAnchorPoint({0, 1});
-            break;
-          case LabelsContainer::Alignment::TopCenter:
-            label->setPosition(winSize.width / 2 + offset.x,
-                               winSize.height - offset.y);
-            label->setAnchorPoint({0.5, 1});
-            break;
-          case LabelsContainer::Alignment::TopRight:
-            label->setPosition(winSize.width - offset.x,
-                               winSize.height - offset.y);
-            label->setAnchorPoint({1, 1});
-            break;
-          case LabelsContainer::Alignment::CenterLeft:
-            label->setPosition(offset.x, winSize.height / 2 - offset.y);
-            label->setAnchorPoint({0, 0.5});
-            break;
-          case LabelsContainer::Alignment::Center:
-            label->setPosition(winSize.width / 2 + offset.x,
-                               winSize.height / 2 - offset.y);
-            label->setAnchorPoint({0.5, 0.5});
-            break;
-          case LabelsContainer::Alignment::CenterRight:
-            label->setPosition(winSize.width - offset.x,
-                               winSize.height / 2 - offset.y);
-            label->setAnchorPoint({1, 0.5});
-            break;
-          case LabelsContainer::Alignment::BottomLeft:
-            label->setPosition(offset.x, offset.y);
-            label->setAnchorPoint({0, 0});
-            break;
-          case LabelsContainer::Alignment::BottomCenter:
-            label->setPosition(winSize.width / 2 + offset.x, offset.y);
-            label->setAnchorPoint({0.5, 0});
-            break;
-          case LabelsContainer::Alignment::BottomRight:
-            label->setPosition(winSize.width - offset.x, offset.y);
-            label->setAnchorPoint({1, 0});
-            break;
+            case LabelsContainer::Alignment::TopLeft:
+              label->setPosition(offset.x, winSize.height - offset.y);
+              label->setAnchorPoint({0, 1});
+              break;
+            case LabelsContainer::Alignment::TopCenter:
+              label->setPosition(winSize.width / 2 + offset.x,
+                                 winSize.height - offset.y);
+              label->setAnchorPoint({0.5, 1});
+              break;
+            case LabelsContainer::Alignment::TopRight:
+              label->setPosition(winSize.width - offset.x,
+                                 winSize.height - offset.y);
+              label->setAnchorPoint({1, 1});
+              break;
+            case LabelsContainer::Alignment::CenterLeft:
+              label->setPosition(offset.x, winSize.height / 2 - offset.y);
+              label->setAnchorPoint({0, 0.5});
+              break;
+            case LabelsContainer::Alignment::Center:
+              label->setPosition(winSize.width / 2 + offset.x,
+                                 winSize.height / 2 - offset.y);
+              label->setAnchorPoint({0.5, 0.5});
+              break;
+            case LabelsContainer::Alignment::CenterRight:
+              label->setPosition(winSize.width - offset.x,
+                                 winSize.height / 2 - offset.y);
+              label->setAnchorPoint({1, 0.5});
+              break;
+            case LabelsContainer::Alignment::BottomLeft:
+              label->setPosition(offset.x, offset.y);
+              label->setAnchorPoint({0, 0});
+              break;
+            case LabelsContainer::Alignment::BottomCenter:
+              label->setPosition(winSize.width / 2 + offset.x, offset.y);
+              label->setAnchorPoint({0.5, 0});
+              break;
+            case LabelsContainer::Alignment::BottomRight:
+              label->setPosition(winSize.width - offset.x, offset.y);
+              label->setAnchorPoint({1, 0});
+              break;
           }
 
           fields->m_absoluteLabels.emplace_back(
@@ -369,8 +366,7 @@ class $modify(LabelsUILHook, UILayer) {
     visible &= !fields->m_isEditor ||
                config::get<bool>("labels.show-in-editor", false);
 
-    if (visible)
-      labels::VariableManager::get().refetch();
+    if (visible) labels::VariableManager::get().refetch();
 
     for (auto &container : fields->m_containers) {
       container->setVisible(visible);
@@ -382,8 +378,7 @@ class $modify(LabelsUILHook, UILayer) {
   }
 
   bool init(GJBaseGameLayer * bgl) {
-    if (!UILayer::init(bgl))
-      return false;
+    if (!UILayer::init(bgl)) return false;
 
     auto fields = m_fields.self();
     fields->m_isEditor =
@@ -411,8 +406,7 @@ class $modify(LabelsUILHook, UILayer) {
 class Labels : public hack::Hack {
   static void updateLabels(bool recreate = false) {
     auto *layer = utils::get<UILayer>();
-    if (!layer)
-      return;
+    if (!layer) return;
 
     auto *labelsLayer = reinterpret_cast<LabelsUILHook *>(layer);
     labelsLayer->realignContainers(recreate);
@@ -436,9 +430,9 @@ class Labels : public hack::Hack {
             {"Clock", "{clock}", false},
             {"FPS", "FPS: {round(fps)}", false},
             {"CPS", "{cps}/{clicks}/{maxCps} CPS",
-             false}, // TODO: Add click trigger
+             false},  // TODO: Add click trigger
             {"Noclip Accuracy", "{ noclip ?? $'Accuracy: {noclipAccuracy}%'}",
-             false}, // TODO: Add death trigger
+             false},  // TODO: Add death trigger
             {"Noclip Deaths", "{ noclip ?? 'Deaths: ' + noclipDeaths}", false},
         });
 
@@ -496,8 +490,7 @@ class Labels : public hack::Hack {
       s_listener.bind([this](FileEvent::Event *event) {
         if (auto value = event->getValue()) {
           auto path = value->unwrapOr("");
-          if (path.empty() || !std::filesystem::exists(path))
-            return;
+          if (path.empty() || !std::filesystem::exists(path)) return;
 
           gui::Engine::queueAfterDrawing([this, path] {
             std::ifstream file(path);
@@ -619,8 +612,7 @@ class Labels : public hack::Hack {
                           i18n::get_("labels.delete-prompt.msg"),
                           i18n::get_("common.yes"), i18n::get_("common.no"),
                           [this, &setting](bool yes) {
-                            if (!yes)
-                              return;
+                            if (!yes) return;
                             gui::Engine::queueAfterDrawing([&] {
                               auto it = std::ranges::find_if(
                                   s_labels,
@@ -628,8 +620,7 @@ class Labels : public hack::Hack {
                                     return s.id == setting.id;
                                   });
 
-                              if (it == s_labels.end())
-                                return;
+                              if (it == s_labels.end()) return;
 
                               s_labels.erase(it);
                               config::set("labels", s_labels);
@@ -650,10 +641,10 @@ class Labels : public hack::Hack {
                 });
 
             if (it == s_labels.end())
-              return; // should never happen but just in case
+              return;  // should never happen but just in case
             if ((up && it == s_labels.begin()) ||
                 (!up && it == s_labels.end() - 1))
-              return; // index out of bounds
+              return;  // index out of bounds
 
             // swap the elements
             auto index = std::distance(s_labels.begin(), it);

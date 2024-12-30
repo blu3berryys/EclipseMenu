@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -22,4 +21,4 @@ class $modify(NoMirrorGJBGLHook,
               GJBaseGameLayer){ALL_DELEGATES_AND_SAFE_PRIO("level.nomirror")
 
                                    void toggleFlipped(bool, bool){}};
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
