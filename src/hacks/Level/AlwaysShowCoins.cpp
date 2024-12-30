@@ -1,81 +1,84 @@
+#include <Geode/binding/GameManager.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/GameObject.hpp>
+#include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
-
-#include <Geode/modify/GameObject.hpp>
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/binding/GameManager.hpp>
 
 namespace eclipse::hacks::Level {
 
-    void onChangeShowCoins(bool state) {
-        static cocos2d::CCObject* uncollectedSecretCoin = nullptr;
-        static cocos2d::CCObject* uncollectedUserCoin = nullptr;
+void onChangeShowCoins(bool state) {
+  static cocos2d::CCObject* uncollectedSecretCoin = nullptr;
+  static cocos2d::CCObject* uncollectedUserCoin = nullptr;
 
-        auto* GM = utils::get<GameManager>();
+  auto* GM = utils::get<GameManager>();
 
-        if (!uncollectedSecretCoin)
-            uncollectedSecretCoin = GM->m_unkAnimationDict->objectForKey(-142)->copy();
+  if (!uncollectedSecretCoin)
+    uncollectedSecretCoin = GM->m_unkAnimationDict->objectForKey(-142)->copy();
 
-        if (!uncollectedUserCoin)
-            uncollectedUserCoin = GM->m_unkAnimationDict->objectForKey(-1329)->copy();
+  if (!uncollectedUserCoin)
+    uncollectedUserCoin = GM->m_unkAnimationDict->objectForKey(-1329)->copy();
 
-        if (state) {
-            uncollectedSecretCoin->retain();
-            uncollectedUserCoin->retain();
+  if (state) {
+    uncollectedSecretCoin->retain();
+    uncollectedUserCoin->retain();
 
-            GM->m_unkAnimationDict->removeObjectForKey(-142);
-            GM->m_unkAnimationDict->removeObjectForKey(-1329);
+    GM->m_unkAnimationDict->removeObjectForKey(-142);
+    GM->m_unkAnimationDict->removeObjectForKey(-1329);
 
-            GM->m_unkAnimationDict->setObject(GM->m_unkAnimationDict->objectForKey(142)->copy(), -142);
-            GM->m_unkAnimationDict->setObject(GM->m_unkAnimationDict->objectForKey(1329)->copy(), -1329);
-        } else if (uncollectedSecretCoin && uncollectedUserCoin) {
-            GM->m_unkAnimationDict->removeObjectForKey(-142);
-            GM->m_unkAnimationDict->removeObjectForKey(-1329);
+    GM->m_unkAnimationDict->setObject(
+        GM->m_unkAnimationDict->objectForKey(142)->copy(), -142);
+    GM->m_unkAnimationDict->setObject(
+        GM->m_unkAnimationDict->objectForKey(1329)->copy(), -1329);
+  } else if (uncollectedSecretCoin && uncollectedUserCoin) {
+    GM->m_unkAnimationDict->removeObjectForKey(-142);
+    GM->m_unkAnimationDict->removeObjectForKey(-1329);
 
-            GM->m_unkAnimationDict->setObject(uncollectedSecretCoin, -142);
-            GM->m_unkAnimationDict->setObject(uncollectedUserCoin, -1329);
-        }
-    }
+    GM->m_unkAnimationDict->setObject(uncollectedSecretCoin, -142);
+    GM->m_unkAnimationDict->setObject(uncollectedUserCoin, -1329);
+  }
+}
 
-    class AlwaysShowCoins : public hack::Hack {
-        void init() override {
-            auto tab = gui::MenuTab::find("tab.level");
+class AlwaysShowCoins : public hack::Hack {
+  void init() override {
+    auto tab = gui::MenuTab::find("tab.level");
 
-            tab->addToggle("level.alwaysshowcoins")
-                ->handleKeybinds()
-                ->setDescription()
-                ->callback(onChangeShowCoins);
-        }
+    tab->addToggle("level.alwaysshowcoins")
+        ->handleKeybinds()
+        ->setDescription()
+        ->callback(onChangeShowCoins);
+  }
 
-        void lateInit() override {
-            onChangeShowCoins(config::get<bool>("level.alwaysshowcoins", false));
-        }
+  void lateInit() override {
+    onChangeShowCoins(config::get<bool>("level.alwaysshowcoins", false));
+  }
 
-        [[nodiscard]] const char* getId() const override { return "Always Show Coins"; }
-    };
+  [[nodiscard]] const char* getId() const override {
+    return "Always Show Coins";
+  }
+};
 
-    REGISTER_HACK(AlwaysShowCoins)
+REGISTER_HACK(AlwaysShowCoins)
 
-    // if qolmod makes 3 billion playlayers this will not work correctly
-    static bool skipUniqueCoin = false;
+// if qolmod makes 3 billion playlayers this will not work correctly
+static bool skipUniqueCoin = false;
 
-    class $modify(AlwaysShowCoinsGOHook, GameObject) {
-        ADD_HOOKS_DELEGATE("level.alwaysshowcoins")
+class $modify(AlwaysShowCoinsGOHook, GameObject){
+    ADD_HOOKS_DELEGATE("level.alwaysshowcoins")
 
-        void playDestroyObjectAnim(GJBaseGameLayer* p0) {
-            skipUniqueCoin = true;
-            GameObject::playDestroyObjectAnim(p0);
-            skipUniqueCoin = false;
-        }
-    };
+        void playDestroyObjectAnim(GJBaseGameLayer * p0){skipUniqueCoin = true;
+GameObject::playDestroyObjectAnim(p0);
+skipUniqueCoin = false;
+}  // namespace eclipse::hacks::Level
+}
+;
 
-    class $modify(AlwaysShowCoinsBGLHook, GJBaseGameLayer) {
-        bool hasUniqueCoin(EffectGameObject* p0) {
-            if (!GJBaseGameLayer::hasUniqueCoin(p0))
-                return false;
+class $modify(AlwaysShowCoinsBGLHook,
+              GJBaseGameLayer){bool hasUniqueCoin(EffectGameObject * p0){
+    if (!GJBaseGameLayer::hasUniqueCoin(p0)) return false;
 
-            return !skipUniqueCoin;
-        }
-    };
+return !skipUniqueCoin;
+}
+}
+;
 }

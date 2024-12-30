@@ -1,127 +1,127 @@
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
-#include <modules/utils/GameCheckpoint.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/CheckpointObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
-#include <Geode/modify/CheckpointObject.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
+#include <modules/utils/GameCheckpoint.hpp>
 
 using namespace geode::prelude;
 
 namespace eclipse::Hacks::Level {
 
-    class PracticeFix : public hack::Hack {
-    public:
-        static bool shouldEnable() {
-            return config::get<bool>("bot.practicefix", false) || config::get<int>("bot.state", 0) == 1;
-        }
-        
-    private:
-        void init() override {
-            auto tab = gui::MenuTab::find("tab.level");
+class PracticeFix : public hack::Hack {
+ public:
+  static bool shouldEnable() {
+    return config::get<bool>("bot.practicefix", false) ||
+           config::get<int>("bot.state", 0) == 1;
+  }
 
-            tab->addToggle("bot.practicefix")->setDescription()->handleKeybinds();
-        }
+ private:
+  void init() override {
+    auto tab = gui::MenuTab::find("tab.level");
 
-        [[nodiscard]] bool isCheating() override { return false; }
-        [[nodiscard]] const char* getId() const override { return "Practice Fix"; }
-    };
+    tab->addToggle("bot.practicefix")->setDescription()->handleKeybinds();
+  }
 
-    REGISTER_HACK(PracticeFix)
+  [[nodiscard]] bool isCheating() override { return false; }
+  [[nodiscard]] const char* getId() const override { return "Practice Fix"; }
+};
 
-    class CheckpointData {
-    public:
-        CheckpointData() = default;
+REGISTER_HACK(PracticeFix)
 
-        CheckpointData(PlayerObject* player1, PlayerObject* player2) {
-            m_checkpointPlayer1 = eclipse::utils::FixPlayerCheckpoint(player1);
-            if (player2)
-                m_checkpointPlayer2 = utils::FixPlayerCheckpoint(player2);
-        }
+class CheckpointData {
+ public:
+  CheckpointData() = default;
 
-        void apply(PlayerObject* player1, PlayerObject* player2) {
-            m_checkpointPlayer1.apply(player1);
-            if (player2)
-                m_checkpointPlayer2.apply(player2);
-        }
+  CheckpointData(PlayerObject* player1, PlayerObject* player2) {
+    m_checkpointPlayer1 = eclipse::utils::FixPlayerCheckpoint(player1);
+    if (player2) m_checkpointPlayer2 = utils::FixPlayerCheckpoint(player2);
+  }
 
-    private:
-        eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer1;
-        eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer2;
-    };
+  void apply(PlayerObject* player1, PlayerObject* player2) {
+    m_checkpointPlayer1.apply(player1);
+    if (player2) m_checkpointPlayer2.apply(player2);
+  }
 
-    class $modify(FixPlayLayer, PlayLayer) {
-        struct Fields {
-            std::unordered_map<CheckpointObject*, CheckpointData> m_checkpoints;
-        };
+ private:
+  eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer1;
+  eclipse::utils::FixPlayerCheckpoint m_checkpointPlayer2;
+};
 
-        void onQuit() {
-            m_fields->m_checkpoints.clear();
-            PlayLayer::onQuit();
-        }
+class $modify(FixPlayLayer, PlayLayer) {
+  struct Fields {
+    std::unordered_map<CheckpointObject*, CheckpointData> m_checkpoints;
+  };
 
-        void resetLevel() {
-            if (m_checkpointArray->count() <= 0)
-                m_fields->m_checkpoints.clear();
+  void onQuit() {
+    m_fields->m_checkpoints.clear();
+    PlayLayer::onQuit();
+  }
 
-            PlayLayer::resetLevel();
-        }
+  void resetLevel() {
+    if (m_checkpointArray->count() <= 0) m_fields->m_checkpoints.clear();
 
-        void loadFromCheckpoint(CheckpointObject* checkpoint) {
-            auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>());
+    PlayLayer::resetLevel();
+  }
 
-            if (PracticeFix::shouldEnable() && playLayer->m_fields->m_checkpoints.contains(checkpoint)) {
-                PlayLayer::loadFromCheckpoint(checkpoint);
+  void loadFromCheckpoint(CheckpointObject * checkpoint) {
+    auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>());
 
-                CheckpointData& data = playLayer->m_fields->m_checkpoints[checkpoint];
-                data.apply(playLayer->m_player1, playLayer->m_gameState.m_isDualMode ? playLayer->m_player2 : nullptr);
+    if (PracticeFix::shouldEnable() &&
+        playLayer->m_fields->m_checkpoints.contains(checkpoint)) {
+      PlayLayer::loadFromCheckpoint(checkpoint);
 
-                return;
-            }
+      CheckpointData& data = playLayer->m_fields->m_checkpoints[checkpoint];
+      data.apply(playLayer->m_player1, playLayer->m_gameState.m_isDualMode
+                                           ? playLayer->m_player2
+                                           : nullptr);
 
-            PlayLayer::loadFromCheckpoint(checkpoint);
-        }
+      return;
+    }
 
-    };
+    PlayLayer::loadFromCheckpoint(checkpoint);
+  }
+};
 
-    class $modify(PracticeFixLELHook, LevelEditorLayer) {
-        bool init(GJGameLevel* level, bool unk) {
-            bool result = LevelEditorLayer::init(level, unk);
+class $modify(PracticeFixLELHook,
+              LevelEditorLayer){bool init(GJGameLevel * level, bool unk){
+    bool result = LevelEditorLayer::init(level, unk);
 
-            if (auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>()))
-                playLayer->m_fields->m_checkpoints.clear();
-            
-            return result;
-        }
-    };
+if (auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>()))
+  playLayer->m_fields->m_checkpoints.clear();
 
-    class $modify(PracticeFixCOHook, CheckpointObject) {
+return result;
+}  // namespace eclipse::Hacks::Level
+}
+;
+
+class $modify(PracticeFixCOHook, CheckpointObject) {
 #ifdef GEODE_IS_ANDROID
-        static CheckpointObject* create() { // this is so dumb
-            auto result = CheckpointObject::create();
-#else 
-        bool init() override {
-            auto result = CheckpointObject::init();
-#endif
-
-            if (!PracticeFix::shouldEnable())
-                return result;
-
-            auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>());
-
-            if (playLayer->m_gameState.m_currentProgress > 0) {
-                CheckpointData data(playLayer->m_player1, playLayer->m_gameState.m_isDualMode ? playLayer->m_player2 : nullptr);
-#ifdef GEODE_IS_ANDROID
-                playLayer->m_fields->m_checkpoints[result] = data;
+  static CheckpointObject* create() {  // this is so dumb
+    auto result = CheckpointObject::create();
 #else
-                playLayer->m_fields->m_checkpoints[(CheckpointObject*)this] = data;
+  bool init() override {
+    auto result = CheckpointObject::init();
 #endif
-            }
 
-            return result;
-        }
-    };
+    if (!PracticeFix::shouldEnable()) return result;
 
+    auto* playLayer = static_cast<FixPlayLayer*>(utils::get<PlayLayer>());
+
+    if (playLayer->m_gameState.m_currentProgress > 0) {
+      CheckpointData data(
+          playLayer->m_player1,
+          playLayer->m_gameState.m_isDualMode ? playLayer->m_player2 : nullptr);
+#ifdef GEODE_IS_ANDROID
+      playLayer->m_fields->m_checkpoints[result] = data;
+#else
+      playLayer->m_fields->m_checkpoints[(CheckpointObject*)this] = data;
+#endif
+    }
+
+    return result;
+  }
+};
 }

@@ -1,45 +1,46 @@
 #pragma once
 #include <Geode/platform/platform.hpp>
-#include "ffmpeg-api/events.hpp"
-
-#include "rendertexture.hpp"
-
-#include <mutex>
 #include <chrono>
+#include <mutex>
+
+#include "ffmpeg-api/events.hpp"
+#include "rendertexture.hpp"
 
 namespace eclipse::recorder {
 
-    class Recorder {
-    public:
-        void start();
-        void stop();
+class Recorder {
+ public:
+  void start();
+  void stop();
 
-        void startAudio(const std::filesystem::path& renderPath);
-        void stopAudio();
+  void startAudio(const std::filesystem::path& renderPath);
+  void stopAudio();
 
-        void captureFrame();
+  void captureFrame();
 
-        bool isRecording() const { return m_recording; }
-        bool isRecordingAudio() const { return m_recordingAudio; }
+  bool isRecording() const { return m_recording; }
+  bool isRecordingAudio() const { return m_recordingAudio; }
 
-        void setCallback(const std::function<void(std::string const&)>& callback) { m_callback = callback; }
+  void setCallback(const std::function<void(std::string const&)>& callback) {
+    m_callback = callback;
+  }
 
-        static std::vector<std::string> getAvailableCodecs();
-    
-    public:
-        ffmpeg::RenderSettings m_renderSettings{};
+  static std::vector<std::string> getAvailableCodecs();
 
-    private:
-        void recordThread();
+ public:
+  ffmpeg::RenderSettings m_renderSettings{};
 
-    private:
-        bool m_recording = false;
-        bool m_recordingAudio = false;
-        bool m_frameHasData = false;
-        std::vector<uint8_t> m_currentFrame;
-        std::mutex m_lock;
-        RenderTexture m_renderTexture{};
+ private:
+  void recordThread();
 
-        std::function<void(std::string const&)> m_callback;
-    };
+ private:
+  bool m_recording = false;
+  bool m_recordingAudio = false;
+  bool m_frameHasData = false;
+  std::vector<uint8_t> m_currentFrame;
+  std::mutex m_lock;
+  RenderTexture m_renderTexture{};
+
+  std::function<void(std::string const&)> m_callback;
 };
+};  // namespace eclipse::recorder
