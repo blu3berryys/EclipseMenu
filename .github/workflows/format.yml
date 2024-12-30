@@ -17,9 +17,11 @@ jobs:
 
       - name: Format
         run: |
-          # Find all .cpp and .h files and run clang-format on them
           find . -name '*.cpp' -o -name '*.h' | xargs clang-format -i
 
       - name: Commit formatted code (if any)
         run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git diff --exit-code || (git add . && git commit -m "Format C++ code" && git push origin test)
