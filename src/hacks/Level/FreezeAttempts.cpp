@@ -1,52 +1,51 @@
+#include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
 
 #include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
-    class FreezeAttempts : public hack::Hack {
-        void init() override {
-            auto tab = gui::MenuTab::find("tab.level");
+class FreezeAttempts : public hack::Hack {
+  void init() override {
+    auto tab = gui::MenuTab::find("tab.level");
 
-            tab->addToggle("level.freeze_attempts")->handleKeybinds()->setDescription();
-        }
+    tab->addToggle("level.freeze_attempts")->handleKeybinds()->setDescription();
+  }
 
-        [[nodiscard]] const char* getId() const override { return "Freeze Attempts"; }
-    };
+  [[nodiscard]] const char *getId() const override { return "Freeze Attempts"; }
+};
 
-    REGISTER_HACK(FreezeAttempts)
-    
-    class $modify(FreezeAttemptsPLHook, PlayLayer) {
-        struct Fields {
-            std::uint32_t totalAttempts;
-        };
+REGISTER_HACK(FreezeAttempts)
 
-        static void onModify(auto& self) {
-            HOOKS_TOGGLE("level.freeze_attempts", PlayLayer,
-                "updateAttempts", "resetLevel", "onQuit"
-            );
-        }
+class $modify(FreezeAttemptsPLHook, PlayLayer) {
+  struct Fields {
+    std::uint32_t totalAttempts;
+  };
 
-        bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-            auto* GSM = utils::get<GameStatsManager>();
+  static void onModify(auto &self) {
+    HOOKS_TOGGLE("level.freeze_attempts", PlayLayer, "updateAttempts",
+                 "resetLevel", "onQuit");
+  }
 
-            m_fields->totalAttempts = GSM->getStat("2");
+  bool init(GJGameLevel * level, bool useReplay, bool dontCreateObjects) {
+    auto *GSM = utils::get<GameStatsManager>();
 
-            return PlayLayer::init(level, useReplay, dontCreateObjects);
-        }
+    m_fields->totalAttempts = GSM->getStat("2");
 
-        void updateAttempts() {}
+    return PlayLayer::init(level, useReplay, dontCreateObjects);
+  }
 
-        void resetLevel() {
-            this->m_level->m_attempts = this->m_level->m_attempts - 1;
-            PlayLayer::resetLevel();
-        }
+  void updateAttempts() {}
 
-        void onQuit() {
-            utils::get<GameStatsManager>()->setStat("2", m_fields->totalAttempts);
-            PlayLayer::onQuit();
-        }
-    };
-}
+  void resetLevel() {
+    this->m_level->m_attempts = this->m_level->m_attempts - 1;
+    PlayLayer::resetLevel();
+  }
+
+  void onQuit() {
+    utils::get<GameStatsManager>()->setStat("2", m_fields->totalAttempts);
+    PlayLayer::onQuit();
+  }
+};
+} // namespace eclipse::hacks::Level
