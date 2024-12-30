@@ -1,43 +1,41 @@
+#include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
 
 #include <Geode/modify/EditorUI.hpp>
 
 namespace eclipse::hacks::Creator {
 
-    class HideUI : public hack::Hack {
-        void init() override {
-            auto tab = gui::MenuTab::find("tab.creator");
+class HideUI : public hack::Hack {
+  void init() override {
+    auto tab = gui::MenuTab::find("tab.creator");
 
-            tab->addToggle("creator.hideui")
-                ->handleKeybinds()
-                ->setDescription();
-        }
+    tab->addToggle("creator.hideui")->handleKeybinds()->setDescription();
+  }
 
-        [[nodiscard]] const char* getId() const override { return "Hide UI"; }
-    };
+  [[nodiscard]] const char *getId() const override { return "Hide UI"; }
+};
 
-    REGISTER_HACK(HideUI)
+REGISTER_HACK(HideUI)
 
-    static bool s_lastState = false;
+static bool s_lastState = false;
 
-    class $modify(HideUIEUIHook, EditorUI) {
-        void onUpdate(float) {
-            const bool isHidden = config::get<bool>("creator.hideui", false);
-            if (s_lastState == isHidden)
-                return;
+class $modify(HideUIEUIHook, EditorUI){void onUpdate(float){
+    const bool isHidden = config::get<bool>("creator.hideui", false);
+if (s_lastState == isHidden)
+  return;
 
-            s_lastState = isHidden;
-            this->setVisible(!isHidden);
-        }
+s_lastState = isHidden;
+this->setVisible(!isHidden);
+} // namespace eclipse::hacks::Creator
 
-        bool init(LevelEditorLayer* editorLayer) {
-            if (!EditorUI::init(editorLayer)) return false;
+bool init(LevelEditorLayer *editorLayer) {
+  if (!EditorUI::init(editorLayer))
+    return false;
 
-            this->schedule(schedule_selector(HideUIEUIHook::onUpdate), 0.f);
-            return true;
-        }
-    };
-
+  this->schedule(schedule_selector(HideUIEUIHook::onUpdate), 0.f);
+  return true;
+}
+}
+;
 }

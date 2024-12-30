@@ -1,12 +1,12 @@
+#include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
 #include <modules/recorder/recorder.hpp>
 
+#include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/ShaderLayer.hpp>
-#include <Geode/modify/CCScheduler.hpp>
 
 #include <regex>
 
@@ -19,398 +19,430 @@
 
 namespace eclipse::hacks::Recorder {
 
-    static recorder::Recorder s_recorder;
+static recorder::Recorder s_recorder;
 
-    bool levelDone = false;
-    bool popupShown = false;
+bool levelDone = false;
+bool popupShown = false;
 
-    float totalTime = 0.f;
-    float afterEndTimer = 0.f;
+float totalTime = 0.f;
+float afterEndTimer = 0.f;
 
-    double extraTime = 0.;
-    double lastFrameTime = 0.;
+double extraTime = 0.;
+double lastFrameTime = 0.;
 
-    cocos2d::CCSize oldDesignResolution;
-    cocos2d::CCSize newDesignResolution;
-    cocos2d::CCSize originalScreenScale;
-    cocos2d::CCSize newScreenScale;
+cocos2d::CCSize oldDesignResolution;
+cocos2d::CCSize newDesignResolution;
+cocos2d::CCSize originalScreenScale;
+cocos2d::CCSize newScreenScale;
 
-    void callback(std::string const& error) {
-        Popup::create(
-            i18n::get_("common.error"),
-            error
-        );
-    }
+void callback(std::string const &error) {
+  Popup::create(i18n::get_("common.error"), error);
+}
 
-    void endPopup() {
-        Popup::create(
-            i18n::get_("common.info"),
-            i18n::get_("recorder.finished"),
-            i18n::get_("common.ok"),
-            i18n::get_("recorder.open-folder"),
-            [](bool result) {
-                if(result)
+void endPopup() {
+  Popup::create(i18n::get_("common.info"), i18n::get_("recorder.finished"),
+                i18n::get_("common.ok"), i18n::get_("recorder.open-folder"),
+                [](bool result) {
+                  if (result)
                     return;
 
-                geode::utils::file::openFolder(geode::Mod::get()->getSaveDir() / "renders");
-            }
-        );
-    }
+                  geode::utils::file::openFolder(
+                      geode::Mod::get()->getSaveDir() / "renders");
+                });
+}
 
-    void applyWinSize() {
-        if(newDesignResolution.width != 0 && newDesignResolution.height != 0) {
-            auto view = utils::get<cocos2d::CCEGLView>();
-            
-            utils::get<cocos2d::CCDirector>()->m_obWinSizeInPoints = newDesignResolution;
-            view->setDesignResolutionSize(newDesignResolution.width, newDesignResolution.height, ResolutionPolicy::kResolutionExactFit);
-            view->m_fScaleX = newScreenScale.width;
-            view->m_fScaleY = newScreenScale.height;
-        }
-    }
+void applyWinSize() {
+  if (newDesignResolution.width != 0 && newDesignResolution.height != 0) {
+    auto view = utils::get<cocos2d::CCEGLView>();
 
-    void restoreWinSize() {
-        if(oldDesignResolution.width != 0 && oldDesignResolution.height != 0) {
-            auto view = utils::get<cocos2d::CCEGLView>();
+    utils::get<cocos2d::CCDirector>()->m_obWinSizeInPoints =
+        newDesignResolution;
+    view->setDesignResolutionSize(newDesignResolution.width,
+                                  newDesignResolution.height,
+                                  ResolutionPolicy::kResolutionExactFit);
+    view->m_fScaleX = newScreenScale.width;
+    view->m_fScaleY = newScreenScale.height;
+  }
+}
 
-            utils::get<cocos2d::CCDirector>()->m_obWinSizeInPoints = oldDesignResolution;
-            view->setDesignResolutionSize(oldDesignResolution.width, oldDesignResolution.height, ResolutionPolicy::kResolutionExactFit);
-            view->m_fScaleX = originalScreenScale.width;
-            view->m_fScaleY = originalScreenScale.height;
-        }
-    }
+void restoreWinSize() {
+  if (oldDesignResolution.width != 0 && oldDesignResolution.height != 0) {
+    auto view = utils::get<cocos2d::CCEGLView>();
 
-    void start() {
-        if (!utils::get<PlayLayer>()) return;
+    utils::get<cocos2d::CCDirector>()->m_obWinSizeInPoints =
+        oldDesignResolution;
+    view->setDesignResolutionSize(oldDesignResolution.width,
+                                  oldDesignResolution.height,
+                                  ResolutionPolicy::kResolutionExactFit);
+    view->m_fScaleX = originalScreenScale.width;
+    view->m_fScaleY = originalScreenScale.height;
+  }
+}
 
-        levelDone = false;
-        popupShown = false;
-        totalTime = 0.f;
-        extraTime = 0.;
-        lastFrameTime = 0.;
-        afterEndTimer = 0.f;
+void start() {
+  if (!utils::get<PlayLayer>())
+    return;
 
-        GJGameLevel* lvl = utils::get<PlayLayer>()->m_level;
+  levelDone = false;
+  popupShown = false;
+  totalTime = 0.f;
+  extraTime = 0.;
+  lastFrameTime = 0.;
+  afterEndTimer = 0.f;
 
-        std::string trimmedLevelName = lvl->m_levelName;
-        std::erase(trimmedLevelName, '/');
-        std::erase(trimmedLevelName, '\\');
-        trimmedLevelName = std::regex_replace(trimmedLevelName, std::regex("\\s+"), " ");
-        std::filesystem::path renderDirectory = geode::Mod::get()->getSaveDir() / "renders" / STR(trimmedLevelName);
+  GJGameLevel *lvl = utils::get<PlayLayer>()->m_level;
 
-        if (!std::filesystem::exists(renderDirectory))
-            std::filesystem::create_directories(renderDirectory);
+  std::string trimmedLevelName = lvl->m_levelName;
+  std::erase(trimmedLevelName, '/');
+  std::erase(trimmedLevelName, '\\');
+  trimmedLevelName =
+      std::regex_replace(trimmedLevelName, std::regex("\\s+"), " ");
+  std::filesystem::path renderDirectory =
+      geode::Mod::get()->getSaveDir() / "renders" / STR(trimmedLevelName);
 
-        s_recorder.m_renderSettings.m_bitrate = static_cast<int>(config::get<float>("recorder.bitrate", 30.f)) * 1000000;
-        s_recorder.m_renderSettings.m_fps = static_cast<int>(config::get<float>("recorder.fps", 60.f));
-        s_recorder.m_renderSettings.m_width = config::get<int>("recorder.resolution.x", 1920);
-        s_recorder.m_renderSettings.m_height = config::get<int>("recorder.resolution.y", 1080);
-        s_recorder.m_renderSettings.m_codec = config::get<std::string>("recorder.codecString", "libx264");
-        s_recorder.m_renderSettings.m_outputFile = renderDirectory / (fmt::format("{} - {}.mp4", trimmedLevelName, lvl->m_levelID.value()));
-        s_recorder.m_renderSettings.m_hardwareAccelerationType = static_cast<ffmpeg::HardwareAccelerationType>(config::get<int>("recorder.hwType", 0));
-        s_recorder.m_renderSettings.m_colorspaceFilters = config::get<std::string>("recorder.colorspace", "");
-        s_recorder.m_renderSettings.m_doVerticalFlip = false;
+  if (!std::filesystem::exists(renderDirectory))
+    std::filesystem::create_directories(renderDirectory);
 
-        auto view = utils::get<cocos2d::CCEGLView>();
+  s_recorder.m_renderSettings.m_bitrate =
+      static_cast<int>(config::get<float>("recorder.bitrate", 30.f)) * 1000000;
+  s_recorder.m_renderSettings.m_fps =
+      static_cast<int>(config::get<float>("recorder.fps", 60.f));
+  s_recorder.m_renderSettings.m_width =
+      config::get<int>("recorder.resolution.x", 1920);
+  s_recorder.m_renderSettings.m_height =
+      config::get<int>("recorder.resolution.y", 1080);
+  s_recorder.m_renderSettings.m_codec =
+      config::get<std::string>("recorder.codecString", "libx264");
+  s_recorder.m_renderSettings.m_outputFile =
+      renderDirectory /
+      (fmt::format("{} - {}.mp4", trimmedLevelName, lvl->m_levelID.value()));
+  s_recorder.m_renderSettings.m_hardwareAccelerationType =
+      static_cast<ffmpeg::HardwareAccelerationType>(
+          config::get<int>("recorder.hwType", 0));
+  s_recorder.m_renderSettings.m_colorspaceFilters =
+      config::get<std::string>("recorder.colorspace", "");
+  s_recorder.m_renderSettings.m_doVerticalFlip = false;
 
-        oldDesignResolution = view->getDesignResolutionSize();
-        float aspectRatio = static_cast<float>(s_recorder.m_renderSettings.m_width) / static_cast<float>(s_recorder.m_renderSettings.m_height);
-        newDesignResolution = cocos2d::CCSize(roundf(320.f * aspectRatio), 320.f);
+  auto view = utils::get<cocos2d::CCEGLView>();
 
-        originalScreenScale = cocos2d::CCSize(view->m_fScaleX, view->m_fScaleY);
-        newScreenScale = cocos2d::CCSize(static_cast<float>(s_recorder.m_renderSettings.m_width) / newDesignResolution.width, static_cast<float>(s_recorder.m_renderSettings.m_height) / newDesignResolution.height);
+  oldDesignResolution = view->getDesignResolutionSize();
+  float aspectRatio = static_cast<float>(s_recorder.m_renderSettings.m_width) /
+                      static_cast<float>(s_recorder.m_renderSettings.m_height);
+  newDesignResolution = cocos2d::CCSize(roundf(320.f * aspectRatio), 320.f);
 
-        if(oldDesignResolution != newDesignResolution)
-            applyWinSize();
+  originalScreenScale = cocos2d::CCSize(view->m_fScaleX, view->m_fScaleY);
+  newScreenScale =
+      cocos2d::CCSize(static_cast<float>(s_recorder.m_renderSettings.m_width) /
+                          newDesignResolution.width,
+                      static_cast<float>(s_recorder.m_renderSettings.m_height) /
+                          newDesignResolution.height);
 
-        s_recorder.start();
-    }
+  if (oldDesignResolution != newDesignResolution)
+    applyWinSize();
 
-    void stop() {
-        s_recorder.stop();
-    }
+  s_recorder.start();
+}
 
-    void startAudio() {
+void stop() { s_recorder.stop(); }
+
+void startAudio() {
+  stop();
+
+  utils::get<FMODAudioEngine>()->stopAllEffects();
+
+  auto lvl = utils::get<PlayLayer>()->m_level;
+  std::string trimmedLevelName = lvl->m_levelName;
+  std::erase(trimmedLevelName, '/');
+  std::erase(trimmedLevelName, '\\');
+  trimmedLevelName =
+      std::regex_replace(trimmedLevelName, std::regex("\\s+"), " ");
+  auto renderPath =
+      geode::Mod::get()->getSaveDir() / "renders" / STR(trimmedLevelName) /
+      (fmt::format("{} - {}.mp4", trimmedLevelName, lvl->m_levelID.value()));
+
+  if (!std::filesystem::exists(renderPath)) {
+    geode::log::error("Render {} not found", renderPath);
+    return;
+  }
+
+  levelDone = false;
+  popupShown = false;
+  afterEndTimer = 0.f;
+
+  if (auto ell = utils::get<PlayLayer>()->getChildByType<EndLevelLayer>(0))
+    ell->removeFromParent();
+
+  utils::get<PlayLayer>()->stopAllActions();
+  utils::get<PlayLayer>()->startGame();
+  utils::get<PlayLayer>()->resetLevelFromStart();
+
+  s_recorder.startAudio(renderPath);
+}
+
+void stopAudio() { s_recorder.stopAudio(); }
+
+class InternalRecorder : public hack::Hack {
+  void init() override {}
+
+  void lateInit() override {
+    auto ffmpeg = geode::Loader::get()->getLoadedMod("eclipse.ffmpeg-api");
+    if (!ffmpeg)
+      return;
+
+    s_recorder.setCallback(callback);
+
+    auto tab = gui::MenuTab::find("tab.recorder");
+
+    tab->addButton("recorder.start")->callback(start);
+    tab->addButton("recorder.stop")->callback([] {
+      if (s_recorder.isRecording())
         stop();
+      if (s_recorder.isRecordingAudio())
+        stopAudio();
+    });
 
-        utils::get<FMODAudioEngine>()->stopAllEffects();
+    config::setIfEmpty("recorder.fps", 60.f);
+    config::setIfEmpty("recorder.endscreen", 3.4f);
+    config::setIfEmpty("recorder.bitrate", 30.f);
+    config::setIfEmpty("recorder.resolution.x", 1920.f);
+    config::setIfEmpty("recorder.resolution.y", 1080.f);
+    config::setIfEmpty("recorder.audio", 2);
+    config::setIfEmpty("recorder.hwType", 0);
+    config::setIfEmpty("recorder.colorspace", "");
 
-        auto lvl = utils::get<PlayLayer>()->m_level;
-        std::string trimmedLevelName = lvl->m_levelName;
-        std::erase(trimmedLevelName, '/');
-        std::erase(trimmedLevelName, '\\');
-        trimmedLevelName = std::regex_replace(trimmedLevelName, std::regex("\\s+"), " ");
-        auto renderPath = geode::Mod::get()->getSaveDir() / "renders" / STR(trimmedLevelName) / (fmt::format("{} - {}.mp4", trimmedLevelName, lvl->m_levelID.value()));
+    m_codecs = recorder::Recorder::getAvailableCodecs();
 
-        if (!std::filesystem::exists(renderPath)) {
-            geode::log::error("Render {} not found", renderPath);
-            return;
-        }
+    std::ranges::sort(m_codecs);
 
-        levelDone = false;
-        popupShown = false;
-        afterEndTimer = 0.f;
+    int codecIdx = static_cast<int>(std::distance(
+        m_codecs.begin(), std::ranges::find(m_codecs, "libx264")));
 
-        if (auto ell = utils::get<PlayLayer>()->getChildByType<EndLevelLayer>(0))
-            ell->removeFromParent();
+    tab->addInputFloat("recorder.framerate", "recorder.fps", 1.f, 360.f,
+                       "%.0f FPS");
+    tab->addInputFloat("recorder.endscreen-duration", "recorder.endscreen", 0.f,
+                       30.f, "%.2fs.");
+    tab->addInputFloat("recorder.bitrate", "recorder.bitrate", 1.f, 1000.f,
+                       "%.0fmbps");
+    tab->addInputInt("recorder.res-x", "recorder.resolution.x", 1, 15360);
+    tab->addInputInt("recorder.res-y", "recorder.resolution.y", 1, 8640);
 
-        utils::get<PlayLayer>()->stopAllActions();
-        utils::get<PlayLayer>()->startGame();
-        utils::get<PlayLayer>()->resetLevelFromStart();
+    config::setIfEmpty("recorder.codecIdx", codecIdx);
 
-        s_recorder.startAudio(renderPath);
-    }
+    tab->addCombo("recorder.codec", "recorder.codecIdx", m_codecs, codecIdx)
+        ->callback([&](int index) {
+          config::set("recorder.codecString", m_codecs[index]);
+        });
 
-    void stopAudio() {
-        s_recorder.stopAudio();
-    }
+    // i honestly dont think hw is working rn, will remove this for now
+    //  tab->addCombo("HW Type", "recorder.hwIdx", {"None", "CUDA (Nvidia)",
+    //  "D3D11 (All)"}, 0)->callback([&](int index) {
+    //      switch(index) {
+    //          case 0:
+    //          default:
+    //              config::set<int>("recorder.hwType",
+    //              static_cast<int>(ffmpeg::HardwareAccelerationType::NONE));
+    //              break;
+    //          case 1:
+    //              config::set<int>("recorder.hwType",
+    //              static_cast<int>(ffmpeg::HardwareAccelerationType::CUDA));
+    //              break;
+    //          case 2:
+    //              config::set<int>("recorder.hwType",
+    //              static_cast<int>(ffmpeg::HardwareAccelerationType::D3D11VA));
+    //              break;
+    //      }
+    //  });
 
-    class InternalRecorder : public hack::Hack {
-        void init() override {}
+    tab->addCombo("recorder.audio-mode", "recorder.audio",
+                  {i18n::get_("recorder.audio-mode.disable"),
+                   i18n::get_("recorder.audio-mode.ask"),
+                   i18n::get_("recorder.audio-mode.always")},
+                  0);
 
-        void lateInit() override {
-            auto ffmpeg = geode::Loader::get()->getLoadedMod("eclipse.ffmpeg-api");
-            if (!ffmpeg) return;
+    tab->addInputText("recorder.colorspace-args", "recorder.colorspace");
 
-            s_recorder.setCallback(callback);
+    tab->addLabel("recorder.presets");
+    tab->addButton("recorder.preset.cpu")->callback([] {
+      config::set<std::string>("recorder.codecString", "libx264");
+    });
 
-            auto tab = gui::MenuTab::find("tab.recorder");
+    tab->addButton("recorder.preset.nvidia")->callback([] {
+      config::set<std::string>("recorder.codecString", "h264_nvenc");
+      config::set<int>(
+          "recorder.hwType",
+          static_cast<int>(ffmpeg::HardwareAccelerationType::CUDA));
+    });
 
-            tab->addButton("recorder.start")->callback(start);
-            tab->addButton("recorder.stop")->callback([] {
-                if (s_recorder.isRecording())
-                    stop();
-                if (s_recorder.isRecordingAudio())
-                    stopAudio();
-            });
+    tab->addButton("recorder.preset.amd")->callback([] {
+      config::set<std::string>("recorder.codecString", "h264_amf");
+      config::set<int>(
+          "recorder.hwType",
+          static_cast<int>(ffmpeg::HardwareAccelerationType::D3D11VA));
+    });
+  }
 
-            config::setIfEmpty("recorder.fps", 60.f);
-            config::setIfEmpty("recorder.endscreen", 3.4f);
-            config::setIfEmpty("recorder.bitrate", 30.f);
-            config::setIfEmpty("recorder.resolution.x", 1920.f);
-            config::setIfEmpty("recorder.resolution.y", 1080.f);
-            config::setIfEmpty("recorder.audio", 2);
-            config::setIfEmpty("recorder.hwType", 0);
-            config::setIfEmpty("recorder.colorspace", "");
+  [[nodiscard]] const char *getId() const override {
+    return "Internal Recorder";
+  }
 
-            m_codecs = recorder::Recorder::getAvailableCodecs();
-
-            std::ranges::sort(m_codecs);
-
-            int codecIdx = static_cast<int>(std::distance(m_codecs.begin(), std::ranges::find(m_codecs, "libx264")));
-
-            tab->addInputFloat("recorder.framerate", "recorder.fps", 1.f, 360.f, "%.0f FPS");
-            tab->addInputFloat("recorder.endscreen-duration", "recorder.endscreen", 0.f, 30.f, "%.2fs.");
-            tab->addInputFloat("recorder.bitrate", "recorder.bitrate", 1.f, 1000.f, "%.0fmbps");
-            tab->addInputInt("recorder.res-x", "recorder.resolution.x", 1, 15360);
-            tab->addInputInt("recorder.res-y", "recorder.resolution.y", 1, 8640);
-
-            config::setIfEmpty("recorder.codecIdx", codecIdx);
-
-            tab->addCombo("recorder.codec", "recorder.codecIdx", m_codecs, codecIdx)->callback([&](int index) {
-                config::set("recorder.codecString", m_codecs[index]);
-            });
-
-            //i honestly dont think hw is working rn, will remove this for now
-            // tab->addCombo("HW Type", "recorder.hwIdx", {"None", "CUDA (Nvidia)", "D3D11 (All)"}, 0)->callback([&](int index) {
-            //     switch(index) {
-            //         case 0:
-            //         default:
-            //             config::set<int>("recorder.hwType", static_cast<int>(ffmpeg::HardwareAccelerationType::NONE));
-            //             break;
-            //         case 1:
-            //             config::set<int>("recorder.hwType", static_cast<int>(ffmpeg::HardwareAccelerationType::CUDA));
-            //             break;
-            //         case 2:
-            //             config::set<int>("recorder.hwType", static_cast<int>(ffmpeg::HardwareAccelerationType::D3D11VA));
-            //             break;
-            //     }
-            // });
-
-            tab->addCombo("recorder.audio-mode", "recorder.audio", {
-                i18n::get_("recorder.audio-mode.disable"),
-                i18n::get_("recorder.audio-mode.ask"),
-                i18n::get_("recorder.audio-mode.always")
-            }, 0);
-
-            tab->addInputText("recorder.colorspace-args", "recorder.colorspace");
-            
-            tab->addLabel("recorder.presets");
-            tab->addButton("recorder.preset.cpu")->callback([] {
-                config::set<std::string>("recorder.codecString", "libx264");
-            });
-
-            tab->addButton("recorder.preset.nvidia")->callback([] {
-                config::set<std::string>("recorder.codecString", "h264_nvenc");
-                config::set<int>("recorder.hwType", static_cast<int>(ffmpeg::HardwareAccelerationType::CUDA));
-            });
-
-            tab->addButton("recorder.preset.amd")->callback([] {
-                config::set<std::string>("recorder.codecString", "h264_amf");
-                config::set<int>("recorder.hwType", static_cast<int>(ffmpeg::HardwareAccelerationType::D3D11VA));
-            });
-        }
-
-        [[nodiscard]] const char* getId() const override { return "Internal Recorder"; }
-
-        std::vector<std::string> m_codecs;
-    };
-
-    REGISTER_HACK(InternalRecorder)
-
-    class $modify(InternalRecorderSLHook, ShaderLayer) {
-        void visit() {
-            if(s_recorder.isRecording()) {
-                setScaleY(-1);
-                ShaderLayer::visit();
-                return setScaleY(1);
-            }
-
-            ShaderLayer::visit();
-        }
-    };
-
-    class $modify(InternalRecorderSchedulerHook, cocos2d::CCScheduler) {
-        ENABLE_SAFE_HOOKS_ALL()
-
-        void update(float dt) {
-            if (s_recorder.isRecording()) {
-                float framerate = config::get<float>("recorder.fps", 60.f);
-
-                if (framerate < 1)
-                    framerate = 1;
-
-                dt = 1.f / framerate;
-
-                applyWinSize();
-                CCScheduler::update(dt);
-                restoreWinSize();
-
-                return;
-            }
-
-            CCScheduler::update(dt);
-        }
-    };
-
-    class $modify(InternalRecorderBGLHook, GJBaseGameLayer) {
-        void syncMusic() {
-            //temp hardcoded
-            uint32_t tps = 240;
-
-            float songTime = (static_cast<float>(m_gameState.m_currentProgress) / tps) * 1000.f;
-            songTime += m_levelSettings->m_songOffset * 1000.f;
-
-            FMOD::Channel* audioChannel;
-
-            for (int i = 0; i < 2; i++) {
-                utils::get<FMODAudioEngine>()->m_system->getChannel(126 + i, &audioChannel);
-                if (audioChannel) {
-                    uint32_t channelTime = 0;
-                    audioChannel->getPosition(&channelTime, FMOD_TIMEUNIT_MS);
-
-                    if (channelTime <= 0)
-                        continue;
-
-                    if (channelTime - songTime > 0.25f || channelTime - songTime < -0.25f)
-                        audioChannel->setPosition(songTime, FMOD_TIMEUNIT_MS);
-                }
-            }
-        }
-
-        void update(float dt) {
-            if ((!s_recorder.isRecording() && !s_recorder.isRecordingAudio()) || m_gameState.m_currentProgress <= 0) return GJBaseGameLayer::update(dt);
-
-            float endscreen = config::get<float>("recorder.endscreen", 5.f);
-
-            if (levelDone) {
-                if (afterEndTimer > endscreen) {
-                    if (s_recorder.isRecording() && !popupShown) {
-                        switch(config::get<int>("recorder.audio", 2)) {
-                            case 1:
-                                popupShown = true;
-                                Popup::create(
-                                    i18n::get_("recorder.audio"),
-                                    i18n::get_("recorder.audio.msg"),
-                                    i18n::get_("common.yes"),
-                                    i18n::get_("common.no"),
-                                    [&](bool result) {
-                                        if(result) {
-                                            startAudio();
-                                            return;
-                                        }
-                                        stop();
-                                        endPopup();
-                                    }
-                                );
-                                break;
-                            case 2:
-                                startAudio();
-                                break;
-                            default:
-                            case 0:
-                                stop();
-                                endPopup();
-                                break;
-                        }
-                    }
-                    else if (s_recorder.isRecordingAudio()) {
-                        stopAudio();
-                        endPopup();
-                    }
-                    
-                    return GJBaseGameLayer::update(dt);
-                }
-                afterEndTimer += dt;
-            }
-
-            if (!s_recorder.isRecording())
-                return GJBaseGameLayer::update(dt);
-
-            float fps = config::get<float>("recorder.fps", 60.f);
-            float timewarp = m_gameState.m_timeWarp;
-
-            totalTime += dt;
-
-            double frameDt = 1. / static_cast<double>(fps) * timewarp;
-            double time = totalTime + extraTime - lastFrameTime;
-
-            if (time >= frameDt) {
-                extraTime = time - frameDt;
-                lastFrameTime = totalTime;
-
-                syncMusic();
-
-                s_recorder.captureFrame();
-            }
-
-            GJBaseGameLayer::update(dt);
-        }
-    };
-    
-    class $modify(InternalRecorderPLHook, PlayLayer) {
-        void onQuit() {
-            if (s_recorder.isRecording()) stop();
-            if (s_recorder.isRecordingAudio()) stopAudio();
-            PlayLayer::onQuit();
-        }
-
-        void levelComplete() {
-            PlayLayer::levelComplete();
-            levelDone = true;
-        }
-
-        void resetLevel() {
-            levelDone = false;
-            popupShown = false;
-            PlayLayer::resetLevel();
-        }
-
-        void pauseGame(bool paused) {
-            if (s_recorder.isRecordingAudio())
-                return;
-
-            PlayLayer::pauseGame(paused);
-        }
-    };
-
+  std::vector<std::string> m_codecs;
 };
+
+REGISTER_HACK(InternalRecorder)
+
+class $modify(InternalRecorderSLHook, ShaderLayer){
+    void visit(){if (s_recorder.isRecording()){setScaleY(-1);
+ShaderLayer::visit();
+return setScaleY(1);
+} // namespace eclipse::hacks::Recorder
+
+ShaderLayer::visit();
+}
+}
+;
+
+class $modify(InternalRecorderSchedulerHook, cocos2d::CCScheduler){
+    ENABLE_SAFE_HOOKS_ALL()
+
+        void update(float dt){if (s_recorder.isRecording()){
+            float framerate = config::get<float>("recorder.fps", 60.f);
+
+if (framerate < 1)
+  framerate = 1;
+
+dt = 1.f / framerate;
+
+applyWinSize();
+CCScheduler::update(dt);
+restoreWinSize();
+
+return;
+}
+
+CCScheduler::update(dt);
+}
+}
+;
+
+class $modify(InternalRecorderBGLHook,
+              GJBaseGameLayer){void syncMusic(){// temp hardcoded
+                                                uint32_t tps = 240;
+
+float songTime =
+    (static_cast<float>(m_gameState.m_currentProgress) / tps) * 1000.f;
+songTime += m_levelSettings->m_songOffset * 1000.f;
+
+FMOD::Channel *audioChannel;
+
+for (int i = 0; i < 2; i++) {
+  utils::get<FMODAudioEngine>()->m_system->getChannel(126 + i, &audioChannel);
+  if (audioChannel) {
+    uint32_t channelTime = 0;
+    audioChannel->getPosition(&channelTime, FMOD_TIMEUNIT_MS);
+
+    if (channelTime <= 0)
+      continue;
+
+    if (channelTime - songTime > 0.25f || channelTime - songTime < -0.25f)
+      audioChannel->setPosition(songTime, FMOD_TIMEUNIT_MS);
+  }
+}
+}
+
+void update(float dt) {
+  if ((!s_recorder.isRecording() && !s_recorder.isRecordingAudio()) ||
+      m_gameState.m_currentProgress <= 0)
+    return GJBaseGameLayer::update(dt);
+
+  float endscreen = config::get<float>("recorder.endscreen", 5.f);
+
+  if (levelDone) {
+    if (afterEndTimer > endscreen) {
+      if (s_recorder.isRecording() && !popupShown) {
+        switch (config::get<int>("recorder.audio", 2)) {
+        case 1:
+          popupShown = true;
+          Popup::create(i18n::get_("recorder.audio"),
+                        i18n::get_("recorder.audio.msg"),
+                        i18n::get_("common.yes"), i18n::get_("common.no"),
+                        [&](bool result) {
+                          if (result) {
+                            startAudio();
+                            return;
+                          }
+                          stop();
+                          endPopup();
+                        });
+          break;
+        case 2:
+          startAudio();
+          break;
+        default:
+        case 0:
+          stop();
+          endPopup();
+          break;
+        }
+      } else if (s_recorder.isRecordingAudio()) {
+        stopAudio();
+        endPopup();
+      }
+
+      return GJBaseGameLayer::update(dt);
+    }
+    afterEndTimer += dt;
+  }
+
+  if (!s_recorder.isRecording())
+    return GJBaseGameLayer::update(dt);
+
+  float fps = config::get<float>("recorder.fps", 60.f);
+  float timewarp = m_gameState.m_timeWarp;
+
+  totalTime += dt;
+
+  double frameDt = 1. / static_cast<double>(fps) * timewarp;
+  double time = totalTime + extraTime - lastFrameTime;
+
+  if (time >= frameDt) {
+    extraTime = time - frameDt;
+    lastFrameTime = totalTime;
+
+    syncMusic();
+
+    s_recorder.captureFrame();
+  }
+
+  GJBaseGameLayer::update(dt);
+}
+}
+;
+
+class $modify(InternalRecorderPLHook,
+              PlayLayer){void onQuit(){if (s_recorder.isRecording()) stop();
+if (s_recorder.isRecordingAudio())
+  stopAudio();
+PlayLayer::onQuit();
+}
+
+void levelComplete() {
+  PlayLayer::levelComplete();
+  levelDone = true;
+}
+
+void resetLevel() {
+  levelDone = false;
+  popupShown = false;
+  PlayLayer::resetLevel();
+}
+
+void pauseGame(bool paused) {
+  if (s_recorder.isRecordingAudio())
+    return;
+
+  PlayLayer::pauseGame(paused);
+}
+}
+;
+}
+;

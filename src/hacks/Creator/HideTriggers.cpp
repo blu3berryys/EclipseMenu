@@ -1,72 +1,73 @@
+#include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-#include <modules/config/config.hpp>
 
-#include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/EditorUI.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 
 namespace eclipse::hacks::Creator {
 
-    static std::vector<GameObject*> s_editorTriggers;
+static std::vector<GameObject *> s_editorTriggers;
 
-    class HideTriggers : public hack::Hack {
-        void init() override {
-            auto tab = gui::MenuTab::find("tab.creator");
+class HideTriggers : public hack::Hack {
+  void init() override {
+    auto tab = gui::MenuTab::find("tab.creator");
 
-            tab->addToggle("creator.hidetriggers")
-                ->handleKeybinds()
-                ->setDescription();
-        }
+    tab->addToggle("creator.hidetriggers")->handleKeybinds()->setDescription();
+  }
 
-        [[nodiscard]] const char* getId() const override { return "Hide Triggers"; }
-    };
+  [[nodiscard]] const char *getId() const override { return "Hide Triggers"; }
+};
 
-    REGISTER_HACK(HideTriggers)
+REGISTER_HACK(HideTriggers)
 
-    static bool isSpeedPortal(GameObject* obj) {
-        auto id = obj->m_objectID;
-        return id == 200 || id == 201 || id == 202 || id == 203 || id == 1334;
-    }
+static bool isSpeedPortal(GameObject *obj) {
+  auto id = obj->m_objectID;
+  return id == 200 || id == 201 || id == 202 || id == 203 || id == 1334;
+}
 
-    class $modify(HideTriggersEUIHook, EditorUI) {
-        ADD_HOOKS_DELEGATE("creator.hidetriggers")
+class $modify(HideTriggersEUIHook, EditorUI){
+    ADD_HOOKS_DELEGATE("creator.hidetriggers")
 
-        void onPlaytest(cocos2d::CCObject* sender) {
-            EditorUI::onPlaytest(sender);
+        void onPlaytest(cocos2d::CCObject *
+                        sender){EditorUI::onPlaytest(sender);
 
-            auto* editorLayer = utils::get<LevelEditorLayer>();
-            if (!editorLayer) return;
+auto *editorLayer = utils::get<LevelEditorLayer>();
+if (!editorLayer)
+  return;
 
-            // Store all triggers
-            s_editorTriggers.clear();
-            geode::cocos::CCArrayExt<GameObject*> objects = editorLayer->m_objects;
-            for (auto obj : objects) {
-                if (obj->m_objectType == GameObjectType::Modifier && !isSpeedPortal(obj) && obj->m_objectID != 2063) {
-                    s_editorTriggers.push_back(obj);
-                }
-            }
-        }
-    };
+// Store all triggers
+s_editorTriggers.clear();
+geode::cocos::CCArrayExt<GameObject *> objects = editorLayer->m_objects;
+for (auto obj : objects) {
+  if (obj->m_objectType == GameObjectType::Modifier && !isSpeedPortal(obj) &&
+      obj->m_objectID != 2063) {
+    s_editorTriggers.push_back(obj);
+  }
+}
+} // namespace eclipse::hacks::Creator
+}
+;
 
-    class $modify(HideTriggersLELHook, LevelEditorLayer) {
-        ADD_HOOKS_DELEGATE("creator.hidetriggers")
+class $modify(HideTriggersLELHook, LevelEditorLayer){
+    ADD_HOOKS_DELEGATE("creator.hidetriggers")
 
-        void onStopPlaytest() {
-            LevelEditorLayer::onStopPlaytest();
+        void onStopPlaytest(){LevelEditorLayer::onStopPlaytest();
 
-            // Show all triggers
-            for (auto obj : s_editorTriggers)
-                obj->setVisible(true);
+// Show all triggers
+for (auto obj : s_editorTriggers)
+  obj->setVisible(true);
 
-            s_editorTriggers.clear();
-        }
+s_editorTriggers.clear();
+}
 
-        void updateVisibility(float dt) override {
-            LevelEditorLayer::updateVisibility(dt);
+void updateVisibility(float dt) override {
+  LevelEditorLayer::updateVisibility(dt);
 
-            // Hide all triggers
-            for (auto obj : s_editorTriggers)
-                obj->setVisible(false);
-        }
-    };
+  // Hide all triggers
+  for (auto obj : s_editorTriggers)
+    obj->setVisible(false);
+}
+}
+;
 }
