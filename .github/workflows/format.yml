@@ -1,0 +1,27 @@
+name: Format C++ files
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Clang
+        uses: egor-tensin/setup-clang@v1
+
+      - name: Format
+        run: |
+          find . -name '*.cpp' -o -name '*.hpp' | xargs clang-format -i
+
+      - name: Commit formatted code (if any)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git diff --exit-code || (git add . && git commit -m "Format C++ code" && git push origin test2)
