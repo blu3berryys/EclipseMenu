@@ -2,6 +2,7 @@ name: Format C++ files
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   format:
