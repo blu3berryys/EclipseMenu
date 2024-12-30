@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -35,9 +34,8 @@ class $modify(ZeroPercentPracticePLHook, PlayLayer) {
   }
 
   void levelComplete() {
-    if (m_fields->fromZero && m_isPracticeMode)
-      m_isPracticeMode = false;
+    if (m_fields->fromZero && m_isPracticeMode) m_isPracticeMode = false;
     PlayLayer::levelComplete();
   }
 };
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level

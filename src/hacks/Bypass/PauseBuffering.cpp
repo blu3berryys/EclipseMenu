@@ -1,8 +1,7 @@
+#include <Geode/modify/UILayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/UILayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -23,14 +22,13 @@ class $modify(PauseBufferingUILHook, UILayer){
 
         void onPause(cocos2d::CCObject *
                      sender){auto *playLayer = utils::get<PlayLayer>();
-if (!playLayer)
-  return UILayer::onPause(sender);
+if (!playLayer) return UILayer::onPause(sender);
 
 uint32_t original = playLayer->m_gameState.m_pauseCounter;
 playLayer->m_gameState.m_pauseCounter = 0;
 UILayer::onPause(sender);
 playLayer->m_gameState.m_pauseCounter = original;
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

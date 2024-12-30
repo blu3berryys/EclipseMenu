@@ -1,14 +1,13 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/color.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/CCDrawNode.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/color.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -25,8 +24,7 @@ inline bool robtopHitboxCheck() {
 
 /// @brief Gracefully disable hitboxes to return to the original state
 inline void toggleOffHitboxes() {
-  if (config::get<bool>("level.showhitboxes", false))
-    return;
+  if (config::get<bool>("level.showhitboxes", false)) return;
   if (auto *gjbgl = utils::get<GJBaseGameLayer>())
     gjbgl->m_debugDrawNode->setVisible(robtopHitboxCheck());
 }
@@ -50,8 +48,7 @@ class ShowHitboxes : public hack::Hack {
       if (auto pl = utils::get<PlayLayer>()) {
         // since progress bar isn't added immediately, we need to check if it
         // exists
-        if (pl->m_progressBar == nullptr)
-          return;
+        if (pl->m_progressBar == nullptr) return;
         pl->updateProgressbar();
       }
 
@@ -112,7 +109,7 @@ class ShowHitboxes : public hack::Hack {
   [[nodiscard]] bool isCheating() override {
     bool enabled = config::get<bool>("level.showhitboxes", false);
     if (config::get<bool>("level.showhitboxes.ondeath", false))
-      return false; // on-death hitboxes are fine
+      return false;  // on-death hitboxes are fine
 
     if (auto *pl = utils::get<PlayLayer>())
       // if not in practice with enabled hitboxes
@@ -135,8 +132,7 @@ inline bool shouldDrawHitboxes() {
 inline HitboxType getHitboxType(const gui::Color &color) {
   if (color.r == 0.0f)
     return color.b == 1.0f ? HitboxType::Solid : HitboxType::Other;
-  if (color.g == 1.0f)
-    return HitboxType::Player;
+  if (color.g == 1.0f) return HitboxType::Player;
   return HitboxType::Danger;
 }
 
@@ -175,10 +171,8 @@ void customDraw(cocos2d::CCDrawNode *drawNode, gui::Color &color,
 
   GJBaseGameLayer *bgl = utils::get<GJBaseGameLayer>();
 
-  if (!bgl || drawNode != bgl->m_debugDrawNode)
-    return;
-  if (!config::get<bool>("level.showhitboxes", false))
-    return;
+  if (!bgl || drawNode != bgl->m_debugDrawNode) return;
+  if (!config::get<bool>("level.showhitboxes", false)) return;
 
   bool hidePlayer = false;
 
@@ -186,37 +180,33 @@ void customDraw(cocos2d::CCDrawNode *drawNode, gui::Color &color,
       config::get<bool>("level.showhitboxes.customcolors", false);
 
   switch (HitboxType type = getHitboxType(borderColor)) {
-  case HitboxType::Solid:
-    borderColor =
-        !customColors
-            ? borderColor
-            : config::get<gui::Color>("level.showhitboxes.solid_color",
-                                      gui::Color(0, 0.247, 1));
-    break;
-  case HitboxType::Danger:
-    borderColor =
-        !customColors
-            ? borderColor
-            : config::get<gui::Color>("level.showhitboxes.danger_color",
-                                      gui::Color(1, 0, 0));
-    break;
-  case HitboxType::Player:
-    borderColor =
-        !customColors
-            ? borderColor
-            : config::get<gui::Color>("level.showhitboxes.player_color_rotated",
-                                      gui::Color(1, 1, 0));
-    hidePlayer = config::get<bool>("level.showhitboxes.hideplayer", false);
-    if (hidePlayer)
-      borderColor = gui::Color(0.f, 0.f, 0.f, 0.f);
-    break;
-  case HitboxType::Other:
-    borderColor =
-        !customColors
-            ? borderColor
-            : config::get<gui::Color>("level.showhitboxes.other_color",
-                                      gui::Color(0, 1, 0));
-    break;
+    case HitboxType::Solid:
+      borderColor = !customColors ? borderColor
+                                  : config::get<gui::Color>(
+                                        "level.showhitboxes.solid_color",
+                                        gui::Color(0, 0.247, 1));
+      break;
+    case HitboxType::Danger:
+      borderColor = !customColors ? borderColor
+                                  : config::get<gui::Color>(
+                                        "level.showhitboxes.danger_color",
+                                        gui::Color(1, 0, 0));
+      break;
+    case HitboxType::Player:
+      borderColor = !customColors
+                        ? borderColor
+                        : config::get<gui::Color>(
+                              "level.showhitboxes.player_color_rotated",
+                              gui::Color(1, 1, 0));
+      hidePlayer = config::get<bool>("level.showhitboxes.hideplayer", false);
+      if (hidePlayer) borderColor = gui::Color(0.f, 0.f, 0.f, 0.f);
+      break;
+    case HitboxType::Other:
+      borderColor = !customColors ? borderColor
+                                  : config::get<gui::Color>(
+                                        "level.showhitboxes.other_color",
+                                        gui::Color(0, 1, 0));
+      break;
   }
 
   borderSize = hidePlayer ? 0.f
@@ -243,7 +233,7 @@ customDraw(this, (gui::Color &)fillColor, borderWidth,
            (gui::Color &)borderColor);
 return CCDrawNode::drawPolygon(vertex, count, fillColor, borderWidth,
                                borderColor);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 
 bool drawCircle(const cocos2d::CCPoint &position, float radius,
                 const cocos2d::ccColor4F &color, float borderWidth,
@@ -258,20 +248,17 @@ bool drawCircle(const cocos2d::CCPoint &position, float radius,
 ;
 
 void forceDraw(GJBaseGameLayer *self, bool editor) {
-  if (editor && config::get<bool>("level.showhitboxes.editor", false))
-    return;
+  if (editor && config::get<bool>("level.showhitboxes.editor", false)) return;
   bool show = config::get<bool>("level.showhitboxes", false);
   bool robtopShow = editor || robtopHitboxCheck();
   self->m_debugDrawNode->setVisible(show || robtopShow);
 
   bool onDeath = config::get<bool>("level.showhitboxes.ondeath", false);
 
-  if (!show)
-    return;
+  if (!show) return;
   if (onDeath) {
     self->m_debugDrawNode->setVisible(s_isDead || robtopShow);
-    if (!s_isDead && !editor)
-      return;
+    if (!s_isDead && !editor) return;
   }
 
   if (!config::get<bool>("level.showhitboxes.hideplayer", false)) {
@@ -339,8 +326,7 @@ class $modify(ShowHitboxesPLHook, PlayLayer){
     void updateProgressbar(){PlayLayer::updateProgressbar();
 
 // only call updateDebugDraw if it wasn't called yet to prevent overdraw
-if (shouldDrawHitboxes() && !robtopHitboxCheck())
-  PlayLayer::updateDebugDraw();
+if (shouldDrawHitboxes() && !robtopHitboxCheck()) PlayLayer::updateDebugDraw();
 
 forceDraw(this, false);
 }
@@ -389,11 +375,9 @@ if (m_gameState.m_isDualMode) {
 auto max = static_cast<int>(
     config::get<float>("level.showhitboxes.traillength", 240.f));
 
-while (s_playerTrail1.size() > max)
-  s_playerTrail1.pop_front();
+while (s_playerTrail1.size() > max) s_playerTrail1.pop_front();
 
-while (s_playerTrail2.size() > max)
-  s_playerTrail2.pop_front();
+while (s_playerTrail2.size() > max) s_playerTrail2.pop_front();
 }
 
 void updateDebugDraw() override {

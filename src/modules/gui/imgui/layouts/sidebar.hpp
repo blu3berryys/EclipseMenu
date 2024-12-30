@@ -6,7 +6,7 @@
 namespace eclipse::gui::imgui {
 
 class SidebarLayout : public Layout {
-public:
+ public:
   SidebarLayout() { m_mode = LayoutMode::Sidebar; }
   ~SidebarLayout() override = default;
 
@@ -14,11 +14,11 @@ public:
   void draw() override;
   void toggle(bool state) override;
 
-public:
+ public:
   static void recalculateSize(bool second);
 
   std::vector<Tab> m_tabs;
   unsigned int m_selectedTab = 0;
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

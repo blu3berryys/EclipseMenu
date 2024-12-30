@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -35,7 +34,7 @@ if (this->m_isPlatformer)
   this->playPlatformerEndAnimationToPos({.0f, 105.f}, true);
 else
   this->playEndAnimationToPos({2.f, 2.f});
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 
 void levelComplete() {
   if (this->m_isPlatformer)

@@ -1,15 +1,17 @@
 #include "theme.hpp"
 
-#include <imgui-cocos.hpp>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
+
+#include <imgui-cocos.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/theming/manager.hpp>
 #include <modules/i18n/translations.hpp>
 
-std::pair<std::string, float>
-truncateString(std::string_view str, float availWidth, bool canDelete = false) {
+std::pair<std::string, float> truncateString(std::string_view str,
+                                             float availWidth,
+                                             bool canDelete = false) {
   auto labelMaxWidth = availWidth * (canDelete ? 0.5f : 0.6f);
   auto labelSize = ImGui::CalcTextSize(str.data());
 
@@ -20,8 +22,7 @@ truncateString(std::string_view str, float availWidth, bool canDelete = false) {
       auto labelStr = fmt::format("{}...", str.substr(0, labelEnd));
       auto newSize = ImGui::CalcTextSize(labelStr.c_str());
 
-      if (newSize.x > labelMaxWidth - 20)
-        break;
+      if (newSize.x > labelMaxWidth - 20) break;
 
       labelEnd++;
     }
@@ -37,31 +38,30 @@ namespace eclipse::gui::imgui {
 std::vector<std::string> THEME_NAMES = {"ImGui", "MegaHack", "MegaOverlay"};
 
 void Theme::visit(const std::shared_ptr<Component> &component) const {
-
-#define CASE(x)                                                                \
-  case ComponentType::x:                                                       \
-    this->visit##x(std::static_pointer_cast<x##Component>(component));         \
+#define CASE(x)                                                        \
+  case ComponentType::x:                                               \
+    this->visit##x(std::static_pointer_cast<x##Component>(component)); \
     break;
 
   ImGui::PushID(component->getId().c_str());
   switch (component->getType()) {
-  default:
-    break;
-    CASE(Label);
-    CASE(Toggle);
-    CASE(RadioButton);
-    CASE(Combo);
-    CASE(Slider);
-    CASE(InputFloat);
-    CASE(InputInt);
-    CASE(FloatToggle);
-    CASE(InputText);
-    CASE(Color);
-    CASE(Button);
-    CASE(Keybind);
-    CASE(LabelSettings);
-    CASE(FilesystemCombo);
-    CASE(IntToggle);
+    default:
+      break;
+      CASE(Label);
+      CASE(Toggle);
+      CASE(RadioButton);
+      CASE(Combo);
+      CASE(Slider);
+      CASE(InputFloat);
+      CASE(InputInt);
+      CASE(FloatToggle);
+      CASE(InputText);
+      CASE(Color);
+      CASE(Button);
+      CASE(Keybind);
+      CASE(LabelSettings);
+      CASE(FilesystemCombo);
+      CASE(IntToggle);
   }
   ImGui::PopID();
 
@@ -69,8 +69,7 @@ void Theme::visit(const std::shared_ptr<Component> &component) const {
 }
 
 void Theme::handleTooltip(const std::string &text) {
-  if (text.empty())
-    return;
+  if (text.empty()) return;
   if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
     ImVec2 pos = ImGui::GetMousePos();
 
@@ -83,10 +82,8 @@ void Theme::handleTooltip(const std::string &text) {
     pos.x += padding;
     pos.y += padding;
 
-    if (pos.x + size.x > screenSize.x)
-      pos.x = screenSize.x - size.x - padding;
-    if (pos.y + size.y > screenSize.y)
-      pos.y = screenSize.y - size.y - padding;
+    if (pos.x + size.x > screenSize.x) pos.x = screenSize.x - size.x - padding;
+    if (pos.y + size.y > screenSize.y) pos.y = screenSize.y - size.y - padding;
 
     ImGui::SetNextWindowPos(pos);
     ImGui::PushStyleColor(ImGuiCol_Text,
@@ -196,8 +193,7 @@ void Theme::endWindow() {
 }
 
 void Theme::visitLabel(const std::shared_ptr<LabelComponent> &label) const {
-  if (label->getTitle().empty())
-    return; // skip empty labels
+  if (label->getTitle().empty()) return;  // skip empty labels
   if (label->isSearchedFor())
     ImGui::PushStyleColor(
         ImGuiCol_Text,
@@ -221,19 +217,16 @@ void Theme::visitToggle(const std::shared_ptr<ToggleComponent> &toggle) const {
     toggled = this->checkboxWithSettings(
         title, value, toggle->isSearchedFor(),
         [this, options] {
-          for (auto &comp : options->getComponents())
-            this->visit(comp);
+          for (auto &comp : options->getComponents()) this->visit(comp);
         },
         [toggle] {
           handleTooltip(toggle->getDescription());
-          if (toggle->hasKeybind())
-            handleKeybindMenu(toggle->getId());
+          if (toggle->hasKeybind()) handleKeybindMenu(toggle->getId());
         });
   } else {
     toggled = this->checkbox(title, value, toggle->isSearchedFor(), [toggle] {
       handleTooltip(toggle->getDescription());
-      if (toggle->hasKeybind())
-        handleKeybindMenu(toggle->getId());
+      if (toggle->hasKeybind()) handleKeybindMenu(toggle->getId());
     });
   }
 
@@ -262,8 +255,7 @@ void Theme::visitRadioButton(
   }
   ImGui::PopStyleColor();
 
-  if (radio->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (radio->isSearchedFor()) ImGui::PopStyleColor();
 
   handleTooltip(radio->getDescription());
   if (radio->hasKeybind())
@@ -288,8 +280,7 @@ void Theme::visitCombo(const std::shared_ptr<ComboComponent> &combo) const {
         combo->triggerCallback(n);
       }
 
-      if (is_selected)
-        ImGui::SetItemDefaultFocus();
+      if (is_selected) ImGui::SetItemDefaultFocus();
     }
     ImGui::EndCombo();
   }
@@ -305,8 +296,7 @@ void Theme::visitCombo(const std::shared_ptr<ComboComponent> &combo) const {
 
   ImGui::TextWrapped("%s", title.data());
 
-  if (combo->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (combo->isSearchedFor()) ImGui::PopStyleColor();
 }
 
 void Theme::visitFilesystemCombo(
@@ -330,8 +320,7 @@ void Theme::visitFilesystemCombo(
           combo->triggerCallback(n);
         }
 
-        if (is_selected)
-          ImGui::SetItemDefaultFocus();
+        if (is_selected) ImGui::SetItemDefaultFocus();
       }
     }
     ImGui::EndCombo();
@@ -348,8 +337,7 @@ void Theme::visitFilesystemCombo(
 
   ImGui::TextWrapped("%s", title.data());
 
-  if (combo->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (combo->isSearchedFor()) ImGui::PopStyleColor();
 }
 
 void Theme::visitSlider(const std::shared_ptr<SliderComponent> &slider) const {
@@ -368,8 +356,7 @@ void Theme::visitSlider(const std::shared_ptr<SliderComponent> &slider) const {
     slider->triggerCallback(value);
   }
 
-  if (slider->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (slider->isSearchedFor()) ImGui::PopStyleColor();
 
   handleTooltip(slider->getDescription());
   ImGui::PopItemWidth();
@@ -397,8 +384,7 @@ void Theme::visitInputFloat(
 
   ImGui::TextWrapped("%s", title.data());
 
-  if (inputFloat->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (inputFloat->isSearchedFor()) ImGui::PopStyleColor();
 
   handleTooltip(inputFloat->getDescription());
   ImGui::PopItemWidth();
@@ -425,8 +411,7 @@ void Theme::visitInputInt(
 
   ImGui::TextWrapped("%s", title.data());
 
-  if (inputInt->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (inputInt->isSearchedFor()) ImGui::PopStyleColor();
 
   handleTooltip(inputInt->getDescription());
   ImGui::PopItemWidth();
@@ -451,8 +436,7 @@ void Theme::visitIntToggle(
 
   if (this->checkbox(title, state, intToggle->isSearchedFor(), [intToggle] {
         handleTooltip(intToggle->getDescription());
-        if (intToggle->hasKeybind())
-          handleKeybindMenu(intToggle->getId());
+        if (intToggle->hasKeybind()) handleKeybindMenu(intToggle->getId());
       })) {
     intToggle->setState(state);
     intToggle->triggerCallback(value);
@@ -479,8 +463,7 @@ void Theme::visitFloatToggle(
 
   if (this->checkbox(title, state, floatToggle->isSearchedFor(), [floatToggle] {
         handleTooltip(floatToggle->getDescription());
-        if (floatToggle->hasKeybind())
-          handleKeybindMenu(floatToggle->getId());
+        if (floatToggle->hasKeybind()) handleKeybindMenu(floatToggle->getId());
       })) {
     floatToggle->setState(state);
     floatToggle->triggerCallback(value);
@@ -510,8 +493,7 @@ void Theme::visitInputText(
   ImGui::Text("%s", title.data());
   // ImGui::PopTextWrapPos();
 
-  if (inputText->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (inputText->isSearchedFor()) ImGui::PopStyleColor();
 
   handleTooltip(inputText->getDescription());
 }
@@ -538,8 +520,7 @@ void Theme::visitColor(const std::shared_ptr<ColorComponent> &color) const {
 
   ImGui::TextWrapped("%s", title.data());
 
-  if (color->isSearchedFor())
-    ImGui::PopStyleColor();
+  if (color->isSearchedFor()) ImGui::PopStyleColor();
 
   if (changed) {
     color->setValue(value);
@@ -607,8 +588,7 @@ void Theme::visitKeybind(
   ImGui::PopStyleVar();
 
   auto popupName = fmt::format("##{}-popup", keybind->getId());
-  if (changed)
-    ImGui::OpenPopup(popupName.c_str());
+  if (changed) ImGui::OpenPopup(popupName.c_str());
 
   if (ImGui::BeginPopup(popupName.c_str())) {
     ImGuiCocos::get().setInputMode(ImGuiCocos::InputMode::Blocking);
@@ -942,8 +922,7 @@ bool Theme::checkboxWithSettings(const std::string &label, bool &value,
 
   std::string popupName =
       popupId.empty() ? fmt::format("##{}", label) : popupId;
-  if (openPopup)
-    ImGui::OpenPopup(popupName.c_str());
+  if (openPopup) ImGui::OpenPopup(popupName.c_str());
 
   ImGui::SetNextWindowSizeConstraints(ImVec2(240 * tm->getGlobalScale(), 0),
                                       ImVec2(FLT_MAX, FLT_MAX));
@@ -980,4 +959,4 @@ bool Theme::button(const std::string &text, bool isSearchedFor) const {
 
   return pressed;
 }
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

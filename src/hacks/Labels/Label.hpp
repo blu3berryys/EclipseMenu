@@ -10,7 +10,7 @@ class LabelsContainer;
 
 /// @brief Label with RIFT scripting support.
 class SmartLabel : public gui::cocos::EmojiLabel {
-public:
+ public:
   static SmartLabel *create(const std::string &text, const std::string &font) {
     auto ret = new SmartLabel();
     if (ret->init(text, font)) {
@@ -50,7 +50,7 @@ public:
   /// @brief Update the label.
   void update();
 
-private:
+ private:
   cocos2d::CCPoint m_customPosition = {0, 0};
   float m_heightMultiplier = 1.0f;
   std::unique_ptr<rift::Script> m_script = nullptr;
@@ -63,4 +63,4 @@ private:
   LabelsContainer *m_parentContainer = nullptr;
 };
 
-} // namespace eclipse::hacks::Labels
+}  // namespace eclipse::hacks::Labels

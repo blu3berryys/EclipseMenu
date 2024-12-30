@@ -1,9 +1,8 @@
+#include <Geode/modify/EditorUI.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditorUI.hpp>
-#include <Geode/modify/LevelEditorLayer.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -33,8 +32,7 @@ class $modify(HideTriggersEUIHook, EditorUI){
                         sender){EditorUI::onPlaytest(sender);
 
 auto *editorLayer = utils::get<LevelEditorLayer>();
-if (!editorLayer)
-  return;
+if (!editorLayer) return;
 
 // Store all triggers
 s_editorTriggers.clear();
@@ -45,7 +43,7 @@ for (auto obj : objects) {
     s_editorTriggers.push_back(obj);
   }
 }
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 }
 ;
 
@@ -55,8 +53,7 @@ class $modify(HideTriggersLELHook, LevelEditorLayer){
         void onStopPlaytest(){LevelEditorLayer::onStopPlaytest();
 
 // Show all triggers
-for (auto obj : s_editorTriggers)
-  obj->setVisible(true);
+for (auto obj : s_editorTriggers) obj->setVisible(true);
 
 s_editorTriggers.clear();
 }
@@ -65,8 +62,7 @@ void updateVisibility(float dt) override {
   LevelEditorLayer::updateVisibility(dt);
 
   // Hide all triggers
-  for (auto obj : s_editorTriggers)
-    obj->setVisible(false);
+  for (auto obj : s_editorTriggers) obj->setVisible(false);
 }
 }
 ;

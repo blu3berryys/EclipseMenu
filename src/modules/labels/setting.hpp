@@ -1,8 +1,9 @@
 #pragma once
-#include "events.hpp"
 #include <hacks/Labels/LabelContainer.hpp>
 #include <modules/gui/color.hpp>
 #include <nlohmann/json.hpp>
+
+#include "events.hpp"
 
 namespace eclipse::labels {
 using LabelsContainer = hacks::Labels::LabelsContainer;
@@ -104,7 +105,7 @@ inline int32_t getFontIndex(const std::string &font) {
 
 /// @brief Settings for a label to store in the config.
 struct LabelSettings {
-  static size_t instanceCount; // used to generate unique IDs
+  static size_t instanceCount;  // used to generate unique IDs
 
   ~LabelSettings() {
     // release all current related events
@@ -133,4 +134,4 @@ void from_json(const nlohmann::json &json, LabelSettings &settings);
 void to_json(nlohmann::json &json, const LabelSettings &settings);
 void from_json(const nlohmann::json &json, LabelEvent &event);
 void to_json(nlohmann::json &json, const LabelEvent &event);
-} // namespace eclipse::labels
+}  // namespace eclipse::labels

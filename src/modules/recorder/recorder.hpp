@@ -1,16 +1,15 @@
 #pragma once
-#include "ffmpeg-api/events.hpp"
 #include <Geode/platform/platform.hpp>
-
-#include "rendertexture.hpp"
-
 #include <chrono>
 #include <mutex>
+
+#include "ffmpeg-api/events.hpp"
+#include "rendertexture.hpp"
 
 namespace eclipse::recorder {
 
 class Recorder {
-public:
+ public:
   void start();
   void stop();
 
@@ -28,13 +27,13 @@ public:
 
   static std::vector<std::string> getAvailableCodecs();
 
-public:
+ public:
   ffmpeg::RenderSettings m_renderSettings{};
 
-private:
+ private:
   void recordThread();
 
-private:
+ private:
   bool m_recording = false;
   bool m_recordingAudio = false;
   bool m_frameHasData = false;
@@ -44,4 +43,4 @@ private:
 
   std::function<void(std::string const &)> m_callback;
 };
-}; // namespace eclipse::recorder
+};  // namespace eclipse::recorder

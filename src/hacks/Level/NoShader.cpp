@@ -1,8 +1,7 @@
+#include <Geode/modify/ShaderLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/ShaderLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -25,7 +24,7 @@ class $modify(NoShaderSLHook, ShaderLayer){
     ALL_DELEGATES_AND_SAFE_PRIO("level.noshader")
 
         void performCalculations(){m_state.m_usesShaders = false;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

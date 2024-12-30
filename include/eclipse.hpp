@@ -6,4 +6,4 @@
 #include "config.hpp"
 #include "labels.hpp"
 
-#endif // ECLIPSE_HPP
+#endif  // ECLIPSE_HPP

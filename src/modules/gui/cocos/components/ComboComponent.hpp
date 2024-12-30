@@ -1,18 +1,19 @@
 #pragma once
-#include "BaseComponentNode.hpp"
 #include <modules/gui/cocos/popup/options-popup.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class ComboComponentNode
     : public BaseComponentNode<ComboComponentNode, cocos2d::CCMenu,
                                ComboComponent, float> {
-protected:
+ protected:
   TranslatedLabel *m_label = nullptr;
   CCMenuItemSpriteExtra *m_infoButton = nullptr;
   cocos2d::extension::CCScale9Sprite *m_background = nullptr;
   FallbackBMFont *m_valueLabel = nullptr;
 
-public:
+ public:
   void updateLabel() const {
     int index = m_component->getValue();
     if (index < 0 || index >= m_component->getItems().size()) {
@@ -27,18 +28,15 @@ public:
     int tag = sender->getTag();
     int currentIndex = m_component->getValue();
     int value = currentIndex + tag;
-    if (value < 0)
-      value = std::max<int>(m_component->getItems().size() - 1, 0);
-    if (value >= m_component->getItems().size())
-      value = 0;
+    if (value < 0) value = std::max<int>(m_component->getItems().size() - 1, 0);
+    if (value >= m_component->getItems().size()) value = 0;
     m_component->setValue(value);
     m_component->triggerCallback(value);
     updateLabel();
   }
 
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setID(fmt::format("combo-{}"_spr, m_component->getId()));
     this->setContentSize({width, 28.f});
@@ -99,4 +97,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

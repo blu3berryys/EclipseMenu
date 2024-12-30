@@ -11,4 +11,4 @@ class MegaOverlay : public Theme {
     return ComponentTheme::MegaOverlay;
   }
 };
-} // namespace eclipse::gui::imgui::themes
+}  // namespace eclipse::gui::imgui::themes

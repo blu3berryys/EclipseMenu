@@ -1,4 +1,5 @@
 #include "panel.hpp"
+
 #include <modules/gui/gui.hpp>
 #include <modules/gui/imgui/imgui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -34,8 +35,7 @@ void PanelLayout::recalculateSize() {
 }
 
 void PanelLayout::draw() {
-  if (!Engine::get()->isToggled())
-    return;
+  if (!Engine::get()->isToggled()) return;
 
   auto tm = ThemeManager::get();
   auto scale = tm->getGlobalScale();
@@ -134,4 +134,4 @@ void PanelLayout::draw() {
 }
 
 void PanelLayout::toggle(bool state) {}
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

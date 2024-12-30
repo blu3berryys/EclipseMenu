@@ -23,8 +23,7 @@ void MoveAction::update(double deltaTime) {
     return;
   }
 
-  if (isFinished())
-    return;
+  if (isFinished()) return;
 
   m_totalTime += deltaTime;
 
@@ -45,4 +44,4 @@ void MoveAction::update(double deltaTime) {
 double MoveAction::getProgress() { return m_easing(m_totalTime / m_duration); }
 
 bool MoveAction::isFinished() const { return m_totalTime >= m_duration; }
-} // namespace eclipse::gui::animation
+}  // namespace eclipse::gui::animation

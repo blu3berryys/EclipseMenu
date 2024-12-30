@@ -5,7 +5,8 @@ namespace eclipse::utils {
 template <typename T>
 using base_type = std::remove_pointer_t<std::remove_cv_t<T>>;
 
-template <typename T, typename... Args> struct not_one_of {
+template <typename T, typename... Args>
+struct not_one_of {
   constexpr static bool value = (!std::is_same_v<base_type<T>, Args> && ...);
 };
 
@@ -25,9 +26,11 @@ concept NestedInstance = one_of_v<base_type<T>, EditorUI, UILayer>;
 template <typename T>
 concept SupportedSingleton = HasSharedState<base_type<T>> || NestedInstance<T>;
 
-template <SupportedSingleton T> base_type<T> *get(); // forward declaration
+template <SupportedSingleton T>
+base_type<T> *get();  // forward declaration
 
-template <typename T> base_type<T> *getNested() {
+template <typename T>
+base_type<T> *getNested() {
   if constexpr (std::is_same_v<base_type<T>, EditorUI>) {
     if (auto editor = utils::get<LevelEditorLayer>()) {
       return editor->m_editorUI;
@@ -46,7 +49,8 @@ template <typename T> base_type<T> *getNested() {
 /// @brief More optimized way to get singletons. Caches the pointer after first
 /// call. Regular sharedState() function calls have an overhead of 10-20%
 /// compared to this.
-template <SupportedSingleton T> base_type<T> *get() {
+template <SupportedSingleton T>
+base_type<T> *get() {
   using type = base_type<T>;
 
   if constexpr (NestedInstance<type>) {
@@ -92,4 +96,4 @@ template <SupportedSingleton T> base_type<T> *get() {
   }
 }
 
-} // namespace eclipse::utils
+}  // namespace eclipse::utils

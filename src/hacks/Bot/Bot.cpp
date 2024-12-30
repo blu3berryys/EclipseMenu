@@ -1,14 +1,13 @@
+#include <Geode/modify/CheckpointObject.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/bot/bot.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/popup.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/keybinds/manager.hpp>
-
-#include <Geode/modify/CheckpointObject.hpp>
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayLayer.hpp>
-#include <Geode/modify/PlayerObject.hpp>
 
 using namespace geode::prelude;
 
@@ -20,8 +19,7 @@ void newReplay() {
   Popup::prompt(
       i18n::get_("bot.new-replay"), i18n::get_("bot.new-replay.msg"),
       [&](bool result, std::string name) {
-        if (!result)
-          return;
+        if (!result) return;
 
         s_bot.save(Mod::get()->getSaveDir() / "replays" / (name + ".gdr"));
         config::set("bot.selectedreplay",
@@ -44,8 +42,7 @@ void saveReplay() {
         i18n::get_("common.warning"),
         i18n::format("bot.overwrite", replayPath.filename().stem().string()),
         i18n::get_("common.yes"), i18n::get_("common.no"), [&](bool result) {
-          if (!result)
-            return;
+          if (!result) return;
 
           auto confirmReplayDirectory =
               config::get<std::filesystem::path>("bot.selectedreplay", "temp");
@@ -62,10 +59,10 @@ void saveReplay() {
   }
 
   s_bot.save(replayPath);
-  Popup::create(i18n::get_("bot.saved"),
-                i18n::format("bot.saved.msg",
-                             replayPath.filename().stem().string(),
-                             s_bot.getInputCount()));
+  Popup::create(
+      i18n::get_("bot.saved"),
+      i18n::format("bot.saved.msg", replayPath.filename().stem().string(),
+                   s_bot.getInputCount()));
   config::set("bot.selectedreplay", replayPath);
 }
 
@@ -88,8 +85,7 @@ void loadReplay() {
     return Popup::create(
         i18n::get_("common.warning"), i18n::get_("bot.overwrite-current"),
         i18n::get_("common.yes"), i18n::get_("common.no"), [&](bool result) {
-          if (!result)
-            return;
+          if (!result) return;
 
           std::filesystem::path confirmReplayPath =
               config::get<std::string>("bot.selectedreplay", "");
@@ -113,8 +109,7 @@ void deleteReplay() {
                 i18n::format("bot.confirm-delete", replayName),
                 i18n::get_("common.yes"), i18n::get_("common.no"),
                 [replayPath, replayName](bool result) {
-                  if (!result)
-                    return;
+                  if (!result) return;
                   if (std::filesystem::exists(replayPath)) {
                     Popup::create(i18n::get_("bot.deleted"),
                                   i18n::format("bot.deleted.msg", replayName));
@@ -171,7 +166,7 @@ class $modify(BotPLHook,
     bool result = PlayLayer::init(gj, p1, p2);
 s_bot.setLevelInfo(gdr::Level(gj->m_levelName, gj->m_levelID.value()));
 return result;
-} // namespace eclipse::hacks::Bot
+}  // namespace eclipse::hacks::Bot
 
 void resetLevel() {
   bool p1hold = m_player1->m_holdingButtons[1];
@@ -190,7 +185,7 @@ void resetLevel() {
     s_bot.recordInput(m_gameState.m_currentProgress + 1, PlayerButton::Jump,
                       false, false);
     m_player1->m_isDashing =
-        false; // temporary, find better way to fix dash orbs
+        false;  // temporary, find better way to fix dash orbs
     if (m_gameState.m_isDualMode && m_levelSettings->m_twoPlayerMode) {
       s_bot.recordInput(m_gameState.m_currentProgress + 1, PlayerButton::Jump,
                         true, false);
@@ -198,13 +193,11 @@ void resetLevel() {
     }
   }
 
-  if (m_checkpointArray->count() > 0)
-    return;
+  if (m_checkpointArray->count() > 0) return;
 
   s_bot.restart();
 
-  if (s_bot.getState() == bot::State::PLAYBACK)
-    return;
+  if (s_bot.getState() == bot::State::PLAYBACK) return;
 
   s_bot.clearInputs();
 }
@@ -233,8 +226,7 @@ void loadFromCheckpoint(CheckpointObject *checkpoint) {
 class $modify(BotBGLHook, GJBaseGameLayer){
     void processCommands(float dt){GJBaseGameLayer::processCommands(dt);
 
-if (s_bot.getState() != bot::State::PLAYBACK)
-  return;
+if (s_bot.getState() != bot::State::PLAYBACK) return;
 
 std::optional<gdr::Input> input = std::nullopt;
 
@@ -247,8 +239,7 @@ while ((input = s_bot.poll(m_gameState.m_currentProgress)) != std::nullopt) {
 void handleButton(bool down, int button, bool player1) {
   GJBaseGameLayer::handleButton(down, button, player1);
 
-  if (s_bot.getState() != bot::State::RECORD)
-    return;
+  if (s_bot.getState() != bot::State::RECORD) return;
 
   bool realPlayer1 =
       !m_levelSettings->m_twoPlayerMode || player1 || !m_gameState.m_isDualMode;

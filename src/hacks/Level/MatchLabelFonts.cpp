@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -29,7 +28,7 @@ class $modify(MatchLabelFontsPLHook, PlayLayer){
             const {return m_attemptLabel && m_percentageLabel &&
                           m_percentageLabel->getFntFile() == s_bigFontName &&
                           m_attemptLabel->getFntFile() != s_bigFontName;
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 
 void updateProgressbar() {
   PlayLayer::updateProgressbar();

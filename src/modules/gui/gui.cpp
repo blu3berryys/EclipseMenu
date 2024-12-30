@@ -51,16 +51,14 @@ std::shared_ptr<Component> Component::find(size_t uid) {
 
 void ToggleComponent::addOptions(
     const std::function<void(std::shared_ptr<MenuTab>)> &options) {
-  if (!m_options)
-    m_options = std::make_shared<MenuTab>(m_title, false);
+  if (!m_options) m_options = std::make_shared<MenuTab>(m_title, false);
 
   options(m_options);
 }
 
 ToggleComponent *ToggleComponent::handleKeybinds() {
   keybinds::Manager::get()->registerKeybind(m_id, m_title, [this](bool down) {
-    if (!down)
-      return;
+    if (!down) return;
     bool value = !getValue();
     setValue(value);
     this->triggerCallback(value);
@@ -81,8 +79,7 @@ RadioButtonComponent *RadioButtonComponent::handleKeybinds() {
   auto specialId = fmt::format("{}-{}", m_id, m_value);
   keybinds::Manager::get()->registerKeybind(specialId, m_title,
                                             [this](bool down) {
-                                              if (!down)
-                                                return;
+                                              if (!down) return;
                                               auto value = getChoice();
                                               setValue(value);
                                               this->triggerCallback(value);
@@ -98,8 +95,7 @@ void ComboComponent::setValue(int value) const {
 }
 
 void ComboComponent::setValueIfEmpty(int value) const {
-  if (!config::has(m_id))
-    store_value(m_id, value, m_noSave);
+  if (!config::has(m_id)) store_value(m_id, value, m_noSave);
 }
 
 std::filesystem::path FilesystemComboComponent::getValue() const {
@@ -117,8 +113,7 @@ void FilesystemComboComponent::setValue(int index) const {
 void FilesystemComboComponent::globFiles() {
   m_items.clear();
 
-  if (!std::filesystem::exists(m_directory))
-    return;
+  if (!std::filesystem::exists(m_directory)) return;
 
   for (const auto &entry :
        std::filesystem::recursive_directory_iterator(m_directory))
@@ -149,8 +144,7 @@ void InputIntComponent::setValue(int value) const {
 
 IntToggleComponent *IntToggleComponent::handleKeybinds() {
   keybinds::Manager::get()->registerKeybind(m_id, m_title, [this](bool down) {
-    if (!down)
-      return;
+    if (!down) return;
     bool value =
         !config::get<bool>(fmt::format("{}.toggle", this->getId()), false);
     auto id = fmt::format("{}.toggle", this->getId());
@@ -179,8 +173,7 @@ void IntToggleComponent::setState(bool value) const {
 
 FloatToggleComponent *FloatToggleComponent::handleKeybinds() {
   keybinds::Manager::get()->registerKeybind(m_id, m_title, [this](bool down) {
-    if (!down)
-      return;
+    if (!down) return;
     bool value =
         !config::get<bool>(fmt::format("{}.toggle", this->getId()), false);
     auto id = fmt::format("{}.toggle", this->getId());
@@ -226,8 +219,7 @@ void ColorComponent::setValue(const Color &value) const {
 ButtonComponent *ButtonComponent::handleKeybinds() {
   keybinds::Manager::get()->registerKeybind(fmt::format("button.{}", m_title),
                                             m_title, [this](bool down) {
-                                              if (!down)
-                                                return;
+                                              if (!down) return;
                                               this->triggerCallback();
                                             });
   m_hasKeybind = true;
@@ -235,8 +227,7 @@ ButtonComponent *ButtonComponent::handleKeybinds() {
 }
 
 void LabelSettingsComponent::triggerDeleteCallback() const {
-  if (m_deleteCallback)
-    m_deleteCallback();
+  if (m_deleteCallback) m_deleteCallback();
 
   // We also have to clean up the keybind
   keybinds::Manager::get()->unregisterKeybind(
@@ -244,8 +235,7 @@ void LabelSettingsComponent::triggerDeleteCallback() const {
 }
 
 void LabelSettingsComponent::triggerEditCallback() const {
-  if (m_editCallback)
-    m_editCallback();
+  if (m_editCallback) m_editCallback();
 
   // Update the keybind title
   auto keybind = keybinds::Manager::get()->getKeybind(
@@ -261,8 +251,7 @@ LabelSettingsComponent *LabelSettingsComponent::handleKeybinds() {
   keybinds::Manager::get()->registerKeybind(
       fmt::format("label.{}", m_settings->id), m_settings->name,
       [this](bool down) {
-        if (!down)
-          return;
+        if (!down) return;
         this->m_settings->visible = !this->m_settings->visible;
         this->triggerEditCallback();
       });
@@ -291,22 +280,20 @@ std::shared_ptr<MenuTab> MenuTab::find(std::string_view name) {
 
 void Engine::setRenderer(RendererType type) {
   const auto tm = ThemeManager::get();
-  if (m_renderer && type == m_renderer->getType())
-    return;
-  if (m_renderer)
-    m_renderer->shutdown();
+  if (m_renderer && type == m_renderer->getType()) return;
+  if (m_renderer) m_renderer->shutdown();
 
   switch (type) {
-  default:
+    default:
 #ifndef GEODE_IS_MOBILE
-  case RendererType::ImGui:
-    m_renderer = std::make_shared<imgui::ImGuiRenderer>();
-    break;
+    case RendererType::ImGui:
+      m_renderer = std::make_shared<imgui::ImGuiRenderer>();
+      break;
 #endif
 #ifndef GEODE_IS_DESKTOP
-  case RendererType::Cocos2d:
-    m_renderer = std::make_shared<cocos::CocosRenderer>();
-    break;
+    case RendererType::Cocos2d:
+      m_renderer = std::make_shared<cocos::CocosRenderer>();
+      break;
 #endif
   }
 
@@ -315,10 +302,8 @@ void Engine::setRenderer(RendererType type) {
 
 RendererType Engine::getRendererType() {
   auto engine = Engine::get();
-  if (!engine->isInitialized())
-    return RendererType::None;
-  if (!engine->m_renderer)
-    return RendererType::None;
+  if (!engine->isInitialized()) return RendererType::None;
+  if (!engine->m_renderer) return RendererType::None;
   return engine->m_renderer->getType();
 }
 
@@ -333,8 +318,7 @@ void Engine::init() {
 }
 
 void Engine::toggle() const {
-  if (!m_renderer)
-    return;
+  if (!m_renderer) return;
   m_renderer->toggle();
 }
 
@@ -350,10 +334,9 @@ std::shared_ptr<MenuTab> Engine::findTab(std::string_view name) {
   m_tabs.push_back(tab);
 
   // tell the renderer to update the tabs if we're past the initialization stage
-  if (m_initialized && m_renderer)
-    m_renderer->updateTabs();
+  if (m_initialized && m_renderer) m_renderer->updateTabs();
 
   return tab;
 }
 
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

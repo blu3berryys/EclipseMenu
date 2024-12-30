@@ -1,13 +1,11 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-#include <modules/recorder/recorder.hpp>
-
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/ShaderLayer.hpp>
-
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
+#include <modules/recorder/recorder.hpp>
 #include <regex>
 
 // android uses custom gd::string class
@@ -43,8 +41,7 @@ void endPopup() {
   Popup::create(i18n::get_("common.info"), i18n::get_("recorder.finished"),
                 i18n::get_("common.ok"), i18n::get_("recorder.open-folder"),
                 [](bool result) {
-                  if (result)
-                    return;
+                  if (result) return;
 
                   geode::utils::file::openFolder(
                       geode::Mod::get()->getSaveDir() / "renders");
@@ -80,8 +77,7 @@ void restoreWinSize() {
 }
 
 void start() {
-  if (!utils::get<PlayLayer>())
-    return;
+  if (!utils::get<PlayLayer>()) return;
 
   levelDone = false;
   popupShown = false;
@@ -137,8 +133,7 @@ void start() {
                       static_cast<float>(s_recorder.m_renderSettings.m_height) /
                           newDesignResolution.height);
 
-  if (oldDesignResolution != newDesignResolution)
-    applyWinSize();
+  if (oldDesignResolution != newDesignResolution) applyWinSize();
 
   s_recorder.start();
 }
@@ -186,8 +181,7 @@ class InternalRecorder : public hack::Hack {
 
   void lateInit() override {
     auto ffmpeg = geode::Loader::get()->getLoadedMod("eclipse.ffmpeg-api");
-    if (!ffmpeg)
-      return;
+    if (!ffmpeg) return;
 
     s_recorder.setCallback(callback);
 
@@ -195,10 +189,8 @@ class InternalRecorder : public hack::Hack {
 
     tab->addButton("recorder.start")->callback(start);
     tab->addButton("recorder.stop")->callback([] {
-      if (s_recorder.isRecording())
-        stop();
-      if (s_recorder.isRecordingAudio())
-        stopAudio();
+      if (s_recorder.isRecording()) stop();
+      if (s_recorder.isRecordingAudio()) stopAudio();
     });
 
     config::setIfEmpty("recorder.fps", 60.f);
@@ -294,7 +286,7 @@ class $modify(InternalRecorderSLHook, ShaderLayer){
     void visit(){if (s_recorder.isRecording()){setScaleY(-1);
 ShaderLayer::visit();
 return setScaleY(1);
-} // namespace eclipse::hacks::Recorder
+}  // namespace eclipse::hacks::Recorder
 
 ShaderLayer::visit();
 }
@@ -307,8 +299,7 @@ class $modify(InternalRecorderSchedulerHook, cocos2d::CCScheduler){
         void update(float dt){if (s_recorder.isRecording()){
             float framerate = config::get<float>("recorder.fps", 60.f);
 
-if (framerate < 1)
-  framerate = 1;
+if (framerate < 1) framerate = 1;
 
 dt = 1.f / framerate;
 
@@ -340,8 +331,7 @@ for (int i = 0; i < 2; i++) {
     uint32_t channelTime = 0;
     audioChannel->getPosition(&channelTime, FMOD_TIMEUNIT_MS);
 
-    if (channelTime <= 0)
-      continue;
+    if (channelTime <= 0) continue;
 
     if (channelTime - songTime > 0.25f || channelTime - songTime < -0.25f)
       audioChannel->setPosition(songTime, FMOD_TIMEUNIT_MS);
@@ -360,28 +350,28 @@ void update(float dt) {
     if (afterEndTimer > endscreen) {
       if (s_recorder.isRecording() && !popupShown) {
         switch (config::get<int>("recorder.audio", 2)) {
-        case 1:
-          popupShown = true;
-          Popup::create(i18n::get_("recorder.audio"),
-                        i18n::get_("recorder.audio.msg"),
-                        i18n::get_("common.yes"), i18n::get_("common.no"),
-                        [&](bool result) {
-                          if (result) {
-                            startAudio();
-                            return;
-                          }
-                          stop();
-                          endPopup();
-                        });
-          break;
-        case 2:
-          startAudio();
-          break;
-        default:
-        case 0:
-          stop();
-          endPopup();
-          break;
+          case 1:
+            popupShown = true;
+            Popup::create(i18n::get_("recorder.audio"),
+                          i18n::get_("recorder.audio.msg"),
+                          i18n::get_("common.yes"), i18n::get_("common.no"),
+                          [&](bool result) {
+                            if (result) {
+                              startAudio();
+                              return;
+                            }
+                            stop();
+                            endPopup();
+                          });
+            break;
+          case 2:
+            startAudio();
+            break;
+          default:
+          case 0:
+            stop();
+            endPopup();
+            break;
         }
       } else if (s_recorder.isRecordingAudio()) {
         stopAudio();
@@ -393,8 +383,7 @@ void update(float dt) {
     afterEndTimer += dt;
   }
 
-  if (!s_recorder.isRecording())
-    return GJBaseGameLayer::update(dt);
+  if (!s_recorder.isRecording()) return GJBaseGameLayer::update(dt);
 
   float fps = config::get<float>("recorder.fps", 60.f);
   float timewarp = m_gameState.m_timeWarp;
@@ -420,8 +409,7 @@ void update(float dt) {
 
 class $modify(InternalRecorderPLHook,
               PlayLayer){void onQuit(){if (s_recorder.isRecording()) stop();
-if (s_recorder.isRecordingAudio())
-  stopAudio();
+if (s_recorder.isRecordingAudio()) stopAudio();
 PlayLayer::onQuit();
 }
 
@@ -437,8 +425,7 @@ void resetLevel() {
 }
 
 void pauseGame(bool paused) {
-  if (s_recorder.isRecordingAudio())
-    return;
+  if (s_recorder.isRecordingAudio()) return;
 
   PlayLayer::pauseGame(paused);
 }

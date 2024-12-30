@@ -1,8 +1,7 @@
+#include <Geode/modify/GameManager.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GameManager.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -30,7 +29,7 @@ class $modify(UnlockShopsGMHook, GameManager){
 // 35 - Mechanic Shop
 return strcmp(key, "11") == 0 || strcmp(key, "20") == 0 ||
        strcmp(key, "34") == 0 || strcmp(key, "35") == 0;
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

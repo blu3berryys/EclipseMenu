@@ -1,10 +1,9 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCDrawNode.hpp>
 #include <Geode/modify/HardStreak.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 using namespace geode::prelude;
 
@@ -35,7 +34,7 @@ class $modify(SolidWaveTrailCCDNHook, cocos2d::CCDrawNode){
 this->setBlendFunc(CCSprite::create()->getBlendFunc());
 this->setZOrder(-1);
 return CCDrawNode::drawPolygon(p0, p1, p2, p3, p4);
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

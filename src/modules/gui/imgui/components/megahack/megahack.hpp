@@ -4,7 +4,6 @@
 namespace eclipse::gui::imgui::themes {
 
 class Megahack : public Theme {
-
   bool checkbox(const std::string &label, bool &value, bool isSearchedFor,
                 const std::function<void()> &postDraw) const override;
   bool checkboxWithSettings(const std::string &label, bool &value,
@@ -17,4 +16,4 @@ class Megahack : public Theme {
   ComponentTheme getTheme() const override { return ComponentTheme::MegaHack; }
 };
 
-} // namespace eclipse::gui::imgui::themes
+}  // namespace eclipse::gui::imgui::themes

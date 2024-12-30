@@ -6,7 +6,7 @@ enum class LayoutMode { Tabbed, Panel, Sidebar };
 
 /// @brief Base class for ImGui window layouts
 class Layout {
-public:
+ public:
   virtual ~Layout() = default;
 
   virtual void init() = 0;
@@ -15,8 +15,8 @@ public:
 
   [[nodiscard]] LayoutMode getMode() const { return m_mode; }
 
-protected:
+ protected:
   LayoutMode m_mode = LayoutMode::Tabbed;
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

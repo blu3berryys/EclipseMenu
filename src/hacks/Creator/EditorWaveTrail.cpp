@@ -1,11 +1,10 @@
+#include <Geode/modify/HardStreak.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 
-#include <Geode/modify/HardStreak.hpp>
-#include <Geode/modify/PlayerObject.hpp>
-
-namespace eclipse::hacks::Creator { // i didnt do this properly :P
+namespace eclipse::hacks::Creator {  // i didnt do this properly :P
 
 /*class EditorWaveTrail : public hack::Hack {
     void init() override {

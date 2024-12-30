@@ -22,7 +22,7 @@ class ColorComponent;
 class ButtonComponent;
 class KeybindComponent;
 class LabelSettingsComponent;
-} // namespace eclipse::gui
+}  // namespace eclipse::gui
 
 namespace eclipse::gui::imgui {
 
@@ -31,13 +31,13 @@ constexpr float INV_DEFAULT_SCALE = 1.0f / DEFAULT_SCALE;
 
 extern std::vector<std::string> THEME_NAMES;
 enum class ComponentTheme {
-  ImGui,       /// Classic Dear ImGui look
-  MegaHack,    /// MegaHack v8 style
-  MegaOverlay, /// GDMegaOverlay style
+  ImGui,        /// Classic Dear ImGui look
+  MegaHack,     /// MegaHack v8 style
+  MegaOverlay,  /// GDMegaOverlay style
 };
 
 class Theme {
-public:
+ public:
   virtual ~Theme() = default;
 
   /// @brief Accepts a component and uses current theme to render it
@@ -61,30 +61,30 @@ public:
   // == Components == //
 
   virtual void visitLabel(const std::shared_ptr<LabelComponent> &label) const;
-  virtual void
-  visitToggle(const std::shared_ptr<ToggleComponent> &toggle) const;
-  virtual void
-  visitRadioButton(const std::shared_ptr<RadioButtonComponent> &radio) const;
+  virtual void visitToggle(
+      const std::shared_ptr<ToggleComponent> &toggle) const;
+  virtual void visitRadioButton(
+      const std::shared_ptr<RadioButtonComponent> &radio) const;
   virtual void visitCombo(const std::shared_ptr<ComboComponent> &combo) const;
   virtual void visitFilesystemCombo(
       const std::shared_ptr<FilesystemComboComponent> &combo) const;
-  virtual void
-  visitSlider(const std::shared_ptr<SliderComponent> &slider) const;
-  virtual void
-  visitInputFloat(const std::shared_ptr<InputFloatComponent> &inputFloat) const;
-  virtual void
-  visitInputInt(const std::shared_ptr<InputIntComponent> &inputInt) const;
-  virtual void
-  visitIntToggle(const std::shared_ptr<IntToggleComponent> &intToggle) const;
+  virtual void visitSlider(
+      const std::shared_ptr<SliderComponent> &slider) const;
+  virtual void visitInputFloat(
+      const std::shared_ptr<InputFloatComponent> &inputFloat) const;
+  virtual void visitInputInt(
+      const std::shared_ptr<InputIntComponent> &inputInt) const;
+  virtual void visitIntToggle(
+      const std::shared_ptr<IntToggleComponent> &intToggle) const;
   virtual void visitFloatToggle(
       const std::shared_ptr<FloatToggleComponent> &floatToggle) const;
-  virtual void
-  visitInputText(const std::shared_ptr<InputTextComponent> &inputText) const;
+  virtual void visitInputText(
+      const std::shared_ptr<InputTextComponent> &inputText) const;
   virtual void visitColor(const std::shared_ptr<ColorComponent> &color) const;
-  virtual void
-  visitButton(const std::shared_ptr<ButtonComponent> &button) const;
-  virtual void
-  visitKeybind(const std::shared_ptr<KeybindComponent> &keybind) const;
+  virtual void visitButton(
+      const std::shared_ptr<ButtonComponent> &button) const;
+  virtual void visitKeybind(
+      const std::shared_ptr<KeybindComponent> &keybind) const;
   virtual void visitLabelSettings(
       const std::shared_ptr<LabelSettingsComponent> &labelSettings) const;
 
@@ -97,11 +97,11 @@ public:
       const std::string &label, bool &value, bool isSearchedFor,
       const std::function<void()> &callback,
       const std::function<void()> &postDraw = [] {},
-      const std::string &popupId = "" // empty = use default
+      const std::string &popupId = ""  // empty = use default
   ) const;
   virtual bool button(const std::string &text, bool isSearchedFor) const;
 
   virtual ComponentTheme getTheme() const { return ComponentTheme::ImGui; }
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

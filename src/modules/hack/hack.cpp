@@ -11,8 +11,7 @@ const std::vector<std::shared_ptr<Hack>> &Hack::getHacks() { return hacks; }
 
 void Hack::registerHack(std::shared_ptr<Hack> hack) {
   hacks.push_back(hack);
-  if (s_lateInit)
-    hack->init();
+  if (s_lateInit) hack->init();
 }
 
 std::weak_ptr<Hack> Hack::find(const std::string &id) {
@@ -38,15 +37,13 @@ void Hack::initializeHacks() {
               return a->getPriority() < b->getPriority();
             });
 
-  for (const auto hack : hacks)
-    hack->init();
+  for (const auto hack : hacks) hack->init();
 
   s_lateInit = true;
 }
 
 void Hack::lateInitializeHacks() {
-  for (const auto hack : hacks)
-    hack->lateInit();
+  for (const auto hack : hacks) hack->lateInit();
 }
 
-} // namespace eclipse::hack
+}  // namespace eclipse::hack

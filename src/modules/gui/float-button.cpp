@@ -1,9 +1,9 @@
 #include "float-button.hpp"
-#include <modules/config/config.hpp>
-#include <modules/utils/SingletonCache.hpp>
 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScene.hpp>
+#include <modules/config/config.hpp>
+#include <modules/utils/SingletonCache.hpp>
 using namespace cocos2d;
 
 namespace eclipse::gui {
@@ -29,8 +29,7 @@ FloatingButton *FloatingButton::create() {
 }
 
 bool FloatingButton::init() {
-  if (!CCMenu::init())
-    return false;
+  if (!CCMenu::init()) return false;
 
   this->setZOrder(256);
   this->setPosition({0, 0});
@@ -64,8 +63,7 @@ void FloatingButton::update(float) {
     }
   }
 
-  if (!m_shouldMove)
-    return;
+  if (!m_shouldMove) return;
 
   auto currentPos = m_sprite->getPosition();
 
@@ -77,7 +75,7 @@ void FloatingButton::update(float) {
   auto newPoint = ccpLerp(currentPos, m_holdPosition, MOVE_SPEED * dt);
   if (ccpDistance(newPoint, m_holdPosition) < SNAP_MARGIN) {
     newPoint = m_holdPosition;
-    m_shouldMove = false; // finished moving
+    m_shouldMove = false;  // finished moving
   }
 
   this->m_sprite->setPosition(newPoint);
@@ -112,13 +110,11 @@ void FloatingButton::fadeOut() const {
 }
 
 bool FloatingButton::ccTouchBegan(CCTouch *touch, CCEvent *event) {
-  if (shouldHide())
-    return false;
+  if (shouldHide()) return false;
 
   auto touchPos = this->convertToNodeSpace(touch->getLocation());
   auto spritePos = m_sprite->getPosition();
-  if (ccpDistance(touchPos, spritePos) > getRadius())
-    return false;
+  if (ccpDistance(touchPos, spritePos) > getRadius()) return false;
 
   m_haveMoved = false;
   m_haveReleased = false;

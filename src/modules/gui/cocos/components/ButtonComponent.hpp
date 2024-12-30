@@ -1,13 +1,14 @@
 #pragma once
 
-#include "BaseComponentNode.hpp"
 #include <modules/gui/theming/manager.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class ButtonComponentNode
     : public BaseComponentNode<ButtonComponentNode, CCMenuItemSpriteExtra,
                                ButtonComponent, float> {
-public:
+ public:
   void toggled(CCObject *) { m_component->triggerCallback(); }
 
   bool init(float width) override {
@@ -22,8 +23,7 @@ public:
     label->setColor(tm->getButtonActivatedForeground().toCCColor3B());
     // label->setScale(0.5F);
     bg->addChildAtPosition(label, geode::Anchor::Center);
-    if (!bg || !label)
-      return false;
+    if (!bg || !label) return false;
     if (!CCMenuItemSpriteExtra::init(
             bg, nullptr, this, menu_selector(ButtonComponentNode::toggled)))
       return false;
@@ -37,4 +37,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

@@ -50,10 +50,9 @@ inline static void setBatchSpriteOpacity(cocos2d::CCSpriteBatchNode *batch,
   }
 }
 
-inline static void
-setBatchSpriteColorAndOpacity(cocos2d::CCSpriteBatchNode *batch,
-                              const cocos2d::ccColor3B &color,
-                              GLubyte opacity) {
+inline static void setBatchSpriteColorAndOpacity(
+    cocos2d::CCSpriteBatchNode *batch, const cocos2d::ccColor3B &color,
+    GLubyte opacity) {
   if (auto children = batch->getChildren()) {
     for (int i = 0; i < children->count(); i++) {
       auto sprite =
@@ -101,7 +100,7 @@ inline static const std::unordered_map<uint64_t, std::string_view> g_emojis = {
 /// @brief Common base class for all specialized label nodes.
 template <typename T, typename P>
 class BaseLabel : public cocos2d::CCLabelBMFont {
-public:
+ public:
   static T *create(const std::string &text, const std::string &font,
                    P *parent) {
     auto ret = new T();
@@ -117,8 +116,7 @@ public:
     m_parent = parent;
     m_spriteBatch = parent->getSecondBatch();
 
-    if (!initWithString(text.c_str(), font.c_str()))
-      return false;
+    if (!initWithString(text.c_str(), font.c_str())) return false;
 
     return true;
   }
@@ -146,11 +144,9 @@ public:
   }
 
   void setString(const char *newString, bool needUpdateLabel) override {
-    if (!newString)
-      newString = "";
+    if (!newString) newString = "";
     if (needUpdateLabel) {
-      if (m_sInitialStringUTF8 == newString)
-        return;
+      if (m_sInitialStringUTF8 == newString) return;
       m_sInitialStringUTF8 = newString;
     }
     m_string = std::move(UTF8ToUTF16(newString));
@@ -159,12 +155,10 @@ public:
   }
 
   void setFntFile(std::string_view fntFile) {
-    if (m_sFntFile == fntFile)
-      return;
+    if (m_sFntFile == fntFile) return;
 
     auto *newConf = cocos2d::FNTConfigLoadFile(fntFile.data());
-    if (!newConf)
-      return;
+    if (!newConf) return;
 
     m_sFntFile = GD_STRING_SET_WITH_SW(fntFile);
     CC_SAFE_RELEASE(m_pConfiguration);
@@ -184,8 +178,7 @@ public:
     if (dictionary) {
       cocos2d::tCCKerningHashElement *element = nullptr;
       HASH_FIND_INT(dictionary, &key, element);
-      if (element)
-        ret = element->amount;
+      if (element) ret = element->amount;
     }
     return ret;
   }
@@ -197,11 +190,10 @@ public:
 
   void setContentSize(const cocos2d::CCSize &contentSize) override {
     CCLabelBMFont::setContentSize(contentSize);
-    if (m_parent)
-      m_parent->setContentSize(contentSize);
+    if (m_parent) m_parent->setContentSize(contentSize);
   }
 
-protected:
+ protected:
   std::u16string m_string;
   P *m_parent = nullptr;
   CCSpriteBatchNode *m_spriteBatch = nullptr;
@@ -212,13 +204,13 @@ protected:
 /// the main font. (without having to use TTF or bitmaps with every single
 /// character)
 class FallbackBMFont : public cocos2d::CCNode {
-protected:
+ protected:
   class Label : public BaseLabel<Label, FallbackBMFont> {
-  public:
+   public:
     void createFontChars();
   };
 
-public:
+ public:
   static FallbackBMFont *create(const std::string &text,
                                 const std::string &font,
                                 const std::string &fallbackFont);
@@ -271,7 +263,7 @@ public:
 
   cocos2d::CCSpriteBatchNode *getSecondBatch() const { return m_fallbackBatch; }
 
-protected:
+ protected:
   Label *m_label = nullptr;
   cocos2d::CCSpriteBatchNode *m_fallbackBatch = nullptr;
   cocos2d::CCBMFontConfiguration *m_fallbackConfiguration = nullptr;
@@ -279,13 +271,13 @@ protected:
 
 /// @brief Label node that supports embedded sprites in the text.
 class EmojiLabel : public cocos2d::CCNode {
-protected:
+ protected:
   class Label : public BaseLabel<Label, EmojiLabel> {
-  public:
+   public:
     void createFontChars();
   };
 
-public:
+ public:
   static EmojiLabel *create(const std::string &text, const std::string &font);
 
   virtual bool init(const std::string &text, const std::string &font);
@@ -309,14 +301,14 @@ public:
 
   cocos2d::CCSpriteBatchNode *getSecondBatch() const { return m_emojiBatch; }
 
-protected:
+ protected:
   Label *m_label = nullptr;
   cocos2d::CCSpriteBatchNode *m_emojiBatch = nullptr;
 };
 
 /// @brief Label node that supports translation.
 class TranslatedLabel : public FallbackBMFont {
-public:
+ public:
   static TranslatedLabel *create(std::string_view key) {
     auto ret = new TranslatedLabel();
     ret->init(
@@ -328,4 +320,4 @@ public:
   }
 };
 
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

@@ -20,49 +20,49 @@ concept SupportedType = requires(T a) {
       std::same_as<T, null_t>;
 };
 
-} // namespace eclipse::label
+}  // namespace eclipse::label
 
 namespace eclipse::events {
 
 class FormatRiftStringEvent final : public geode::Event {
-public:
+ public:
   explicit FormatRiftStringEvent(std::string_view source) : m_source(source) {}
   std::string_view getSource() const { return m_source; }
   std::string const &getResult() const { return m_result; }
   void setResult(std::string_view result) { m_result = result; }
 
-private:
+ private:
   std::string_view m_source;
   std::string m_result;
 };
 
 template <label::SupportedType T>
 class GetRiftVariableEvent final : public geode::Event {
-public:
+ public:
   explicit GetRiftVariableEvent(std::string_view name)
       : m_name(name), m_result(geode::Err("Unknown error")) {}
   std::string_view getName() const { return m_name; }
   geode::Result<T> const &getResult() const { return m_result; }
   void setResult(geode::Result<T> result) { m_result = std::move(result); }
 
-private:
+ private:
   std::string_view m_name;
   geode::Result<T> m_result;
 };
 
 template <label::SupportedType T>
 class SetRiftVariableEvent final : public geode::Event {
-public:
+ public:
   explicit SetRiftVariableEvent(std::string_view name, T value)
       : m_name(name), m_value(value) {}
   std::string_view getName() const { return m_name; }
   T getValue() const { return m_value; }
 
-private:
+ private:
   std::string_view m_name;
   T m_value;
 };
-} // namespace eclipse::events
+}  // namespace eclipse::events
 
 namespace eclipse::label {
 
@@ -79,7 +79,8 @@ inline std::string format(std::string_view fmt) {
 /// @brief Gets a variable from the RIFT system.
 /// @param name The name of the variable.
 /// @return Result containing the variable value or an error.
-template <SupportedType T> geode::Result<T> getVariable(std::string_view name) {
+template <SupportedType T>
+geode::Result<T> getVariable(std::string_view name) {
   auto event = events::GetRiftVariableEvent<T>(name);
   event.post();
   return event.getResult();
@@ -88,10 +89,11 @@ template <SupportedType T> geode::Result<T> getVariable(std::string_view name) {
 /// @brief Sets a variable in the RIFT system.
 /// @param name The name of the variable.
 /// @param value The value to set.
-template <SupportedType T> void setVariable(std::string_view name, T value) {
+template <SupportedType T>
+void setVariable(std::string_view name, T value) {
   events::SetRiftVariableEvent<T>(name, value).post();
 }
 
-} // namespace eclipse::label
+}  // namespace eclipse::label
 
 #endif

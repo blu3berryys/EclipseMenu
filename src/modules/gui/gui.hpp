@@ -1,16 +1,16 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <modules/gui/color.hpp>
 #include <modules/keybinds/manager.hpp>
 #include <modules/labels/setting.hpp>
-
-#include "color.hpp"
-#include "popup.hpp"
-#include <functional>
-#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "color.hpp"
+#include "popup.hpp"
 
 namespace eclipse::gui {
 
@@ -36,7 +36,7 @@ enum class ComponentType {
 };
 
 class Component {
-public:
+ public:
   virtual ~Component() = default;
 
   Component() { m_uid = m_uniqueID++; }
@@ -86,7 +86,7 @@ public:
   /// @brief Sets the component's search state
   void setSearchedFor(bool state) { m_isSearchedFor = state; };
 
-protected:
+ protected:
   static size_t m_uniqueID;
   size_t m_uid;
   ComponentType m_type = ComponentType::Unknown;
@@ -97,7 +97,7 @@ protected:
 
 /// @brief Simple label component, that displays a title.
 class LabelComponent : public Component {
-public:
+ public:
   explicit LabelComponent(std::string title) : m_title(std::move(title)) {
     m_type = ComponentType::Label;
   }
@@ -115,13 +115,13 @@ public:
     return this;
   }
 
-private:
+ private:
   std::string m_title;
 };
 
 /// @brief Simple toggle component, that displays a title and a checkbox.
 class ToggleComponent : public Component {
-public:
+ public:
   explicit ToggleComponent(std::string id, std::string title)
       : m_id(std::move(id)), m_title(std::move(title)) {
     m_type = ComponentType::Toggle;
@@ -165,11 +165,10 @@ public:
   [[nodiscard]] bool hasKeybind() const { return m_hasKeybind; }
 
   void triggerCallback(bool value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::function<void(bool)> m_callback;
@@ -179,7 +178,7 @@ private:
 
 /// @brief Radio button component for selecting one of the options.
 class RadioButtonComponent : public Component {
-public:
+ public:
   explicit RadioButtonComponent(std::string id, std::string title, int value)
       : m_id(std::move(id)), m_title(std::move(title)), m_value(value) {
     m_type = ComponentType::RadioButton;
@@ -211,8 +210,7 @@ public:
   [[nodiscard]] bool hasKeybind() const { return m_hasKeybind; }
 
   void triggerCallback(int value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
   RadioButtonComponent *setDescription(std::string description) override {
@@ -220,7 +218,7 @@ public:
     return this;
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   int m_value;
@@ -230,10 +228,12 @@ private:
 
 /// @brief Combo component for selecting one of the options.
 class ComboComponent : public Component {
-public:
+ public:
   explicit ComboComponent(std::string id, std::string title,
                           std::vector<std::string> items, int value)
-      : m_id(std::move(id)), m_title(std::move(title)), m_value(value),
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_value(value),
         m_items(std::move(items)) {
     m_type = ComponentType::Combo;
     setValueIfEmpty(m_value);
@@ -278,11 +278,10 @@ public:
   }
 
   void triggerCallback(int value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   int m_value;
@@ -292,10 +291,11 @@ private:
 
 /// @brief Combo component for selecting entries from a path.
 class FilesystemComboComponent : public Component {
-public:
+ public:
   explicit FilesystemComboComponent(std::string id, std::string title,
                                     std::filesystem::path directory)
-      : m_id(std::move(id)), m_title(std::move(title)),
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
         m_directory(std::move(directory)) {
     m_type = ComponentType::FilesystemCombo;
   }
@@ -303,8 +303,7 @@ public:
   void onInit() override {
     globFiles();
 
-    if (getValue().empty() && m_items.size() > 0)
-      setValue(0);
+    if (getValue().empty() && m_items.size() > 0) setValue(0);
   }
   void onUpdate() override { globFiles(); }
 
@@ -340,14 +339,13 @@ public:
   }
 
   void triggerCallback(int value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   void globFiles();
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::filesystem::path m_directory;
@@ -359,12 +357,15 @@ private:
 
 /// @brief Slider component to select a value from a range.
 class SliderComponent : public Component {
-public:
+ public:
   explicit SliderComponent(std::string title, std::string id,
                            float min = FLT_MIN, float max = FLT_MAX,
                            std::string format = "%.3f")
-      : m_id(std::move(id)), m_title(std::move(title)),
-        m_format(std::move(format)), m_min(min), m_max(max) {
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_format(std::move(format)),
+        m_min(min),
+        m_max(max) {
     m_type = ComponentType::Slider;
   }
 
@@ -394,11 +395,10 @@ public:
   }
 
   void triggerCallback(float value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::string m_format;
@@ -409,12 +409,15 @@ private:
 
 /// @brief Input float component to input a value from a range.
 class InputFloatComponent : public Component {
-public:
+ public:
   explicit InputFloatComponent(std::string title, std::string id,
                                float min = FLT_MIN, float max = FLT_MAX,
                                std::string format = "%.3f")
-      : m_id(std::move(id)), m_title(std::move(title)),
-        m_format(std::move(format)), m_min(min), m_max(max) {
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_format(std::move(format)),
+        m_min(min),
+        m_max(max) {
     m_type = ComponentType::InputFloat;
   }
 
@@ -449,11 +452,10 @@ public:
   }
 
   void triggerCallback(float value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::string m_format;
@@ -464,7 +466,7 @@ private:
 
 /// @brief Input int component to input a value from a range.
 class InputIntComponent : public Component {
-public:
+ public:
   explicit InputIntComponent(std::string title, std::string id,
                              int min = INT_MIN, int max = INT_MAX)
       : m_id(std::move(id)), m_title(std::move(title)), m_min(min), m_max(max) {
@@ -496,11 +498,10 @@ public:
   }
 
   void triggerCallback(int value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   int m_min;
@@ -510,7 +511,7 @@ private:
 
 /// @brief Input int component to input a value from a range. Can be toggled.
 class IntToggleComponent : public Component {
-public:
+ public:
   explicit IntToggleComponent(std::string title, std::string id,
                               int min = INT_MIN, int max = INT_MAX)
       : m_id(std::move(id)), m_title(std::move(title)), m_min(min), m_max(max) {
@@ -553,15 +554,13 @@ public:
   void setState(bool value) const;
 
   void triggerCallback(int value) const {
-    if (m_valueCallback)
-      m_valueCallback(value);
+    if (m_valueCallback) m_valueCallback(value);
   }
   void triggerCallback() const {
-    if (m_toggleCallback)
-      m_toggleCallback();
+    if (m_toggleCallback) m_toggleCallback();
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::string m_description;
@@ -574,12 +573,15 @@ private:
 
 /// @brief Input float component to input a value from a range. Can be toggled .
 class FloatToggleComponent : public Component {
-public:
+ public:
   explicit FloatToggleComponent(std::string title, std::string id,
                                 float min = FLT_MIN, float max = FLT_MAX,
                                 std::string format = "%.3f")
-      : m_id(std::move(id)), m_title(std::move(title)),
-        m_format(std::move(format)), m_min(min), m_max(max) {
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_format(std::move(format)),
+        m_min(min),
+        m_max(max) {
     m_type = ComponentType::FloatToggle;
   }
 
@@ -625,15 +627,13 @@ public:
   void setState(bool value) const;
 
   void triggerCallback(float value) const {
-    if (m_valueCallback)
-      m_valueCallback(value);
+    if (m_valueCallback) m_valueCallback(value);
   }
   void triggerCallback() const {
-    if (m_toggleCallback)
-      m_toggleCallback();
+    if (m_toggleCallback) m_toggleCallback();
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::string m_format;
@@ -647,7 +647,7 @@ private:
 
 /// @brief Input text component to get user input as a string.
 class InputTextComponent : public Component {
-public:
+ public:
   explicit InputTextComponent(std::string title, std::string id)
       : m_id(std::move(id)), m_title(std::move(title)) {
     m_type = ComponentType::InputText;
@@ -675,11 +675,10 @@ public:
   }
 
   void triggerCallback(std::string value) const {
-    if (m_callback)
-      m_callback(std::move(value));
+    if (m_callback) m_callback(std::move(value));
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   std::function<void(std::string)> m_callback;
@@ -687,10 +686,11 @@ private:
 
 /// @brief Input text component to get user input as a string.
 class ColorComponent : public Component {
-public:
+ public:
   explicit ColorComponent(std::string title, std::string id,
                           bool hasOpacity = false)
-      : m_id(std::move(id)), m_title(std::move(title)),
+      : m_id(std::move(id)),
+        m_title(std::move(title)),
         m_hasOpacity(hasOpacity) {
     m_type = ComponentType::Color;
   }
@@ -718,11 +718,10 @@ public:
   }
 
   void triggerCallback(const Color &value) const {
-    if (m_callback)
-      m_callback(value);
+    if (m_callback) m_callback(value);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   bool m_hasOpacity;
@@ -731,7 +730,7 @@ private:
 
 /// @brief Button component to execute an action when pressed.
 class ButtonComponent : public Component {
-public:
+ public:
   explicit ButtonComponent(std::string title) : m_title(std::move(title)) {
     m_type = ComponentType::Button;
   }
@@ -765,11 +764,10 @@ public:
   [[nodiscard]] bool hasKeybind() const { return m_hasKeybind; }
 
   void triggerCallback() const {
-    if (m_callback)
-      m_callback();
+    if (m_callback) m_callback();
   }
 
-private:
+ private:
   std::string m_title;
   std::function<void()> m_callback;
   bool m_hasKeybind = false;
@@ -777,7 +775,7 @@ private:
 
 /// @brief Component for picking a keybind.
 class KeybindComponent : public Component {
-public:
+ public:
   explicit KeybindComponent(std::string title, std::string id,
                             bool canDelete = false)
       : m_id(std::move(id)), m_title(std::move(title)), m_canDelete(canDelete) {
@@ -798,8 +796,7 @@ public:
   KeybindComponent *setInternal() {
     m_callback = [this](keybinds::Keys key) {
       auto keybind = keybinds::Manager::get()->getKeybind(m_id);
-      if (!keybind.has_value())
-        return;
+      if (!keybind.has_value()) return;
       auto &keybindRef = keybind->get();
       keybindRef.setKey(key);
     };
@@ -816,11 +813,10 @@ public:
   }
 
   void triggerCallback(keybinds::Keys key) const {
-    if (m_callback)
-      m_callback(key);
+    if (m_callback) m_callback(key);
   }
 
-private:
+ private:
   std::string m_id;
   std::string m_title;
   bool m_canDelete;
@@ -829,7 +825,7 @@ private:
 
 /// @brief Component that allows to change label settings.
 class LabelSettingsComponent : public Component {
-public:
+ public:
   explicit LabelSettingsComponent(labels::LabelSettings *settings)
       : m_settings(settings) {
     m_type = ComponentType::LabelSettings;
@@ -871,13 +867,11 @@ public:
   void triggerEditCallback() const;
 
   void triggerMoveCallback(bool up) const {
-    if (m_moveCallback)
-      m_moveCallback(up);
+    if (m_moveCallback) m_moveCallback(up);
   }
 
   void triggerExportCallback() const {
-    if (m_exportCallback)
-      m_exportCallback();
+    if (m_exportCallback) m_exportCallback();
   }
 
   /// @brief Allows to set keybinds for the label.
@@ -885,7 +879,7 @@ public:
 
   [[nodiscard]] bool hasKeybind() const { return m_hasKeybind; }
 
-private:
+ private:
   std::string m_id;
   labels::LabelSettings *m_settings;
   std::function<void()> m_deleteCallback;
@@ -899,7 +893,7 @@ private:
 /// @brief Contains a list of components and a title, to be passed into render
 /// engine.
 class MenuTab {
-public:
+ public:
   explicit MenuTab(std::string title, bool isSearchedFor)
       : m_title(std::move(title)), m_isSearchedFor(isSearchedFor) {}
 
@@ -932,8 +926,9 @@ public:
   }
 
   /// @brief Add a radio button to the tab.
-  std::shared_ptr<RadioButtonComponent>
-  addRadioButton(const std::string &title, const std::string &id, int value) {
+  std::shared_ptr<RadioButtonComponent> addRadioButton(const std::string &title,
+                                                       const std::string &id,
+                                                       int value) {
     auto button = std::make_shared<RadioButtonComponent>(id, title, value);
     addComponent(button);
     return button;
@@ -950,9 +945,9 @@ public:
   }
 
   /// @brief Add a filesystem combo button to the tab.
-  std::shared_ptr<FilesystemComboComponent>
-  addFilesystemCombo(const std::string &title, const std::string &id,
-                     std::filesystem::path directory) {
+  std::shared_ptr<FilesystemComboComponent> addFilesystemCombo(
+      const std::string &title, const std::string &id,
+      std::filesystem::path directory) {
     auto combo =
         std::make_shared<FilesystemComboComponent>(id, title, directory);
     addComponent(combo);
@@ -960,10 +955,9 @@ public:
   }
 
   /// @brief Add a slider to the tab.
-  std::shared_ptr<SliderComponent>
-  addSlider(const std::string &title, const std::string &id,
-            float min = FLT_MIN, float max = FLT_MAX,
-            const std::string &format = "%.3f") {
+  std::shared_ptr<SliderComponent> addSlider(
+      const std::string &title, const std::string &id, float min = FLT_MIN,
+      float max = FLT_MAX, const std::string &format = "%.3f") {
     auto slider =
         std::make_shared<SliderComponent>(title, id, min, max, format);
     addComponent(slider);
@@ -971,10 +965,9 @@ public:
   }
 
   /// @brief Add an input float to the tab.
-  std::shared_ptr<InputFloatComponent>
-  addInputFloat(const std::string &title, const std::string &id,
-                float min = FLT_MIN, float max = FLT_MAX,
-                const std::string &format = "%.3f") {
+  std::shared_ptr<InputFloatComponent> addInputFloat(
+      const std::string &title, const std::string &id, float min = FLT_MIN,
+      float max = FLT_MAX, const std::string &format = "%.3f") {
     auto inputFloat =
         std::make_shared<InputFloatComponent>(title, id, min, max, format);
     addComponent(inputFloat);
@@ -1002,10 +995,9 @@ public:
   }
 
   /// @brief Add an float toggle to the tab.
-  std::shared_ptr<FloatToggleComponent>
-  addFloatToggle(const std::string &title, const std::string &id,
-                 float min = FLT_MIN, float max = FLT_MAX,
-                 const std::string &format = "%.3f") {
+  std::shared_ptr<FloatToggleComponent> addFloatToggle(
+      const std::string &title, const std::string &id, float min = FLT_MIN,
+      float max = FLT_MAX, const std::string &format = "%.3f") {
     auto floatToggle =
         std::make_shared<FloatToggleComponent>(title, id, min, max, format);
     addComponent(floatToggle);
@@ -1046,8 +1038,8 @@ public:
   }
 
   /// @brief Add a label settings to the tab.
-  std::shared_ptr<LabelSettingsComponent>
-  addLabelSetting(labels::LabelSettings *settings) {
+  std::shared_ptr<LabelSettingsComponent> addLabelSetting(
+      labels::LabelSettings *settings) {
     auto labelSettings = std::make_shared<LabelSettingsComponent>(settings);
     addComponent(labelSettings);
     return labelSettings;
@@ -1057,8 +1049,8 @@ public:
   [[nodiscard]] const std::string &getTitle() const { return m_title; }
 
   /// @brief Get the tab's components.
-  [[nodiscard]] const std::vector<std::shared_ptr<Component>> &
-  getComponents() const {
+  [[nodiscard]] const std::vector<std::shared_ptr<Component>> &getComponents()
+      const {
     return m_components;
   }
 
@@ -1071,7 +1063,7 @@ public:
   /// @brief Sets the tab's search state
   void setSearchedFor(bool state) { m_isSearchedFor = state; };
 
-private:
+ private:
   std::string m_title;
   bool m_isSearchedFor;
   std::vector<std::shared_ptr<Component>> m_components;
@@ -1081,7 +1073,7 @@ enum class RendererType { None = -1, ImGui, Cocos2d };
 
 /// @brief Abstract class, that wraps all UI function calls.
 class Renderer {
-public:
+ public:
   virtual ~Renderer() = default;
 
   /// @brief Initialize the renderer.
@@ -1114,7 +1106,7 @@ using Tabs = std::vector<std::shared_ptr<MenuTab>>;
 
 /// @brief Main controller for the UI.
 class Engine {
-public:
+ public:
   static std::shared_ptr<Engine> get();
 
   void init();
@@ -1130,8 +1122,7 @@ public:
 
   /// @brief Check if the UI is visible.
   [[nodiscard]] bool isToggled() const {
-    if (!m_renderer)
-      return false;
+    if (!m_renderer) return false;
     return m_renderer->isToggled();
   }
 
@@ -1143,21 +1134,20 @@ public:
     if (auto renderer = get()->m_renderer)
       renderer->queueAfterDrawing(func);
     else
-      func(); // fallback
+      func();  // fallback
   }
 
   void showPopup(const Popup &popup) const {
-    if (m_renderer)
-      m_renderer->showPopup(popup);
+    if (m_renderer) m_renderer->showPopup(popup);
   }
 
   [[nodiscard]] const Tabs &getTabs() const { return m_tabs; }
   [[nodiscard]] bool isInitialized() const { return m_initialized; }
 
-private:
+ private:
   std::shared_ptr<Renderer> m_renderer;
   Tabs m_tabs;
   bool m_initialized = false;
 };
 
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

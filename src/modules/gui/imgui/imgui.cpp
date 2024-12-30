@@ -1,6 +1,8 @@
 #include "imgui.hpp"
-#include <imgui-cocos.hpp>
+
 #include <misc/cpp/imgui_stdlib.h>
+
+#include <imgui-cocos.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -21,8 +23,7 @@ bool ImGuiRenderer::s_initialized = false;
 std::string_view FontManager::FontMetadata::getName() const { return m_name; }
 
 ImFont *FontManager::FontMetadata::get() {
-  if (m_font)
-    return m_font;
+  if (m_font) return m_font;
 
   this->load();
   return m_font;
@@ -30,8 +31,8 @@ ImFont *FontManager::FontMetadata::get() {
 
 const ImWchar *getDefaultRange() {
   static constexpr ImWchar ranges[] = {
-      0x0020, 0x00FF, // Basic Latin + Latin Supplement
-      0x0100, 0x017F, // Latin Extended-A
+      0x0020, 0x00FF,  // Basic Latin + Latin Supplement
+      0x0100, 0x017F,  // Latin Extended-A
       0,
   };
   return &ranges[0];
@@ -39,24 +40,24 @@ const ImWchar *getDefaultRange() {
 
 const ImWchar *getGlyphRange(i18n::GlyphRange range) {
   switch (range) {
-  case i18n::GlyphRange::Greek:
-    return ImGui::GetIO().Fonts->GetGlyphRangesGreek();
-  case i18n::GlyphRange::Korean:
-    return ImGui::GetIO().Fonts->GetGlyphRangesKorean();
-  case i18n::GlyphRange::Japanese:
-    return ImGui::GetIO().Fonts->GetGlyphRangesJapanese();
-  case i18n::GlyphRange::ChineseFull:
-    return ImGui::GetIO().Fonts->GetGlyphRangesChineseFull();
-  case i18n::GlyphRange::ChineseSimplified:
-    return ImGui::GetIO().Fonts->GetGlyphRangesChineseSimplifiedCommon();
-  case i18n::GlyphRange::Cyrillic:
-    return ImGui::GetIO().Fonts->GetGlyphRangesCyrillic();
-  case i18n::GlyphRange::Thai:
-    return ImGui::GetIO().Fonts->GetGlyphRangesThai();
-  case i18n::GlyphRange::Vietnamese:
-    return ImGui::GetIO().Fonts->GetGlyphRangesVietnamese();
-  default:
-    return getDefaultRange();
+    case i18n::GlyphRange::Greek:
+      return ImGui::GetIO().Fonts->GetGlyphRangesGreek();
+    case i18n::GlyphRange::Korean:
+      return ImGui::GetIO().Fonts->GetGlyphRangesKorean();
+    case i18n::GlyphRange::Japanese:
+      return ImGui::GetIO().Fonts->GetGlyphRangesJapanese();
+    case i18n::GlyphRange::ChineseFull:
+      return ImGui::GetIO().Fonts->GetGlyphRangesChineseFull();
+    case i18n::GlyphRange::ChineseSimplified:
+      return ImGui::GetIO().Fonts->GetGlyphRangesChineseSimplifiedCommon();
+    case i18n::GlyphRange::Cyrillic:
+      return ImGui::GetIO().Fonts->GetGlyphRangesCyrillic();
+    case i18n::GlyphRange::Thai:
+      return ImGui::GetIO().Fonts->GetGlyphRangesThai();
+    case i18n::GlyphRange::Vietnamese:
+      return ImGui::GetIO().Fonts->GetGlyphRangesVietnamese();
+    default:
+      return getDefaultRange();
   }
 }
 
@@ -72,8 +73,7 @@ std::vector<FontManager::FontMetadata> FontManager::fetchAvailableFonts() {
   auto globFonts = [&](std::filesystem::path const &path) {
     std::filesystem::create_directories(path);
     for (auto &entry : std::filesystem::directory_iterator(path)) {
-      if (entry.path().extension() != ".ttf")
-        continue;
+      if (entry.path().extension() != ".ttf") continue;
       auto filename = entry.path().stem().string();
       FontMetadata font{filename, entry.path()};
       result.push_back(font);
@@ -111,8 +111,7 @@ void FontManager::setFont(std::string_view name) {
   }
 
   for (int i = 0; i < m_availableFonts.size(); i++) {
-    if (m_availableFonts[i].getName() != name)
-      continue;
+    if (m_availableFonts[i].getName() != name) continue;
 
     m_selectedFontIndex = i;
     ImGui::GetIO().FontDefault = getFont().get();
@@ -122,8 +121,7 @@ void FontManager::setFont(std::string_view name) {
 }
 
 void ImGuiRenderer::init() {
-  if (s_initialized)
-    return;
+  if (s_initialized) return;
 
   // first call will initialize the layout/theme
   setLayoutMode(ThemeManager::get()->getLayoutMode());
@@ -135,13 +133,11 @@ void ImGuiRenderer::init() {
         auto &style = ImGui::GetStyle();
         io.IniFilename = nullptr;
         style.DisplaySafeAreaPadding = ImVec2(0, 0);
-        if (m_theme)
-          m_theme->init();
+        if (m_theme) m_theme->init();
         m_fontManager.init();
       })
       .draw([this] {
-        if (!s_initialized)
-          return;
+        if (!s_initialized) return;
         ImGuiCocos::get().setInputMode(ImGuiCocos::InputMode::Default);
         draw();
         drawFinished();
@@ -152,8 +148,7 @@ void ImGuiRenderer::init() {
 
 void ImGuiRenderer::updateTabs() {
   // init will recreate all tabs
-  if (m_layout)
-    m_layout->init();
+  if (m_layout) m_layout->init();
 }
 
 void ImGuiRenderer::draw() {
@@ -161,10 +156,8 @@ void ImGuiRenderer::draw() {
   config::setTemp("ui.scale", scale);
 
   m_insideDraw = true;
-  if (m_theme)
-    m_theme->update();
-  if (m_layout)
-    m_layout->draw();
+  if (m_theme) m_theme->update();
+  if (m_layout) m_layout->draw();
   renderPopups();
   m_insideDraw = false;
   setLayoutMode(m_queuedMode);
@@ -185,8 +178,7 @@ void ImGuiRenderer::shutdown() {
 }
 
 void ImGuiRenderer::setLayoutMode(LayoutMode mode) {
-  if (m_layout && m_layout->getMode() == mode)
-    return;
+  if (m_layout && m_layout->getMode() == mode) return;
   if (m_insideDraw) {
     // replacing layout during rendering is a bad idea
     // so we queue the change after the frame is finished
@@ -194,46 +186,42 @@ void ImGuiRenderer::setLayoutMode(LayoutMode mode) {
     return;
   }
   switch (mode) {
-  case LayoutMode::Tabbed:
-    m_layout = std::make_unique<TabbedLayout>();
-    break;
-  case LayoutMode::Panel:
-    m_layout = std::make_unique<PanelLayout>();
-    break;
-  case LayoutMode::Sidebar:
-    m_layout = std::make_unique<SidebarLayout>();
-    break;
+    case LayoutMode::Tabbed:
+      m_layout = std::make_unique<TabbedLayout>();
+      break;
+    case LayoutMode::Panel:
+      m_layout = std::make_unique<PanelLayout>();
+      break;
+    case LayoutMode::Sidebar:
+      m_layout = std::make_unique<SidebarLayout>();
+      break;
   }
   m_layout->init();
-  if (s_initialized)
-    m_layout->toggle(m_isOpened);
+  if (s_initialized) m_layout->toggle(m_isOpened);
   m_queuedMode = mode;
 }
 
 void ImGuiRenderer::setComponentTheme(ComponentTheme theme) {
   auto tm = ThemeManager::get();
-  if (m_theme && theme == m_theme->getTheme())
-    return;
+  if (m_theme && theme == m_theme->getTheme()) return;
   switch (theme) {
-  case ComponentTheme::ImGui:
-    m_theme = std::make_unique<Theme>();
-    break;
-  case ComponentTheme::MegaHack:
-  default:
-    m_theme = std::make_unique<themes::Megahack>();
-    break;
-  case ComponentTheme::MegaOverlay:
-    m_theme = std::make_unique<themes::MegaOverlay>();
-    break;
+    case ComponentTheme::ImGui:
+      m_theme = std::make_unique<Theme>();
+      break;
+    case ComponentTheme::MegaHack:
+    default:
+      m_theme = std::make_unique<themes::Megahack>();
+      break;
+    case ComponentTheme::MegaOverlay:
+      m_theme = std::make_unique<themes::MegaOverlay>();
+      break;
   }
-  if (s_initialized)
-    m_theme->init();
+  if (s_initialized) m_theme->init();
 }
 
 void ImGuiRenderer::visitComponent(
     const std::shared_ptr<Component> &component) const {
-  if (!m_theme)
-    return;
+  if (!m_theme) return;
   component->onUpdate();
   m_theme->visit(component);
 }
@@ -247,8 +235,7 @@ bool ImGuiRenderer::beginWindow(const std::string &title) const {
 }
 
 void ImGuiRenderer::endWindow() const {
-  if (!m_theme)
-    return;
+  if (!m_theme) return;
   m_theme->endWindow();
 }
 
@@ -379,4 +366,4 @@ void ImGuiRenderer::renderPopups() {
                      .begin(),
                  m_popups.end());
 }
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

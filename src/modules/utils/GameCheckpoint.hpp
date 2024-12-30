@@ -1,15 +1,14 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 using namespace geode::prelude;
 
 namespace eclipse::utils {
 class FixPlayerCheckpoint {
-public:
+ public:
   FixPlayerCheckpoint() = default;
 
   FixPlayerCheckpoint(PlayerObject *player) {
@@ -237,7 +236,7 @@ public:
     m_stateForce = player->m_stateForce;
     m_stateForceVector = player->m_stateForceVector;
     m_affectedByForces = player->m_affectedByForces;
-    m_jumpPadRelated = player->m_jumpPadRelated; // map<int, bool>
+    m_jumpPadRelated = player->m_jumpPadRelated;  // map<int, bool>
     m_somethingPlayerSpeedTime = player->m_somethingPlayerSpeedTime;
     m_playerSpeedAC = player->m_playerSpeedAC;
     m_fixRobotJump = player->m_fixRobotJump;
@@ -263,16 +262,15 @@ public:
     m_rotation = player->getRotation();
 
     m_rotateObjectsRelated =
-        player->m_rotateObjectsRelated; // unordered_map<int, GJPointDouble>
+        player->m_rotateObjectsRelated;  // unordered_map<int, GJPointDouble>
     m_maybeRotatedObjectsMap =
-        player->m_maybeRotatedObjectsMap; // unordered_map<int, GameObject*>
-    m_ringRelatedSet = player->m_ringRelatedSet; // unordered_set<int>
-    m_touchedRings = player->m_touchedRings;     // unordered_set<int>
+        player->m_maybeRotatedObjectsMap;  // unordered_map<int, GameObject*>
+    m_ringRelatedSet = player->m_ringRelatedSet;  // unordered_set<int>
+    m_touchedRings = player->m_touchedRings;      // unordered_set<int>
   }
 
   void apply(PlayerObject *player) {
-    if (!utils::get<PlayLayer>()->m_isPracticeMode)
-      return;
+    if (!utils::get<PlayLayer>()->m_isPracticeMode) return;
 
     player->m_wasTeleported = m_wasTeleported;
     player->m_fixGravityBug = m_fixGravityBug;
@@ -530,7 +528,7 @@ public:
     player->m_touchedRings = m_touchedRings;
   }
 
-private:
+ private:
   cocos2d::CCPoint m_position;
   std::vector<CCObject *> m_touchingRings;
   float m_rotation;
@@ -781,4 +779,4 @@ private:
   bool m_ignoreDamage;
   bool m_enable22Changes;
 };
-} // namespace eclipse::utils
+}  // namespace eclipse::utils

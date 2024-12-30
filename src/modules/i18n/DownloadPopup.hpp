@@ -8,7 +8,7 @@ class FallbackBMFont;
 namespace eclipse::i18n {
 
 class DownloadPopup : public geode::Popup<std::string const &> {
-protected:
+ protected:
   bool setup(std::string const &charset) override;
   void keyBackClicked() override {}
   void keyDown(cocos2d::enumKeyCodes key) override {}
@@ -28,8 +28,8 @@ protected:
 
   geode::EventListener<geode::utils::web::WebTask> m_listener;
 
-public:
+ public:
   static DownloadPopup *create(std::string const &charset);
 };
 
-} // namespace eclipse::i18n
+}  // namespace eclipse::i18n

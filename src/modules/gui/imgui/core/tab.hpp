@@ -1,7 +1,8 @@
 #pragma once
 
-#include <functional>
 #include <imgui.h>
+
+#include <functional>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -10,7 +11,7 @@ namespace eclipse::gui::imgui {
 /// @brief A Tab that can contain components, has its own title and position.
 /// Supports drag and drop, can be minimized, supports animations.
 class Tab {
-public:
+ public:
   /// @brief Create new instance of `Tab` with default title and draw callback
   Tab() : m_title("Tab"), m_isOpen(false) {}
 
@@ -33,12 +34,12 @@ public:
   [[nodiscard]] const std::string &getTitle() const;
   void setTitle(const std::string &title);
 
-private:
-  std::string m_title; // Tab title
-  bool m_isOpen;       // Whether the Tab is collapsed or not
+ private:
+  std::string m_title;  // Tab title
+  bool m_isOpen;        // Whether the Tab is collapsed or not
 
   std::function<void()>
-      m_drawCallback; // Callback which will be called when the Tab is drawn
+      m_drawCallback;  // Callback which will be called when the Tab is drawn
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

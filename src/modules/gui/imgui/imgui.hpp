@@ -1,19 +1,21 @@
 #pragma once
+#include <imgui.h>
+
+#include <modules/gui/gui.hpp>
+
 #include "components/theme.hpp"
 #include "layouts/layout.hpp"
-#include <imgui.h>
-#include <modules/gui/gui.hpp>
 
 namespace eclipse::gui::imgui {
 
 class FontManager {
-public:
+ public:
   class FontMetadata {
     ImFont *m_font{};
     std::string m_name;
     std::filesystem::path m_path;
 
-  public:
+   public:
     FontMetadata(std::string name, std::filesystem::path path)
         : m_name(std::move(name)), m_path(std::move(path)) {}
 
@@ -23,7 +25,7 @@ public:
     ImFont *get();
     void load();
 
-  private:
+   private:
     friend class FontManager;
   };
 
@@ -37,13 +39,13 @@ public:
   FontMetadata &getFont() { return m_availableFonts[m_selectedFontIndex]; }
   void setFont(std::string_view name);
 
-private:
+ private:
   std::vector<FontMetadata> m_availableFonts;
   int m_selectedFontIndex = 0;
 };
 
 class ImGuiRenderer : public Renderer {
-public:
+ public:
   static std::shared_ptr<ImGuiRenderer> get() {
     auto engine = Engine::get();
     if (!engine->isInitialized() ||
@@ -63,7 +65,7 @@ public:
   }
   void updateTabs() override;
 
-public:
+ public:
   void draw();
   void setLayoutMode(LayoutMode mode);
   void setComponentTheme(ComponentTheme theme);
@@ -75,7 +77,7 @@ public:
 
   FontManager &getFontManager() { return m_fontManager; }
 
-private:
+ private:
   void drawFinished();
   void renderPopups();
 
@@ -93,4 +95,4 @@ private:
   std::vector<Popup> m_popups;
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

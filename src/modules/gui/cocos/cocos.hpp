@@ -1,6 +1,7 @@
 #pragma once
-#include "popup/popup.hpp"
 #include <modules/gui/gui.hpp>
+
+#include "popup/popup.hpp"
 
 namespace eclipse::gui::cocos {
 
@@ -8,10 +9,9 @@ class OptionsPopup;
 class ModalPopup;
 
 class CocosRenderer : public Renderer {
-public:
+ public:
   static std::shared_ptr<CocosRenderer> get() {
-    if (Engine::getRendererType() != RendererType::Cocos2d)
-      return nullptr;
+    if (Engine::getRendererType() != RendererType::Cocos2d) return nullptr;
     return std::static_pointer_cast<CocosRenderer>(
         Engine::get()->getRenderer());
   }
@@ -47,10 +47,10 @@ public:
   void registerModal(ModalPopup *modal) { m_modals.push_back(modal); }
   void unregisterModal(ModalPopup *modal) { std::erase(m_modals, modal); }
 
-private:
+ private:
   Popup *m_popup = nullptr;
   std::vector<OptionsPopup *> m_optionsPopups;
   std::vector<ModalPopup *> m_modals;
 };
 
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

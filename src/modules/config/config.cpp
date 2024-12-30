@@ -20,8 +20,7 @@ nlohmann::json &getTempStorage() { return tempStorage; }
 /// @return True if the file was loaded successfully
 bool loadFile(const std::filesystem::path &path) {
   std::ifstream file(path);
-  if (!file.is_open())
-    return false;
+  if (!file.is_open()) return false;
 
   storage = nlohmann::json::parse(file, nullptr, false);
   file.close();
@@ -31,8 +30,7 @@ bool loadFile(const std::filesystem::path &path) {
 
 void executeCallbacks(std::string_view name) {
   auto it = callbacks.find(name);
-  if (it == callbacks.end())
-    return;
+  if (it == callbacks.end()) return;
   for (const auto &callback : it->second) {
     callback();
   }
@@ -77,7 +75,7 @@ void loadProfile(std::string_view profile) {
   auto path = profilesDir / fmt::format("{}.json", profile);
   if (!loadFile(path)) {
     geode::log::warn("Failed to load profile: {}", profile);
-    load(); // Load the default config
+    load();  // Load the default config
   }
 }
 
@@ -85,8 +83,7 @@ void deleteProfile(std::string_view profile) {
   auto profilesDir = geode::Mod::get()->getSaveDir() / "profiles";
   auto path = profilesDir / fmt::format("{}.json", profile);
 
-  if (std::filesystem::exists(path))
-    std::filesystem::remove(path);
+  if (std::filesystem::exists(path)) std::filesystem::remove(path);
 }
 
 std::vector<std::string> getProfiles() {
@@ -106,9 +103,8 @@ std::vector<std::string> getProfiles() {
 }
 
 nlohmann::detail::value_t getType(std::string_view key) {
-  if (!has(key))
-    return nlohmann::detail::value_t::null;
+  if (!has(key)) return nlohmann::detail::value_t::null;
   return getStorage().at(key).type();
 }
 
-} // namespace eclipse::config
+}  // namespace eclipse::config

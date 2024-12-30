@@ -1,11 +1,10 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/CCCircleWave.hpp>
 #include <Geode/modify/CCLightFlash.hpp>
 #include <Geode/modify/CCParticleSystem.hpp>
 #include <Geode/modify/CCParticleSystemQuad.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Level {
 class HideLevelCompleteVFX : public hack::Hack {
@@ -32,8 +31,7 @@ class $modify(HideLevelCompleteVFXCCCWHook,
 
 PlayLayer *pl = utils::get<PlayLayer>();
 
-if (!pl)
-  return;
+if (!pl) return;
 
 /*
 CCCircleWaves sometimes get added
@@ -46,7 +44,7 @@ thanks to the m_levelEndAnimationStarted member variable
 if (pl->m_levelEndAnimationStarted &&
     !geode::cast::typeinfo_cast<CurrencyRewardLayer *>(this->getParent()))
   this->setVisible(false);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 
@@ -66,11 +64,9 @@ class $modify(HideLevelCompleteVFXCCLFHook, CCLightFlash){
 
 PlayLayer *pl = utils::get<PlayLayer>();
 
-if (!pl)
-  return;
+if (!pl) return;
 
-if (pl->m_levelEndAnimationStarted)
-  this->setVisible(false);
+if (pl->m_levelEndAnimationStarted) this->setVisible(false);
 }
 }
 ;
@@ -103,15 +99,11 @@ class $modify(HideLevelCompleteVFXCCPSHook, cocos2d::CCParticleSystem){
 
 PlayLayer *pl = utils::get<PlayLayer>();
 
-if (!pl)
-  return;
-if (this->getParent() != pl)
-  return;
-if (!geode::cast::typeinfo_cast<cocos2d::CCParticleSystemQuad *>(this))
-  return;
+if (!pl) return;
+if (this->getParent() != pl) return;
+if (!geode::cast::typeinfo_cast<cocos2d::CCParticleSystemQuad *>(this)) return;
 
-if (pl->m_levelEndAnimationStarted)
-  this->setVisible(false);
+if (pl->m_levelEndAnimationStarted) this->setVisible(false);
 }
 }
 ;

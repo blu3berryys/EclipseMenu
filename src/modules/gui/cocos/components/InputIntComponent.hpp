@@ -1,21 +1,21 @@
 #pragma once
-#include "BaseComponentNode.hpp"
 #include <modules/gui/cocos/popup/options-popup.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class InputIntComponentNode
     : public BaseComponentNode<InputIntComponentNode, cocos2d::CCMenu,
                                InputIntComponent, float>,
       public TextInputDelegate {
-protected:
+ protected:
   TranslatedLabel *m_label = nullptr;
   CCMenuItemSpriteExtra *m_infoButton = nullptr;
   geode::TextInput *m_textInput = nullptr;
 
-public:
+ public:
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setID(fmt::format("toggle-{}"_spr, m_component->getId()));
     this->setContentSize({width, 28.f});
@@ -53,8 +53,7 @@ public:
   virtual void textChanged(CCTextInputNode *input) override {
     geode::Result<int> valueOpt =
         geode::utils::numFromString<int>(input->getString());
-    if (!valueOpt)
-      return;
+    if (!valueOpt) return;
 
     int value =
         std::clamp(*valueOpt, m_component->getMin(), m_component->getMax());
@@ -67,4 +66,4 @@ public:
     m_textInput->setString(std::to_string(m_component->getValue()));
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

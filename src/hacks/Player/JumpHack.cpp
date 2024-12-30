@@ -1,9 +1,8 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#include <Geode/modify/PlayerObject.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -29,17 +28,14 @@ class $modify(JumpHackBGLHook, GJBaseGameLayer){
 
         void update(float dt){
             if (jump){if (m_player1) m_player1->m_isOnGround = true;
-if (m_player2)
-  m_player2->m_isOnGround = true;
-} // namespace eclipse::hacks::Player
+if (m_player2) m_player2->m_isOnGround = true;
+}  // namespace eclipse::hacks::Player
 
 GJBaseGameLayer::update(dt);
 
 if (jump) {
-  if (m_player1)
-    m_player1->m_isOnGround = true;
-  if (m_player2)
-    m_player2->m_isOnGround = true;
+  if (m_player1) m_player1->m_isOnGround = true;
+  if (m_player2) m_player2->m_isOnGround = true;
   jump = false;
 }
 }

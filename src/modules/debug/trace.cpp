@@ -13,4 +13,4 @@ Trace::~Trace() {
   geode::log::popNest();
   geode::log::debug("<<< {}", m_name);
 }
-} // namespace eclipse::debug
+}  // namespace eclipse::debug

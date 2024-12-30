@@ -1,9 +1,8 @@
+#include <Geode/modify/MenuGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 #include <modules/keybinds/manager.hpp>
-
-#include <Geode/modify/MenuGameLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -36,7 +35,7 @@ for (auto key : keys) {
     m_playerObject->releaseButton(PlayerButton::Jump);
   }
 }
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 
 MenuGameLayer::update(dt);
 }

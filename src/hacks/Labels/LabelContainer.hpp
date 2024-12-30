@@ -6,7 +6,7 @@ class SmartLabel;
 
 /// @brief Class that contains multiple labels and can manage them.
 class LabelsContainer : public cocos2d::CCNode {
-public:
+ public:
   enum class Alignment {
     TopLeft = 0,
     TopCenter = 1,
@@ -64,7 +64,7 @@ public:
   /// @brief Update the position of the container.
   void updatePosition();
 
-private:
+ private:
   /// @brief Performs a layout update.
   void recalculateLayout();
 
@@ -74,4 +74,4 @@ private:
   bool m_dirty = false;
 };
 
-} // namespace eclipse::hacks::Labels
+}  // namespace eclipse::hacks::Labels

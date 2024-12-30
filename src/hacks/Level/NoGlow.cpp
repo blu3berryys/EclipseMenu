@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -23,7 +22,7 @@ class $modify(NoGlowPLHook, PlayLayer){
 
         void addObject(GameObject * obj){obj->m_hasNoGlow = true;
 PlayLayer::addObject(obj);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

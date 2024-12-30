@@ -1,9 +1,8 @@
+#include <Geode/modify/CCDelayTime.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/CCDelayTime.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -43,7 +42,7 @@ if (auto *respawnSequence = this->getActionByTag(0x10)) {
   newSequence->setTag(0x10);
   this->runAction(newSequence);
 }
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

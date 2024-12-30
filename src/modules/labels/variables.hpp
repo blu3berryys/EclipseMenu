@@ -4,8 +4,8 @@
 #include <unordered_map>
 
 // Quickly assign a value to a label variable for debugging purposes.
-#define DEBUG_VAR(name, value)                                                 \
-  eclipse::labels::VariableManager::get().setVariable(                         \
+#define DEBUG_VAR(name, value)                         \
+  eclipse::labels::VariableManager::get().setVariable( \
       name, rift::Value::from(value))
 
 namespace eclipse::labels {
@@ -13,7 +13,7 @@ namespace eclipse::labels {
 /// @brief Class that represents a variable manager, used to store and retrieve
 /// variables.
 class VariableManager {
-public:
+ public:
   static VariableManager &get();
 
   /// @brief Set default variables (which usually don't change).
@@ -40,7 +40,7 @@ public:
   /// @brief Update the FPS variable.
   void updateFPS();
 
-private:
+ private:
   void fetchGeneralData();
   void fetchTimeData();
   void fetchHacksData();
@@ -51,4 +51,4 @@ private:
   rift::Object m_variables;
 };
 
-} // namespace eclipse::labels
+}  // namespace eclipse::labels

@@ -1,6 +1,7 @@
 #pragma once
-#include <functional>
 #include <stdint.h>
+
+#include <functional>
 #include <string>
 
 namespace eclipse {
@@ -8,7 +9,7 @@ namespace eclipse {
 /// @brief Represents a classic modal window, with a title, a message and a set
 /// of buttons.
 class Popup {
-public:
+ public:
   using PopupCallback = std::function<void(bool)>;
   using PromptCallback = std::function<void(bool, const std::string &)>;
 
@@ -43,7 +44,7 @@ public:
     return m_promptCallback;
   }
 
-private:
+ private:
   static size_t s_instanceCounter;
 
   size_t m_id = 0;
@@ -58,4 +59,4 @@ private:
   PromptCallback m_promptCallback;
 };
 
-} // namespace eclipse
+}  // namespace eclipse

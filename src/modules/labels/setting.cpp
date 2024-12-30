@@ -11,33 +11,32 @@ size_t LabelSettings::instanceCount = 0;
 
 // Handle the event based on the type and condition
 Event *handleEvent(const LabelEvent &event, const LabelSettings *label) {
-  if (!event.enabled)
-    return nullptr;
+  if (!event.enabled) return nullptr;
 
   // check if the condition is met
   bool shouldProcess = false;
   switch (event.type) {
-  case LabelEvent::Type::Always: {
-    shouldProcess = true;
-  } break;
-  case LabelEvent::Type::Custom: {
-    auto res =
-        rift::evaluate(event.condition, VariableManager::get().getVariables());
-    if (res.isOk()) {
-      shouldProcess = res.unwrap().toBoolean();
-    }
-  } break;
-  case LabelEvent::Type::OnDeath: {
-    if (auto gjbgl = utils::get<GJBaseGameLayer>())
-      shouldProcess = gjbgl->m_player1->m_isDead;
-  } break;
-  case LabelEvent::Type::OnButtonHold: {
-    if (auto gjbgl = utils::get<GJBaseGameLayer>())
-      shouldProcess = gjbgl->m_player1->m_jumpBuffered;
-  } break;
-  case LabelEvent::Type::OnNoclipDeath: {
-    shouldProcess = config::getTemp<bool>("noclipDying", false);
-  } break;
+    case LabelEvent::Type::Always: {
+      shouldProcess = true;
+    } break;
+    case LabelEvent::Type::Custom: {
+      auto res = rift::evaluate(event.condition,
+                                VariableManager::get().getVariables());
+      if (res.isOk()) {
+        shouldProcess = res.unwrap().toBoolean();
+      }
+    } break;
+    case LabelEvent::Type::OnDeath: {
+      if (auto gjbgl = utils::get<GJBaseGameLayer>())
+        shouldProcess = gjbgl->m_player1->m_isDead;
+    } break;
+    case LabelEvent::Type::OnButtonHold: {
+      if (auto gjbgl = utils::get<GJBaseGameLayer>())
+        shouldProcess = gjbgl->m_player1->m_jumpBuffered;
+    } break;
+    case LabelEvent::Type::OnNoclipDeath: {
+      shouldProcess = config::getTemp<bool>("noclipDying", false);
+    } break;
   }
 
   // process the queueing and dequeuing of the event based on the delay/duration
@@ -61,8 +60,7 @@ Event::EventState LabelSettings::processEvents() const {
 
   for (const auto &event : events) {
     auto eventState = handleEvent(event, this);
-    if (!eventState)
-      continue;
+    if (!eventState) continue;
     eventState->processState(state);
   }
 
@@ -78,12 +76,10 @@ void LabelSettings::promptSave() const {
   s_listener.bind([this](FileEvent::Event *event) {
     if (auto value = event->getValue()) {
       auto path = value->unwrapOr("");
-      if (path.empty())
-        return;
+      if (path.empty()) return;
 
       // ensure the file has the correct extension
-      if (path.extension() != ".ecl")
-        path.replace_extension(".ecl");
+      if (path.extension() != ".ecl") path.replace_extension(".ecl");
 
       std::ofstream file(path);
       file << nlohmann::json(*this).dump(
@@ -126,12 +122,11 @@ void to_json(nlohmann::json &json, const LabelSettings &settings) {
                         {"events", settings.events}};
 }
 
-#define READ_OPTIONAL(key)                                                     \
-  if (json.contains(#key))                                                     \
+#define READ_OPTIONAL(key) \
+  if (json.contains(#key)) \
   event.key = json.at(#key).get<decltype(event.key)::value_type>()
-#define STORE_OPTIONAL(key)                                                    \
-  if (event.key.has_value())                                                   \
-  json[#key] = event.key.value()
+#define STORE_OPTIONAL(key) \
+  if (event.key.has_value()) json[#key] = event.key.value()
 
 void from_json(const nlohmann::json &json, LabelEvent &event) {
   event.enabled = json.value("enabled", true);
@@ -160,4 +155,4 @@ void to_json(nlohmann::json &json, const LabelEvent &event) {
   STORE_OPTIONAL(opacity);
   STORE_OPTIONAL(font);
 }
-} // namespace eclipse::labels
+}  // namespace eclipse::labels

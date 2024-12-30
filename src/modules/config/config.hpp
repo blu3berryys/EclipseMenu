@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fmt/format.h>
+
 #include <functional>
 #include <nlohmann/json.hpp>
 #include <optional>
@@ -50,9 +51,9 @@ inline bool has(std::string_view key) { return getStorage().contains(key); }
 /// @param defaultValue Default value to return if the key does not exist.
 /// @return Value from the configuration or the default value if the key does
 /// not exist.
-template <typename T> T get(std::string_view key, const T &defaultValue) {
-  if (!has(key))
-    return defaultValue;
+template <typename T>
+T get(std::string_view key, const T &defaultValue) {
+  if (!has(key)) return defaultValue;
 
   return getStorage().at(key).get<T>();
 }
@@ -62,9 +63,9 @@ template <typename T> T get(std::string_view key, const T &defaultValue) {
 /// @tparam T Type of the value to get.
 /// @param key Key to get the value from.
 /// @return Value from the configuration.
-template <typename T> geode::Result<T> get(std::string_view key) {
-  if (!has(key))
-    return geode::Err(fmt::format("Key '{}' does not exist", key));
+template <typename T>
+geode::Result<T> get(std::string_view key) {
+  if (!has(key)) return geode::Err(fmt::format("Key '{}' does not exist", key));
 
   return geode::Ok(getStorage().at(key).get<T>());
 }
@@ -73,7 +74,8 @@ template <typename T> geode::Result<T> get(std::string_view key) {
 /// @tparam T Type of the value to set.
 /// @param key Key to set the value to.
 /// @param value Value to set.
-template <typename T> void set(std::string_view key, const T &value) {
+template <typename T>
+void set(std::string_view key, const T &value) {
   getStorage()[key] = value;
   executeCallbacks(key);
 }
@@ -87,9 +89,9 @@ nlohmann::detail::value_t getType(std::string_view key);
 /// @tparam T Type to check.
 /// @param key Key to check.
 /// @return True if the value is of the specified type.
-template <typename T> bool is(std::string_view key) {
-  if (!has(key))
-    return false;
+template <typename T>
+bool is(std::string_view key) {
+  if (!has(key)) return false;
 
   auto type = getType(key);
   if constexpr (std::is_same_v<T, std::string>) {
@@ -109,9 +111,9 @@ template <typename T> bool is(std::string_view key) {
 /// @tparam T Type of the value to set.
 /// @param key Key to set the value to.
 /// @param value Value to set.
-template <typename T> void setIfEmpty(std::string_view key, const T &value) {
-  if (!has(key))
-    set(key, value);
+template <typename T>
+void setIfEmpty(std::string_view key, const T &value) {
+  if (!has(key)) set(key, value);
 }
 
 /// @brief Registers a delegate which is called when a specific value in config
@@ -133,9 +135,9 @@ inline bool hasTemp(std::string_view key) {
 /// @param defaultValue Default value to return if the key does not exist.
 /// @return Value from the temporary storage or the default value if the key
 /// does not exist.
-template <typename T> T getTemp(std::string_view key, const T &defaultValue) {
-  if (!hasTemp(key))
-    return defaultValue;
+template <typename T>
+T getTemp(std::string_view key, const T &defaultValue) {
+  if (!hasTemp(key)) return defaultValue;
 
   return getTempStorage().at(key).get<T>();
 }
@@ -145,7 +147,8 @@ template <typename T> T getTemp(std::string_view key, const T &defaultValue) {
 /// @tparam T Type of the value to get.
 /// @param key Key to get the value from.
 /// @return Value from the temporary storage.
-template <typename T> geode::Result<T> getTemp(std::string_view key) {
+template <typename T>
+geode::Result<T> getTemp(std::string_view key) {
   if (!hasTemp(key))
     return geode::Err(fmt::format("Key '{}' does not exist", key));
 
@@ -156,7 +159,8 @@ template <typename T> geode::Result<T> getTemp(std::string_view key) {
 /// @tparam T Type of the value to set.
 /// @param key Key to set the value to.
 /// @param value Value to set.
-template <typename T> void setTemp(std::string_view key, const T &value) {
+template <typename T>
+void setTemp(std::string_view key, const T &value) {
   getTempStorage()[key] = value;
 }
-} // namespace eclipse::config
+}  // namespace eclipse::config

@@ -3,7 +3,7 @@
 #include <vector>
 
 class DSPRecorder {
-public:
+ public:
   static DSPRecorder *get();
 
   /// @brief Whether to lock the FMOD thread while recording. (for one-pass
@@ -22,7 +22,7 @@ public:
 
   [[nodiscard]] bool isRecording() const { return m_recording; }
 
-private:
+ private:
   void init();
 
   FMOD::DSP *m_dsp = nullptr;

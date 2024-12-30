@@ -10,8 +10,7 @@ class CBFToggle : public hack::Hack {
 
   void lateInit() override {
     auto cbf = geode::Loader::get()->getLoadedMod("syzzi.click_between_frames");
-    if (!cbf)
-      return; // mod not loaded
+    if (!cbf) return;  // mod not loaded
 
     auto tab = gui::MenuTab::find("tab.global");
     tab->addToggle("global.click-between-frames",
@@ -41,5 +40,5 @@ class CBFToggle : public hack::Hack {
 };
 
 REGISTER_HACK(CBFToggle)
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 #endif

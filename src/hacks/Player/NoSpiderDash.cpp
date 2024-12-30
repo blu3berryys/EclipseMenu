@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayerObject.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -26,7 +25,7 @@ class $modify(NoSpiderDashPOHook, PlayerObject){
 m_playEffects = false;
 PlayerObject::playSpiderDashEffect(from, to);
 m_playEffects = playEffects;
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

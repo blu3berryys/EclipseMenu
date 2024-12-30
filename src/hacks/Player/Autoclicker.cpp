@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -62,4 +61,4 @@ class $modify(AutoClickerBGLHook, GJBaseGameLayer) {
   }
 };
 
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player

@@ -1,20 +1,21 @@
 #pragma once
-#include "BaseComponentNode.hpp"
 #include <modules/gui/cocos/popup/options-popup.hpp>
 #include <modules/gui/theming/manager.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class FloatToggleComponentNode
     : public BaseComponentNode<FloatToggleComponentNode, cocos2d::CCMenu,
                                FloatToggleComponent, float>,
       public TextInputDelegate {
-protected:
+ protected:
   CCMenuItemToggler *m_toggler = nullptr;
   TranslatedLabel *m_label = nullptr;
   CCMenuItemSpriteExtra *m_infoButton = nullptr;
   geode::TextInput *m_textInput = nullptr;
 
-public:
+ public:
   cocos2d::extension::CCScale9Sprite *createButton(bool check) {
     const auto tm = ThemeManager::get();
     // prizm men
@@ -33,8 +34,7 @@ public:
     return box;
   }
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
     const auto tm = ThemeManager::get();
 
     this->setID(fmt::format("toggle-{}"_spr, m_component->getId()));
@@ -84,8 +84,7 @@ public:
   virtual void textChanged(CCTextInputNode *input) override {
     geode::Result<float> valueOpt =
         geode::utils::numFromString<float>(input->getString());
-    if (!valueOpt)
-      return;
+    if (!valueOpt) return;
 
     float value =
         std::clamp(*valueOpt, m_component->getMin(), m_component->getMax());
@@ -98,4 +97,4 @@ public:
     m_textInput->setString(std::to_string(m_component->getValue()));
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

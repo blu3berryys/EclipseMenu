@@ -1,20 +1,18 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/binding/GameStatsManager.hpp>
-
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 #include <Geode/modify/RetryLevelLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Global {
 
 enum class SafeModeState {
-  Normal,   // no cheats detected
-  Cheating, // cheats detected
-  Tripped   // cheated in current attempt
+  Normal,    // no cheats detected
+  Cheating,  // cheats detected
+  Tripped    // cheated in current attempt
 };
 
 // Contains the state of activated hacks in an attempt
@@ -24,7 +22,7 @@ std::map<std::string_view, bool> s_attemptCheats;
 bool s_trippedLastAttempt = false;
 
 class AutoSafeMode : public hack::Hack {
-public:
+ public:
   static bool hasCheats() {
     const auto &hacks = hack::Hack::getHacks();
     return std::ranges::any_of(hacks,
@@ -32,8 +30,7 @@ public:
   }
 
   static bool shouldEnable() {
-    if (!config::get<bool>("global.autosafemode", false))
-      return false;
+    if (!config::get<bool>("global.autosafemode", false)) return false;
 
     return s_trippedLastAttempt || hasCheats();
   }
@@ -56,22 +53,20 @@ public:
     }
 
     // Remove the last newline
-    if (!message.empty())
-      message.pop_back();
+    if (!message.empty()) message.pop_back();
 
     return message;
   }
 
   static void showPopup(const std::string &message) {
-    if (!s_trippedLastAttempt && !hasCheats())
-      return;
+    if (!s_trippedLastAttempt && !hasCheats()) return;
 
     FLAlertLayer::create(nullptr, "Cheats Detected", message, "OK", nullptr,
                          400, true, 0, 1)
         ->show();
   }
 
-private:
+ private:
   void init() override {
     auto tab = gui::MenuTab::find("tab.global");
 
@@ -127,8 +122,7 @@ class $modify(SafeModePLHook, PlayLayer) {
     m_fields->totalJumps = GSM->getStat("1");
     m_fields->totalAttempts = GSM->getStat("2");
 
-    if (!PlayLayer::init(level, useReplay, dontCreateObjects))
-      return false;
+    if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 
     return true;
   }
@@ -169,8 +163,7 @@ class $modify(SafeModePLHook, PlayLayer) {
     bool original = this->m_isTestMode;
     bool safeMode = config::get<bool>("global.safemode", false);
 
-    if (safeMode || AutoSafeMode::shouldEnable())
-      this->m_isTestMode = true;
+    if (safeMode || AutoSafeMode::shouldEnable()) this->m_isTestMode = true;
 
     PlayLayer::levelComplete();
 
@@ -187,13 +180,13 @@ class $modify(SafeModePOHook, PlayerObject){
                 config::get<bool>("global.safemode.freeze_jumps", true)) return;
 
 PlayerObject::incrementJumps();
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global
 }
 ;
 
 #define NormalColor gui::Color::GREEN
 #define CheatingColor gui::Color::RED
-#define TrippedColor                                                           \
+#define TrippedColor \
   gui::Color { 0.72f, 0.37f, 0.f }
 
 static CCMenuItemSpriteExtra *createCI() {
@@ -213,8 +206,7 @@ static CCMenuItemSpriteExtra *createCI() {
 
 class $modify(SafeModeRLLHook, RetryLevelLayer){
     void customSetup() override{RetryLevelLayer::customSetup();
-if (!config::get<bool>("labels.cheat-indicator.endscreen", true))
-  return;
+if (!config::get<bool>("labels.cheat-indicator.endscreen", true)) return;
 
 m_mainMenu->addChild(createCI());
 }
@@ -223,8 +215,7 @@ m_mainMenu->addChild(createCI());
 
 class $modify(SafeModeELLHook, EndLevelLayer){
     void customSetup() override{EndLevelLayer::customSetup();
-if (!config::get<bool>("labels.cheat-indicator.endscreen", true))
-  return;
+if (!config::get<bool>("labels.cheat-indicator.endscreen", true)) return;
 
 auto btn = createCI();
 if (this->getChildByIDRecursive("absolllute.megahack/cheat-indicator")) {
@@ -232,10 +223,8 @@ if (this->getChildByIDRecursive("absolllute.megahack/cheat-indicator")) {
 }
 
 auto menu = m_mainLayer->getChildByID("button-menu");
-if (!menu)
-  menu = m_mainLayer->getChildByType<cocos2d::CCMenu>(0);
-if (menu)
-  menu->addChild(btn);
+if (!menu) menu = m_mainLayer->getChildByType<cocos2d::CCMenu>(0);
+if (menu) menu->addChild(btn);
 }
 }
 ;

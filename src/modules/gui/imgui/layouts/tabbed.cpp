@@ -1,4 +1,5 @@
 #include "tabbed.hpp"
+
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/imgui/imgui.hpp>
@@ -44,45 +45,44 @@ bool TabbedLayout::shouldRender() const {
 
 void TabbedLayout::draw() {
   switch (m_preloadStep) {
-  case 0:
-    // Render windows once, to get the correct size
-    ImGui::GetStyle().Alpha = 0.f;
-    ImGui::GetStyle().WindowShadowSize = 0.f;
-    for (auto &window : m_windows) {
-      window.draw();
-    }
-    // Load saved window states
-    {
-      auto windowStates = config::get("windows", std::vector<nlohmann::json>());
-      for (auto &windowState : windowStates) {
-        auto title = windowState.at("title").get<std::string>();
-        auto window = std::find_if(m_windows.begin(), m_windows.end(),
-                                   [&title](const Window &window) {
-                                     return window.getTitle() == title;
-                                   });
-        if (window != m_windows.end())
-          from_json(windowState, *window);
+    case 0:
+      // Render windows once, to get the correct size
+      ImGui::GetStyle().Alpha = 0.f;
+      ImGui::GetStyle().WindowShadowSize = 0.f;
+      for (auto &window : m_windows) {
+        window.draw();
       }
-    }
-    m_preloadStep = 1;
-    break;
-  case 1:
-    // Move windows outside the screen to prepare for animation
-    for (auto &window : m_windows) {
-      window.draw();
-      window.setDrawPosition(randomWindowPosition(window));
-    }
-    ImGui::GetStyle().Alpha = 1.f;
-    m_preloadStep = 2;
-    break;
-  default:
-    break;
+      // Load saved window states
+      {
+        auto windowStates =
+            config::get("windows", std::vector<nlohmann::json>());
+        for (auto &windowState : windowStates) {
+          auto title = windowState.at("title").get<std::string>();
+          auto window = std::find_if(m_windows.begin(), m_windows.end(),
+                                     [&title](const Window &window) {
+                                       return window.getTitle() == title;
+                                     });
+          if (window != m_windows.end()) from_json(windowState, *window);
+        }
+      }
+      m_preloadStep = 1;
+      break;
+    case 1:
+      // Move windows outside the screen to prepare for animation
+      for (auto &window : m_windows) {
+        window.draw();
+        window.setDrawPosition(randomWindowPosition(window));
+      }
+      ImGui::GetStyle().Alpha = 1.f;
+      m_preloadStep = 2;
+      break;
+    default:
+      break;
   }
 
   // Run move actions
   auto deltaTime = ImGui::GetIO().DeltaTime;
-  for (const auto &action : m_actions)
-    action->update(deltaTime);
+  for (const auto &action : m_actions) action->update(deltaTime);
 
   // Remove finished actions
   std::erase_if(m_actions, [](auto action) {
@@ -93,8 +93,7 @@ void TabbedLayout::draw() {
     return false;
   });
 
-  if (!shouldRender())
-    return;
+  if (!shouldRender()) return;
 
   // Render windows
   for (auto &window : m_windows) {
@@ -104,8 +103,7 @@ void TabbedLayout::draw() {
   // Auto reset window positions
   auto isDragging = config::getTemp("draggingWindow", false);
   auto stackEnabled = config::get<bool>("menu.stackWindows", true);
-  if (m_actions.empty() && !isDragging && stackEnabled)
-    stackWindows();
+  if (m_actions.empty() && !isDragging && stackEnabled) stackWindows();
 
   // Reset dragging state
   config::setTemp("draggingWindow", false);
@@ -145,18 +143,20 @@ ImVec2 TabbedLayout::randomWindowPosition(const Window &window) {
 
   // Pick a random side of the screen
   switch (utils::random(3)) {
-  case 0:
-    target = ImVec2(utils::random(screenSize.x - windowSize.x), -windowSize.y);
-    break;
-  case 1:
-    target = ImVec2(utils::random(screenSize.x - windowSize.x), screenSize.y);
-    break;
-  case 2:
-    target = ImVec2(-windowSize.x, utils::random(screenSize.y - windowSize.y));
-    break;
-  default:
-    target = ImVec2(screenSize.x, utils::random(screenSize.y - windowSize.y));
-    break;
+    case 0:
+      target =
+          ImVec2(utils::random(screenSize.x - windowSize.x), -windowSize.y);
+      break;
+    case 1:
+      target = ImVec2(utils::random(screenSize.x - windowSize.x), screenSize.y);
+      break;
+    case 2:
+      target =
+          ImVec2(-windowSize.x, utils::random(screenSize.y - windowSize.y));
+      break;
+    default:
+      target = ImVec2(screenSize.x, utils::random(screenSize.y - windowSize.y));
+      break;
   }
 
   return target;
@@ -166,7 +166,7 @@ ImVec2 TabbedLayout::randomWindowPosition(const Window &window) {
 std::map<Window *, ImVec2> TabbedLayout::getStackedPositions() {
   auto firstColumnLock = config::get<bool>("menu.lockFirstColumn", false);
   static std::array<std::string, 2> s_builtInWindows = {
-      "Interface", "Keybinds"}; // TODO: Add all primary windows
+      "Interface", "Keybinds"};  // TODO: Add all primary windows
   std::vector<std::string> builtInWindows(s_builtInWindows.begin(),
                                           s_builtInWindows.end());
   if (!firstColumnLock) {
@@ -198,8 +198,7 @@ std::map<Window *, ImVec2> TabbedLayout::getStackedPositions() {
     }
   }
 
-  if (columns <= 0)
-    return positions;
+  if (columns <= 0) return positions;
 
   // Rest are stacked to take as little space as possible
   auto columnCount = firstColumnLock ? columns - 1 : columns;
@@ -245,4 +244,4 @@ void TabbedLayout::stackWindows() {
     m_actions.push_back(window->animateTo(target, duration, easing, true));
   }
 }
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

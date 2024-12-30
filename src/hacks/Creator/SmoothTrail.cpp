@@ -1,8 +1,7 @@
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/LevelEditorLayer.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -24,9 +23,9 @@ class $modify(SmoothTrailLELHook, LevelEditorLayer){
     ADD_HOOKS_DELEGATE("creator.smoothtrail")
 
         void postUpdate(float dt)
-            override{m_trailTimer = 0.1f; // Force trail update every frame
+            override{m_trailTimer = 0.1f;  // Force trail update every frame
 LevelEditorLayer::postUpdate(dt);
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 }
 ;
 }

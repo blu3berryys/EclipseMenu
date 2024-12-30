@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cmath>
 #include <cocos2d.h>
+#include <fmt/format.h>
 #include <imgui.h>
+
+#include <cmath>
 #include <nlohmann/json.hpp>
 #include <string>
-
-#include <fmt/format.h>
 
 namespace eclipse::gui {
 struct Color {
@@ -27,7 +27,9 @@ struct Color {
   explicit Color(const cocos2d::ccColor4F &other)
       : r(other.r), g(other.g), b(other.b), a(other.a) {}
   explicit Color(const cocos2d::ccColor4B &other)
-      : r(other.r / 255.0f), g(other.g / 255.0f), b(other.b / 255.0f),
+      : r(other.r / 255.0f),
+        g(other.g / 255.0f),
+        b(other.b / 255.0f),
         a(other.a / 255.0f) {}
 
   Color(Color &&other) noexcept
@@ -131,4 +133,4 @@ struct Color {
 
 void to_json(nlohmann::json &j, const Color &e);
 void from_json(const nlohmann::json &j, Color &e);
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

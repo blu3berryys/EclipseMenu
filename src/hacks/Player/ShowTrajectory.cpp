@@ -1,7 +1,3 @@
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
 #include <Geode/modify/EffectGameObject.hpp>
 #include <Geode/modify/EnhancedGameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
@@ -10,10 +6,13 @@
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
 
 namespace eclipse::hacks::Player {
 class TrajectorySimulation {
-private:
+ private:
   PlayerObject *m_player1{};
   PlayerObject *m_player2{};
 
@@ -24,10 +23,10 @@ private:
 
   float m_frameDt = 0.f;
 
-public:
+ public:
   cocos2d::CCDrawNode *getDrawNode() const {
     class TrajectoryDrawNode : public cocos2d::CCDrawNode {
-    public:
+     public:
       static TrajectoryDrawNode *create() {
         auto ret = new TrajectoryDrawNode();
         if (ret->init()) {
@@ -51,7 +50,7 @@ public:
     return instance;
   }
 
-private:
+ private:
   void drawRectangleHitbox(const cocos2d::CCRect &rect, const gui::Color &color,
                            const gui::Color &borderColor) const {
     std::array vertices = {cocos2d::CCPoint{rect.getMinX(), rect.getMinY()},
@@ -101,8 +100,7 @@ private:
       pl->checkCollisions(player, m_frameDt, false);
 
       // ReSharper disable once CppDFAConstantConditions
-      if (m_simulationDead)
-        break;
+      if (m_simulationDead) break;
 
       if (!iterationActionDone &&
           (!isPlayer2 && !m_player1Pressed || isPlayer2 && !m_player2Pressed)) {
@@ -126,8 +124,7 @@ private:
 
   void buttonForPlayer(PlayerObject *player, PlayerObject *playerBase,
                        bool down) {
-    if (!player || !playerBase)
-      return;
+    if (!player || !playerBase) return;
 
     bool isPlayer2 = playerBase == utils::get<PlayLayer>()->m_player2;
 
@@ -163,7 +160,7 @@ private:
     return player;
   }
 
-public:
+ public:
   void init() {
     PlayLayer *pl = utils::get<PlayLayer>();
 
@@ -200,8 +197,7 @@ public:
   void simulate() {
     PlayLayer *pl = utils::get<PlayLayer>();
 
-    if (!pl)
-      return;
+    if (!pl) return;
 
     m_simulating = true;
 
@@ -257,11 +253,10 @@ REGISTER_HACK(ShowTrajectory)
 class $modify(ShowTrajectoryPLHook, PlayLayer){static void onModify(auto &self){
     HOOKS_TOGGLE("player.showtrajectory", PlayLayer, "destroyPlayer",
                  "playEndAnimationToPos");
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 
 bool init(GJGameLevel *level, bool useReplay, bool dontCreateObjects) {
-  if (!PlayLayer::init(level, useReplay, dontCreateObjects))
-    return false;
+  if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 
   s_simulation.init();
 
@@ -276,8 +271,7 @@ void destroyPlayer(PlayerObject *player, GameObject *gameObject) override {
 }
 
 void playEndAnimationToPos(cocos2d::CCPoint p0) {
-  if (s_simulation.isSimulating())
-    return;
+  if (s_simulation.isSimulating()) return;
 
   PlayLayer::playEndAnimationToPos(p0);
 }
@@ -341,8 +335,7 @@ PlayerObject::playSpiderDashEffect(from, to);
 }
 
 void incrementJumps() {
-  if (s_simulation.isSimulating())
-    return;
+  if (s_simulation.isSimulating()) return;
 
   PlayerObject::incrementJumps();
 }
@@ -355,8 +348,7 @@ void update(float dt) override {
 }
 
 void ringJump(RingObject *p0, bool p1) {
-  if (s_simulation.isSimulating())
-    return;
+  if (s_simulation.isSimulating()) return;
 
   PlayerObject::ringJump(p0, p1);
 }
@@ -373,15 +365,13 @@ return GJBaseGameLayer::canBeActivatedByPlayer(p0, p1);
 }
 
 void handleButton(bool down, int button, bool isPlayer1) {
-  if (button == 1)
-    s_simulation.handleButton(down, isPlayer1);
+  if (button == 1) s_simulation.handleButton(down, isPlayer1);
 
   GJBaseGameLayer::handleButton(down, button, isPlayer1);
 }
 
 void flipGravity(PlayerObject *p0, bool p1, bool p2) {
-  if (s_simulation.isSimulating())
-    return;
+  if (s_simulation.isSimulating()) return;
 
   GJBaseGameLayer::flipGravity(p0, p1, p2);
 }
@@ -391,7 +381,7 @@ void collisionCheckObjects(PlayerObject *player, gd::vector<GameObject *> *vec,
                            int objectsCount, float dt) {
   if (s_simulation.isSimulating()) {
     gd::vector<GameObject *> extra;
-#ifndef GEODE_IS_ANDROID // vector::reserve is not available on Android
+#ifndef GEODE_IS_ANDROID  // vector::reserve is not available on Android
     extra.reserve(objectsCount);
 #endif
     for (int i = 0; i < objectsCount; i++) {
@@ -412,8 +402,7 @@ void collisionCheckObjects(PlayerObject *player, gd::vector<GameObject *> *vec,
 }
 
 void playerTouchedRing(PlayerObject *player, RingObject *ring) {
-  if (s_simulation.isSimulating())
-    return;
+  if (s_simulation.isSimulating()) return;
 
   GJBaseGameLayer::playerTouchedRing(player, ring);
 }

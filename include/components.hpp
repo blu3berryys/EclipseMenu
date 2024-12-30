@@ -12,72 +12,76 @@
 namespace eclipse::components {
 enum class ComponentType { Label, Toggle };
 
-template <ComponentType T> class Component {
-public:
+template <ComponentType T>
+class Component {
+ public:
   constexpr ComponentType getType() const { return T; }
   size_t getUniqueID() const { return m_uniqueID; }
   explicit Component(size_t id) : m_uniqueID(id) {}
 
-private:
+ private:
   size_t m_uniqueID = 0;
 };
 
 using Label = Component<ComponentType::Label>;
 class Toggle final : public Component<ComponentType::Toggle> {
-public:
+ public:
   Toggle(size_t uid, std::string id) : Component(uid), m_id(std::move(id)) {}
   const std::string &getID() const { return m_id; }
   Toggle &setDescription(const std::string &description);
   // Toggle& addOptions(const std::function<void()>& options);
-private:
+ private:
   std::string m_id;
 };
 class Button final : public Component<ComponentType::Label> {
-public:
+ public:
   explicit Button(size_t uid) : Component(uid) {}
   Button &setDescription(const std::string &description);
   // Button& setText(const std::string& text);
 };
 
-} // namespace eclipse::components
+}  // namespace eclipse::components
 
 namespace eclipse {
 class MenuTab final {
-public:
+ public:
   static MenuTab find(const std::string &name);
 
   components::Label addLabel(const std::string &title) const;
   components::Toggle addToggle(const std::string &id, const std::string &title,
                                const std::function<void(bool)> &callback) const;
-  components::Toggle
-  addModSettingToggle(std::shared_ptr<geode::Setting> const &setting) const;
+  components::Toggle addModSettingToggle(
+      std::shared_ptr<geode::Setting> const &setting) const;
   components::Button addButton(const std::string &title,
                                const std::function<void()> &callback) const;
 
   const std::string &getName() const { return m_name; }
 
-private:
+ private:
   explicit MenuTab(std::string name) : m_name(std::move(name)) {}
   std::string m_name;
 };
-} // namespace eclipse
+}  // namespace eclipse
 
 namespace eclipse::events {
 class CreateMenuTabEvent final : public geode::Event {
-public:
+ public:
   explicit CreateMenuTabEvent(std::string name) : m_name(std::move(name)) {}
   const std::string &getName() const { return m_name; }
 
-private:
+ private:
   std::string m_name;
 };
 
-template <typename... Callback> class AddComponentEvent : public geode::Event {
-public:
+template <typename... Callback>
+class AddComponentEvent : public geode::Event {
+ public:
   AddComponentEvent(const MenuTab *tab, std::string id, std::string title,
                     Callback... callbacks)
-      : m_tabName(tab->getName()), m_id(std::move(id)),
-        m_title(std::move(title)), m_callbacks(std::move(callbacks)...) {}
+      : m_tabName(tab->getName()),
+        m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_callbacks(std::move(callbacks)...) {}
 
   const std::string &getTabName() const { return m_tabName; }
   const std::string &getID() const { return m_id; }
@@ -87,7 +91,7 @@ public:
   size_t getUniqueID() const { return m_uniqueID; }
   void setUniqueID(size_t id) { m_uniqueID = id; }
 
-private:
+ private:
   std::string m_tabName;
   std::string m_id;
   std::string m_title;
@@ -100,17 +104,17 @@ using AddToggleEvent = AddComponentEvent<std::function<void(bool)>>;
 using AddButtonEvent = AddComponentEvent<std::function<void()>>;
 
 class SetComponentDescriptionEvent : public geode::Event {
-public:
+ public:
   SetComponentDescriptionEvent(size_t id, std::string description)
       : m_id(id), m_description(std::move(description)) {}
   size_t getID() const { return m_id; }
   const std::string &getDescription() const { return m_description; }
 
-private:
+ private:
   size_t m_id;
   std::string m_description;
 };
-} // namespace eclipse::events
+}  // namespace eclipse::events
 
 namespace eclipse {
 /// @brief Get a menu tab handle by name. Creates the tab if it doesn't exist.
@@ -132,9 +136,9 @@ inline components::Label MenuTab::addLabel(const std::string &title) const {
 /// @param id The ID of the toggle.
 /// @param title The title of the toggle.
 /// @param callback The callback function to call when the toggle is toggled.
-inline components::Toggle
-MenuTab::addToggle(const std::string &id, const std::string &title,
-                   const std::function<void(bool)> &callback) const {
+inline components::Toggle MenuTab::addToggle(
+    const std::string &id, const std::string &title,
+    const std::function<void(bool)> &callback) const {
   events::AddToggleEvent event(this, id, title, callback);
   event.post();
   return components::Toggle(event.getUniqueID(), id);
@@ -170,9 +174,8 @@ inline components::Toggle MenuTab::addModSettingToggle(
 /// @brief Add a button to the tab.
 /// @param title The title of the button.
 /// @param callback The callback function to call when the button is pressed.
-inline components::Button
-MenuTab::addButton(const std::string &title,
-                   const std::function<void()> &callback) const {
+inline components::Button MenuTab::addButton(
+    const std::string &title, const std::function<void()> &callback) const {
   events::AddButtonEvent event(this, "", title, callback);
   event.post();
   return components::Button(event.getUniqueID());
@@ -193,7 +196,7 @@ inline Button &Button::setDescription(const std::string &description) {
   return *this;
 }
 
-} // namespace components
-} // namespace eclipse
+}  // namespace components
+}  // namespace eclipse
 
-#endif // ECLIPSE_COMPONENTS_HPP
+#endif  // ECLIPSE_COMPONENTS_HPP

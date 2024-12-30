@@ -1,14 +1,12 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
 
-#include <Geode/modify/GJBaseGameLayer.hpp>
-
 namespace eclipse::hacks::Level {
 
 void onHideParticles(bool state) {
-  if (!state)
-    return;
+  if (!state) return;
 
   bool customParticlesEnabled =
       !config::get<bool>("level.noparticles.nocustomparticles", false);
@@ -20,8 +18,7 @@ void onHideParticles(bool state) {
 
   auto *gjbgl = utils::get<GJBaseGameLayer>();
 
-  if (!gjbgl)
-    return;
+  if (!gjbgl) return;
 
   for (const auto &[name, array] :
        geode::cocos::CCDictionaryExt<gd::string, cocos2d::CCArray *>{
@@ -98,7 +95,7 @@ class $modify(NoParticlesBGLHook, GJBaseGameLayer){
                               false)) return nullptr;
 
 return GJBaseGameLayer::spawnParticle(plist, zOrder, positionType, position);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

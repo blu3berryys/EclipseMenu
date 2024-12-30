@@ -1,8 +1,7 @@
+#include <Geode/modify/LevelInfoLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/LevelInfoLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -28,8 +27,7 @@ class $modify(CopyBypassLILHook, LevelInfoLayer) {
   bool init(GJGameLevel * level, bool challenge) {
     m_fields->password = level->m_password;
 
-    if (config::get<bool>("bypass.copybypass", false))
-      level->m_password = 1;
+    if (config::get<bool>("bypass.copybypass", false)) level->m_password = 1;
 
     return LevelInfoLayer::init(level, challenge);
   }
@@ -47,4 +45,4 @@ class $modify(CopyBypassLILHook, LevelInfoLayer) {
   }
 };
 
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass

@@ -1,4 +1,5 @@
 #include "sidebar.hpp"
+
 #include <modules/gui/gui.hpp>
 #include <modules/gui/imgui/imgui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -35,8 +36,7 @@ void SidebarLayout::recalculateSize(bool first) {
 }
 
 void SidebarLayout::draw() {
-  if (!Engine::get()->isToggled())
-    return;
+  if (!Engine::get()->isToggled()) return;
 
   auto tm = ThemeManager::get();
   auto scale = tm->getGlobalScale();
@@ -134,8 +134,7 @@ void SidebarLayout::draw() {
 
   // Render tabs
   for (int i = 0; i < m_tabs.size(); i++) {
-    if (m_selectedTab == i)
-      m_tabs[i].draw();
+    if (m_selectedTab == i) m_tabs[i].draw();
   }
 
   ImGui::EndChild();
@@ -144,4 +143,4 @@ void SidebarLayout::draw() {
 }
 
 void SidebarLayout::toggle(bool state) {}
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

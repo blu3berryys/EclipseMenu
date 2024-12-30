@@ -4,7 +4,7 @@ namespace eclipse::gui::cocos {
 
 // taken from Object Workshop (a hybrid of robtops cocos and geode)
 class ScrollLayer : public CCScrollLayerExt, public CCScrollLayerExtDelegate {
-protected:
+ protected:
   bool m_touchOutOfBoundary;
   bool m_scrollWheelEnabled;
   cocos2d::CCTouch *m_touchStart;
@@ -31,14 +31,14 @@ protected:
   ScrollLayer(cocos2d::CCRect const &rect, bool scrollWheelEnabled,
               bool vertical);
 
-public:
+ public:
   void fixTouchPrio();
   void scrollToTop();
-  static eclipse::gui::cocos::ScrollLayer *
-  create(cocos2d::CCRect const &rect, bool scrollWheelEnabled = true,
-         bool vertical = true);
-  static eclipse::gui::cocos::ScrollLayer *
-  create(cocos2d::CCSize const &size, bool scrollWheelEnabled = true,
-         bool vertical = true);
+  static eclipse::gui::cocos::ScrollLayer *create(
+      cocos2d::CCRect const &rect, bool scrollWheelEnabled = true,
+      bool vertical = true);
+  static eclipse::gui::cocos::ScrollLayer *create(
+      cocos2d::CCSize const &size, bool scrollWheelEnabled = true,
+      bool vertical = true);
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

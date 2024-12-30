@@ -1,8 +1,7 @@
+#include <Geode/modify/GameLevelManager.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GameLevelManager.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -34,7 +33,7 @@ if (level->m_requiredCoins > 0 &&
   level->m_requiredCoins = 0;
 }
 return level;
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

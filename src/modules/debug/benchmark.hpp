@@ -7,7 +7,7 @@ namespace eclipse::debug {
 /// Prints the time taken in nanoseconds to the console, or returns the value if
 /// a pointer is provided.
 class Timer {
-public:
+ public:
   explicit Timer(std::string_view name, uint64_t *result = nullptr)
       : m_name(name), m_result(result) {
     m_start = std::chrono::high_resolution_clock::now();
@@ -24,7 +24,7 @@ public:
     }
   }
 
-private:
+ private:
   std::string_view m_name;
   uint64_t *m_result;
   std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
@@ -34,12 +34,14 @@ private:
 /// Can be limited by the number of iterations or the time taken, whichever
 /// comes first.
 class Benchmark {
-public:
+ public:
   Benchmark(std::string_view name, std::function<void()> func,
-            size_t maxIterations = 1'000'000'000, // 1 billion
-            size_t maxTime = 10'000'000'000       // 10 seconds
+            size_t maxIterations = 1'000'000'000,  // 1 billion
+            size_t maxTime = 10'000'000'000        // 10 seconds
             )
-      : m_name(name), m_func(std::move(func)), m_maxIterations(maxIterations),
+      : m_name(name),
+        m_func(std::move(func)),
+        m_maxIterations(maxIterations),
         m_maxTime(maxTime) {
     run();
   }
@@ -61,11 +63,11 @@ public:
                      averageTime, iterations);
   }
 
-private:
+ private:
   std::string_view m_name;
   std::function<void()> m_func;
   size_t m_maxIterations;
   size_t m_maxTime;
 };
 
-} // namespace eclipse::debug
+}  // namespace eclipse::debug

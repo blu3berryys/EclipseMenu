@@ -4,7 +4,7 @@
 namespace eclipse::gui {
 
 class FloatingButton : public cocos2d::CCMenu {
-protected:
+ protected:
   // how many units required to begin dragging the button
   constexpr static float MIN_MOVE_DISTANCE = 5.f;
   // move progress per second
@@ -13,25 +13,25 @@ protected:
   constexpr static float SNAP_MARGIN = 0.1f;
 
   std::function<void()> m_callback;
-  cocos2d::CCSprite *m_sprite{};     // "main-sprite"
-  cocos2d::CCPoint m_holdPosition{}; // last cursor/touch position
+  cocos2d::CCSprite *m_sprite{};      // "main-sprite"
+  cocos2d::CCPoint m_holdPosition{};  // last cursor/touch position
   float m_minOpacity = 0.2f;
   float m_maxOpacity = 0.9f;
-  float m_postClickTimer = 0.f; // determines beginning of fadeOut after click
+  float m_postClickTimer = 0.f;  // determines beginning of fadeOut after click
   bool m_showInLevel = false;
   bool m_showInEditor = false;
-  bool m_shouldMove = false; // whether currently in move animation
-  bool m_haveMoved = false;  // used to determine whether we should trigger
-                             // callback after release
+  bool m_shouldMove = false;  // whether currently in move animation
+  bool m_haveMoved = false;   // used to determine whether we should trigger
+                              // callback after release
   bool m_haveReleased = false;
 
-public:
+ public:
   static FloatingButton *get();
   void setCallback(std::function<void()> callback);
 
   void setScale(float scale) override;
 
-protected:
+ protected:
   static FloatingButton *create();
   bool init() override;
   void update(float) override;
@@ -52,4 +52,4 @@ protected:
   void registerWithTouchDispatcher() override;
 };
 
-} // namespace eclipse::gui
+}  // namespace eclipse::gui

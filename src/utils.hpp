@@ -19,7 +19,8 @@ std::random_device &getRng();
 /// @param min Minimum value.
 /// @param max Maximum value.
 /// @return Random number between min and max.
-template <typename T> T random(T min, T max) {
+template <typename T>
+T random(T min, T max) {
   if constexpr (std::is_integral_v<T>) {
     std::uniform_int_distribution<T> dist(min, max);
     return dist(getRng());
@@ -36,7 +37,10 @@ template <typename T> T random(T min, T max) {
 /// @tparam T Type of the number.
 /// @param max Maximum value.
 /// @return Random number between 0 and max.
-template <typename T> T random(T max) { return random<T>(0, max); }
+template <typename T>
+T random(T max) {
+  return random<T>(0, max);
+}
 
 /// @brief Allows to access a member of a struct by offset.
 /// @tparam T Type of the member.
@@ -111,4 +115,4 @@ cocos2d::CCMenu *getEclipseUILayer();
 
 /// @brief Checks if a string matches another one (case-insensitive)
 bool matchesStringFuzzy(std::string_view haystack, std::string_view needle);
-} // namespace eclipse::utils
+}  // namespace eclipse::utils

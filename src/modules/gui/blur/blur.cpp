@@ -11,7 +11,6 @@
 #include <Geode/modify/CCNode.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/GameManager.hpp>
-
 #include <imgui-cocos.hpp>
 #include <memory>
 #include <modules/gui/cocos/cocos.hpp>
@@ -32,9 +31,9 @@ GLint ppShaderRadius = 0;
 float blurTimer = 0.f;
 float blurProgress = 0.f;
 
-geode::Result<std::string>
-Shader::compile(const std::filesystem::path &vertexPath,
-                const std::filesystem::path &fragmentPath) {
+geode::Result<std::string> Shader::compile(
+    const std::filesystem::path &vertexPath,
+    const std::filesystem::path &fragmentPath) {
   auto vertexSource = geode::utils::file::readString(vertexPath);
 
   if (!vertexSource)
@@ -50,8 +49,7 @@ Shader::compile(const std::filesystem::path &vertexPath,
     GLint length, written;
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 
-    if (length <= 0)
-      return "";
+    if (length <= 0) return "";
 
     auto stuff = std::make_unique<char[]>(length + 1);
     glGetShaderInfoLog(id, length, &written, stuff.get());
@@ -101,17 +99,14 @@ Shader::compile(const std::filesystem::path &vertexPath,
 }
 
 geode::Result<std::string> Shader::link() {
-  if (!vertex)
-    return geode::Err("vertex shader not compiled");
-  if (!fragment)
-    return geode::Err("fragment shader not compiled");
+  if (!vertex) return geode::Err("vertex shader not compiled");
+  if (!fragment) return geode::Err("fragment shader not compiled");
 
   auto getProgramLog = [](GLuint id) -> std::string {
     GLint length, written;
     glGetProgramiv(id, GL_INFO_LOG_LENGTH, &length);
 
-    if (length <= 0)
-      return "";
+    if (length <= 0) return "";
 
     auto stuff = std::make_unique<char[]>(length + 1);
     glGetProgramInfoLog(id, length, &written, stuff.get());
@@ -140,8 +135,7 @@ geode::Result<std::string> Shader::link() {
 }
 
 void Shader::cleanup() {
-  if (program)
-    glDeleteProgram(program);
+  if (program) glDeleteProgram(program);
 
   program = 0;
 }
@@ -193,20 +187,16 @@ void RenderTexture::resize(GLsizei width, GLsizei height) const {
 }
 
 void RenderTexture::cleanup() {
-  if (fbo)
-    glDeleteFramebuffers(1, &fbo);
-  if (tex)
-    glDeleteTextures(1, &tex);
-  if (rbo)
-    glDeleteRenderbuffers(1, &rbo);
+  if (fbo) glDeleteFramebuffers(1, &fbo);
+  if (tex) glDeleteTextures(1, &tex);
+  if (rbo) glDeleteRenderbuffers(1, &rbo);
   fbo = 0;
   tex = 0;
   rbo = 0;
 }
 
 void setupPostProcess() {
-  if (utils::shouldUseLegacyDraw())
-    return;
+  if (utils::shouldUseLegacyDraw()) return;
 
   auto size = cocos2d::CCEGLView::get()->getFrameSize() *
               geode::utils::getDisplayFactor();
@@ -268,10 +258,8 @@ void cleanupPostProcess() {
   ppRt0.cleanup();
   ppRt1.cleanup();
 
-  if (ppVao)
-    glDeleteVertexArrays(1, &ppVao);
-  if (ppVbo)
-    glDeleteBuffers(1, &ppVbo);
+  if (ppVao) glDeleteVertexArrays(1, &ppVao);
+  if (ppVbo) glDeleteBuffers(1, &ppVbo);
   ppVao = 0;
   ppVbo = 0;
 
@@ -287,15 +275,13 @@ class $modify(BlurCCNHook, cocos2d::CCNode){void visit() override{
     if (static_cast<CCNode *>(this) != cocos2d::CCScene::get() ||
         ppShader.program == 0) return CCNode::visit();
 
-if (blurProgress == 0.f)
-  return CCNode::visit();
+if (blurProgress == 0.f) return CCNode::visit();
 
 float blur =
     0.05f *
     (1.f - std::cos(static_cast<float>(std::numbers::pi) * blurProgress)) *
     0.5f;
-if (blur == 0.f)
-  return CCNode::visit();
+if (blur == 0.f) return CCNode::visit();
 
 GLint drawFbo = 0;
 GLint readFbo = 0;
@@ -327,7 +313,7 @@ glBindTexture(GL_TEXTURE_2D, ppRt1.tex);
 glDrawArrays(GL_TRIANGLES, 0, 6);
 
 glBindVertexArray(0);
-} // namespace eclipse::gui::blur
+}  // namespace eclipse::gui::blur
 }
 ;
 
@@ -335,8 +321,7 @@ class $modify(BlurCCEGLVPHook, cocos2d::CCEGLViewProtocol){
     void setFrameSize(float width, float height)
         override{CCEGLViewProtocol::setFrameSize(width, height);
 
-if (!cocos2d::CCDirector::get()->getOpenGLView())
-  return;
+if (!cocos2d::CCDirector::get()->getOpenGLView()) return;
 
 ppRt0.resize((GLsizei)width, (GLsizei)height);
 ppRt1.resize((GLsizei)width, (GLsizei)height);
@@ -394,6 +379,6 @@ void init() {}
 
 void update(float) {}
 
-} // namespace eclipse::gui::blur
+}  // namespace eclipse::gui::blur
 
 #endif

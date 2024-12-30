@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Bypass {
 
@@ -29,7 +28,7 @@ class $modify(CheckpointLimitPLHook, PlayLayer){
             // Reimplemented without the checkpoint limit
             m_checkpointArray->addObject(checkpointObject);
 PlayLayer::addToSection(checkpointObject->m_physicalCheckpointObject);
-} // namespace eclipse::hacks::Bypass
+}  // namespace eclipse::hacks::Bypass
 }
 ;
 }

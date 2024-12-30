@@ -6,7 +6,7 @@
 namespace eclipse::gui::imgui {
 
 class TabbedLayout : public Layout {
-public:
+ public:
   TabbedLayout() { m_mode = LayoutMode::Tabbed; }
   ~TabbedLayout() override = default;
 
@@ -14,16 +14,16 @@ public:
   void draw() override;
   void toggle(bool state) override;
 
-public:
+ public:
   bool shouldRender() const;
   static ImVec2 randomWindowPosition(const Window &window);
   std::map<Window *, ImVec2> getStackedPositions();
   void stackWindows();
 
-private:
+ private:
   std::vector<Window> m_windows;
   std::vector<std::shared_ptr<animation::MoveAction>> m_actions;
   int m_preloadStep = 0;
 };
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

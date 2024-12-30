@@ -5,10 +5,10 @@ namespace eclipse::gui::cocos {
 class SelectKeybindPopup
     : public geode::Popup<keybinds::Keys,
                           std::function<void(keybinds::Keys)> const &> {
-public:
-  static SelectKeybindPopup *
-  create(keybinds::Keys initialKey,
-         std::function<void(keybinds::Keys)> const &callback) {
+ public:
+  static SelectKeybindPopup *create(
+      keybinds::Keys initialKey,
+      std::function<void(keybinds::Keys)> const &callback) {
     auto ret = new SelectKeybindPopup();
     if (ret->initAnchored(260.f, 120.f, initialKey, callback,
                           "GJ_square02.png")) {
@@ -19,7 +19,7 @@ public:
     return nullptr;
   }
 
-private:
+ private:
   bool setup(keybinds::Keys initialKey,
              std::function<void(keybinds::Keys)> const &callback) override {
     m_callback = callback;
@@ -37,8 +37,8 @@ private:
 
   void onExit() override {
     Popup::onExit();
-    if (m_waitingForInput) { // If we were waiting for input, we should cancel
-                             // the keybind
+    if (m_waitingForInput) {  // If we were waiting for input, we should cancel
+                              // the keybind
       m_callback(m_initialKey);
     }
   }
@@ -77,13 +77,12 @@ private:
 class KeybindComponentNode
     : public BaseComponentNode<KeybindComponentNode, cocos2d::CCMenu,
                                KeybindComponent, float> {
-protected:
+ protected:
   FallbackBMFont *m_keyName{};
 
-public:
+ public:
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setID(fmt::format("keybind-{}"_spr, m_component->getId()));
     this->setContentSize({width, 28.f});
@@ -150,4 +149,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

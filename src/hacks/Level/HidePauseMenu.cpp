@@ -1,8 +1,7 @@
+#include <Geode/modify/PauseLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PauseLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -21,7 +20,7 @@ REGISTER_HACK(HidePause)
 class $modify(HPMPauseLayerHook, PauseLayer){
     void customSetup() override{HPMPauseLayerHook::createHideScheduler(this);
 PauseLayer::customSetup();
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 
 static void createHideScheduler(PauseLayer *pauseLayer) {
   pauseLayer->schedule(schedule_selector(HPMPauseLayerHook::updatePauseMenu));

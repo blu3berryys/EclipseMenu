@@ -17,13 +17,13 @@ concept SupportedType = requires(T a) {
       std::same_as<T, std::string>;
 };
 
-} // namespace eclipse::config
+}  // namespace eclipse::config
 
 namespace eclipse::events {
 
 template <config::SupportedType T>
 class RequestConfigValueEvent : public geode::Event {
-public:
+ public:
   explicit RequestConfigValueEvent(std::string key, bool internal = false)
       : m_key(std::move(key)), m_useInternal(internal) {}
   const std::string &getKey() const { return m_key; }
@@ -36,7 +36,7 @@ public:
     m_hasValue = true;
   }
 
-private:
+ private:
   std::string m_key;
   T m_value;
   bool m_useInternal = false;
@@ -45,7 +45,7 @@ private:
 
 template <config::SupportedType T>
 class SetConfigValueEvent : public geode::Event {
-public:
+ public:
   SetConfigValueEvent(std::string key, T value, bool internal = false)
       : m_key(std::move(key)), m_value(value), m_useInternal(internal) {}
 
@@ -53,13 +53,13 @@ public:
   T getValue() const { return m_value; }
   bool getUseInternal() const { return m_useInternal; }
 
-private:
+ private:
   std::string m_key;
   T m_value;
   bool m_useInternal = false;
 };
 
-} // namespace eclipse::events
+}  // namespace eclipse::events
 
 namespace eclipse::config {
 
@@ -67,11 +67,11 @@ namespace eclipse::config {
 /// @param key The key of the value.
 /// @param defaultValue The default value to return if the key doesn't exist.
 /// @return The value of the key or the default value if the key doesn't exist.
-template <SupportedType T> T get(std::string key, T defaultValue) {
+template <SupportedType T>
+T get(std::string key, T defaultValue) {
   events::RequestConfigValueEvent<T> event(key);
   event.post();
-  if (event.hasValue())
-    return event.getValue();
+  if (event.hasValue()) return event.getValue();
   return defaultValue;
 }
 
@@ -79,27 +79,29 @@ template <SupportedType T> T get(std::string key, T defaultValue) {
 /// @param key The key of the value.
 /// @param defaultValue The default value to return if the key doesn't exist.
 /// @return The value of the key or the default value if the key doesn't exist.
-template <SupportedType T> T getInternal(std::string key, T defaultValue) {
+template <SupportedType T>
+T getInternal(std::string key, T defaultValue) {
   events::RequestConfigValueEvent<T> event(key, true);
   event.post();
-  if (event.hasValue())
-    return event.getValue();
+  if (event.hasValue()) return event.getValue();
   return defaultValue;
 }
 
 /// @brief Set a config value by key in the session storage.
 /// @param key The key of the value.
 /// @param value The value to set.
-template <SupportedType T> void set(std::string key, T value) {
+template <SupportedType T>
+void set(std::string key, T value) {
   events::SetConfigValueEvent<T>(key, value, false).post();
 }
 
 /// @brief Set a config value by key in the persistent storage (config.json).
 /// @param key The key of the value.
 /// @param value The value to set.
-template <SupportedType T> void setInternal(std::string key, T value) {
+template <SupportedType T>
+void setInternal(std::string key, T value) {
   events::SetConfigValueEvent<T>(key, value, true).post();
 }
-} // namespace eclipse::config
+}  // namespace eclipse::config
 
-#endif // ECLIPSE_CONFIG_HPP
+#endif  // ECLIPSE_CONFIG_HPP

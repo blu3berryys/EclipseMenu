@@ -1,12 +1,13 @@
 #pragma once
-#include "BaseComponentNode.hpp"
 #include <modules/gui/cocos/popup/options-popup.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class FilesystemComboComponentNode
     : public BaseComponentNode<FilesystemComboComponentNode, cocos2d::CCMenu,
                                FilesystemComboComponent, float> {
-protected:
+ protected:
   TranslatedLabel *m_label = nullptr;
   CCMenuItemSpriteExtra *m_infoButton = nullptr;
   cocos2d::extension::CCScale9Sprite *m_background = nullptr;
@@ -14,7 +15,7 @@ protected:
 
   int m_index = 0;
 
-public:
+ public:
   void updateLabel() const {
     if (m_index < 0 || m_index >= m_component->getItems().size()) {
       m_valueLabel->setString("");
@@ -28,10 +29,8 @@ public:
   void scroll(CCObject *sender) {
     int tag = sender->getTag();
     int value = m_index + tag;
-    if (value < 0)
-      value = std::max<int>(m_component->getItems().size() - 1, 0);
-    if (value >= m_component->getItems().size())
-      value = 0;
+    if (value < 0) value = std::max<int>(m_component->getItems().size() - 1, 0);
+    if (value >= m_component->getItems().size()) value = 0;
     m_index = value;
     m_component->setValue(value);
     m_component->triggerCallback(value);
@@ -39,8 +38,7 @@ public:
   }
 
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setID(fmt::format("filesystem-combo-{}"_spr, m_component->getId()));
     this->setContentSize({width, 28.f});
@@ -106,4 +104,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

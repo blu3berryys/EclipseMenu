@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
+
 #include <modules/gui/color.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -23,8 +24,7 @@ bool MegaOverlay::checkbox(const std::string &label, bool &value,
   constexpr float cc_pad = 10.0f;
 
   ImGuiWindow *window = GetCurrentWindow();
-  if (window->SkipItems)
-    return false;
+  if (window->SkipItems) return false;
 
   ImGuiContext &g = *GImGui;
   const ImGuiStyle &style = g.Style;
@@ -39,8 +39,7 @@ bool MegaOverlay::checkbox(const std::string &label, bool &value,
            style.FramePadding.y);
 
   ImRect total_bb = check_bb;
-  if (label_size.x > 0)
-    SameLine(0, style.ItemInnerSpacing.x);
+  if (label_size.x > 0) SameLine(0, style.ItemInnerSpacing.x);
   const ImRect text_bb(
       ImVec2(window->DC.CursorPos.x,
              window->DC.CursorPos.y + style.FramePadding.y),
@@ -54,24 +53,22 @@ bool MegaOverlay::checkbox(const std::string &label, bool &value,
                              check_bb.Max.y));
   }
 
-  if (!ItemAdd(total_bb, id))
-    return false;
+  if (!ItemAdd(total_bb, id)) return false;
 
   bool hovered, held;
   bool pressed = ButtonBehavior(total_bb, id, &hovered, &held);
   postDraw();
-  if (pressed)
-    value = !value;
+  if (pressed) value = !value;
   ImVec2 text_pos = text_bb.GetTL();
   if (hovered) {
     ImVec2 text_size = text_bb.GetBR();
     auto fill_color = tm->getButtonHoveredBackground();
-    window->DrawList->AddRectFilled(ImVec2(check_bb.Min.x, check_bb.Min.y),
-                                    ImVec2(check_bb.Min.x + cc_sz +
-                                               text_size.x - text_pos.x +
-                                               cc_pad * 2.0f,
-                                           check_bb.Max.y),
-                                    fill_color, style.FrameRounding);
+    window->DrawList->AddRectFilled(
+        ImVec2(check_bb.Min.x, check_bb.Min.y),
+        ImVec2(
+            check_bb.Min.x + cc_sz + text_size.x - text_pos.x + cc_pad * 2.0f,
+            check_bb.Max.y),
+        fill_color, style.FrameRounding);
   }
 
   window->DrawList->AddRectFilled(
@@ -90,4 +87,4 @@ bool MegaOverlay::checkbox(const std::string &label, bool &value,
 
   return pressed;
 }
-} // namespace eclipse::gui::imgui::themes
+}  // namespace eclipse::gui::imgui::themes

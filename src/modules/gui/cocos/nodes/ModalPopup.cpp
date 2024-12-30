@@ -68,8 +68,7 @@ bool ModalPopup::setup(eclipse::Popup const &settings) {
 
 void ModalPopup::onExit() {
   Popup::onExit();
-  if (auto cocos = CocosRenderer::get())
-    cocos->unregisterModal(this);
+  if (auto cocos = CocosRenderer::get()) cocos->unregisterModal(this);
 }
 
 cocos2d::CCNode *ModalPopup::createButtonSprite(std::string const &text) const {
@@ -90,4 +89,4 @@ void ModalPopup::keyBackClicked() {
     m_settings.getCallback()(true);
   }
 }
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

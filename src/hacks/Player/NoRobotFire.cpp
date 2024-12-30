@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayerObject.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayerObject.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -24,7 +23,7 @@ class $modify(NoRobotFirePOHook, PlayerObject){
         void update(float dt) override{PlayerObject::update(dt);
 m_robotFire->setVisible(false);
 m_robotBurstParticles->setVisible(false);
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

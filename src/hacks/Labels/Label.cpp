@@ -1,13 +1,13 @@
 #include "Label.hpp"
 
-#include "LabelContainer.hpp"
 #include <modules/labels/variables.hpp>
+
+#include "LabelContainer.hpp"
 
 namespace eclipse::hacks::Labels {
 
 bool SmartLabel::init(const std::string &text, const std::string &font) {
-  if (!EmojiLabel::init("", font.c_str()))
-    return false;
+  if (!EmojiLabel::init("", font.c_str())) return false;
 
   auto res = rift::compile(text);
   if (res.isErr()) {
@@ -21,8 +21,7 @@ bool SmartLabel::init(const std::string &text, const std::string &font) {
 }
 
 void SmartLabel::setScript(const std::string &script) {
-  if (script == m_text)
-    return;
+  if (script == m_text) return;
   m_text = script;
 
   auto res = rift::compile(script);
@@ -38,16 +37,14 @@ void SmartLabel::update() {
   if (!isVisible()) {
     if (m_wasVisible) {
       m_wasVisible = false;
-      if (m_parentContainer)
-        m_parentContainer->invalidate();
+      if (m_parentContainer) m_parentContainer->invalidate();
     }
     return;
   }
 
   if (!m_wasVisible) {
     m_wasVisible = true;
-    if (m_parentContainer)
-      m_parentContainer->invalidate();
+    if (m_parentContainer) m_parentContainer->invalidate();
   }
 
   // Re-evaluate the script
@@ -79,4 +76,4 @@ void SmartLabel::update() {
     }
   }
 }
-} // namespace eclipse::hacks::Labels
+}  // namespace eclipse::hacks::Labels

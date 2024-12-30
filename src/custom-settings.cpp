@@ -5,10 +5,10 @@
 using namespace geode::prelude;
 
 class CustomButton : public SettingV3 {
-protected:
+ protected:
   std::string m_buttonCaption = "OK";
 
-public:
+ public:
   static Result<std::shared_ptr<SettingV3>> parse(std::string const &key,
                                                   std::string const &modID,
                                                   matjson::Value const &json) {
@@ -36,13 +36,12 @@ public:
 };
 
 class CustomButtonNode : public SettingNodeV3 {
-protected:
+ protected:
   ButtonSprite *m_buttonSprite{};
   CCMenuItemSpriteExtra *m_button{};
 
   bool init(const std::shared_ptr<CustomButton> &setting, float width) {
-    if (!SettingNodeV3::init(setting, width))
-      return false;
+    if (!SettingNodeV3::init(setting, width)) return false;
 
     m_buttonSprite =
         ButtonSprite::create(this->getSetting()->getButtonCaption().c_str(),
@@ -68,8 +67,7 @@ protected:
                    "Reset Theme",
                    "Are you sure you want to reset the theme to default?", "No",
                    "Yes", [](auto, bool btn2) {
-                     if (btn2)
-                       eclipse::gui::ThemeManager::get()->reloadTheme();
+                     if (btn2) eclipse::gui::ThemeManager::get()->reloadTheme();
                    });
              }},
         };
@@ -82,7 +80,7 @@ protected:
   void onCommit() override {}
   void onResetToDefault() override {}
 
-public:
+ public:
   static CustomButtonNode *create(const std::shared_ptr<CustomButton> &setting,
                                   float width) {
     auto ret = new CustomButtonNode;

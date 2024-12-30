@@ -1,14 +1,13 @@
-#include "Geode/binding/LevelTools.hpp"
-#include <modules/config/config.hpp>
-#include <modules/gui/gui.hpp>
-#include <modules/hack/hack.hpp>
-
-#include <utility>
-
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelTools.hpp>
 #include <Geode/modify/PauseLayer.hpp>
+#include <modules/config/config.hpp>
+#include <modules/gui/gui.hpp>
+#include <modules/hack/hack.hpp>
+#include <utility>
+
+#include "Geode/binding/LevelTools.hpp"
 
 namespace eclipse::hacks::Creator {
 
@@ -34,7 +33,7 @@ auto levelType = level->m_levelType;
 level->m_levelType = GJLevelType::Editor;
 PauseLayer::customSetup();
 level->m_levelType = levelType;
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 
 void onEdit(cocos2d::CCObject *sender) {
   auto level = utils::get<PlayLayer>()->m_level;

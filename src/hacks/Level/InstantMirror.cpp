@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -23,7 +22,7 @@ class $modify(InstantMirrorGJBGLHook, GJBaseGameLayer){
 
         void toggleFlipped(bool p0,
                            bool p1){GJBaseGameLayer::toggleFlipped(p0, true);
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level
 }
 ;
 }

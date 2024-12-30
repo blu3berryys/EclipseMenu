@@ -1,8 +1,7 @@
+#include <Geode/binding/FMODAudioEngine.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/binding/FMODAudioEngine.hpp>
 
 namespace eclipse::hacks::Global {
 
@@ -30,13 +29,11 @@ void updateChannels() {
 
   for (auto i = 0; i < 4; i++) {
     system->getChannel(126 + i, &audioChannel);
-    if (audioChannel)
-      setSpeed(audioChannel);
+    if (audioChannel) setSpeed(audioChannel);
   }
 }
 
 class AudioSpeed : public hack::Hack {
-
   void init() override {
     auto tab = gui::MenuTab::find("tab.global");
 
@@ -76,4 +73,4 @@ class AudioSpeed : public hack::Hack {
 
 REGISTER_HACK(AudioSpeed)
 
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global

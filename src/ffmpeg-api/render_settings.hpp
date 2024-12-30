@@ -7,12 +7,12 @@
 
 #define BEGIN_FFMPEG_NAMESPACE namespace ffmpeg {
 #define FFMPEG_API_VERSION_NS GEODE_CONCAT(v, FFMPEG_API_VERSION)
-#define BEGIN_FFMPEG_NAMESPACE_V                                               \
-  BEGIN_FFMPEG_NAMESPACE                                                       \
+#define BEGIN_FFMPEG_NAMESPACE_V \
+  BEGIN_FFMPEG_NAMESPACE         \
   inline namespace FFMPEG_API_VERSION_NS {
 #define END_FFMPEG_NAMESPACE }
-#define END_FFMPEG_NAMESPACE_V                                                 \
-  }                                                                            \
+#define END_FFMPEG_NAMESPACE_V \
+  }                            \
   }
 
 BEGIN_FFMPEG_NAMESPACE_V

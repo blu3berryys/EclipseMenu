@@ -1,9 +1,8 @@
+#include <Geode/modify/EffectGameObject.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EffectGameObject.hpp>
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -24,12 +23,12 @@ class $modify(NoHideTriggerEGOHook, EffectGameObject){
 
         void triggerObject(GJBaseGameLayer * bgl, int p1,
                            gd::vector<int> const *p2)
-            override{switch (m_objectID){case 1612 :     // Hide Trigger
-                                             case 1613 : // Show Trigger
+            override{switch (m_objectID){case 1612 :      // Hide Trigger
+                                             case 1613 :  // Show Trigger
                                                  return;
 default:
-return EffectGameObject::triggerObject(bgl, p1, p2);
-} // namespace eclipse::hacks::Player
+  return EffectGameObject::triggerObject(bgl, p1, p2);
+}  // namespace eclipse::hacks::Player
 }
 }
 ;

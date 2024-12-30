@@ -1,27 +1,32 @@
 #pragma once
 
-#include "../animation/easing.hpp"
-#include "../animation/move-action.hpp"
-#include <functional>
 #include <imgui.h>
+
+#include <functional>
 #include <nlohmann/json.hpp>
 #include <string>
+
+#include "../animation/easing.hpp"
+#include "../animation/move-action.hpp"
 
 namespace eclipse::gui::imgui {
 
 /// @brief A window that can contain components, has its own title and position.
 /// Supports drag and drop, can be minimized, supports animations.
 class Window {
-public:
-  static constexpr ImVec2 MIN_SIZE{220, 1};    // Minimum window size
-  static constexpr ImVec2 MAX_SIZE{220, 1000}; // Maximum window size
+ public:
+  static constexpr ImVec2 MIN_SIZE{220, 1};     // Minimum window size
+  static constexpr ImVec2 MAX_SIZE{220, 1000};  // Maximum window size
 
-public:
+ public:
   /// @brief Create new instance of `Window` with default title and draw
   /// callback
   Window()
-      : m_title("Window"), m_isOpen(true), m_position(0, 0),
-        m_drawPosition(0, 0), m_size(MIN_SIZE) {}
+      : m_title("Window"),
+        m_isOpen(true),
+        m_position(0, 0),
+        m_drawPosition(0, 0),
+        m_size(MIN_SIZE) {}
 
   /// @brief Create new instance of `Window` with set title and draw callback
   /// @param title Title of the window
@@ -60,24 +65,24 @@ public:
   /// @param duration How long the animation should last in seconds
   /// @param easing Easing mode (see "animation/easing.hpp")
   /// @param useRealPosition Whether to change the actual position of the window
-  std::shared_ptr<animation::MoveAction>
-  animateTo(const ImVec2 &target, double duration,
-            animation::EasingFunction easing, bool useRealPosition = false);
+  std::shared_ptr<animation::MoveAction> animateTo(
+      const ImVec2 &target, double duration, animation::EasingFunction easing,
+      bool useRealPosition = false);
 
-private:
-  std::string m_title; // Window title
-  bool m_isOpen;       // Whether the window is collapsed or not
+ private:
+  std::string m_title;  // Window title
+  bool m_isOpen;        // Whether the window is collapsed or not
 
-  ImVec2 m_position; // Window position in opened state
+  ImVec2 m_position;  // Window position in opened state
   ImVec2
-      m_drawPosition; // Window position used for drawing (used for animations)
-  ImVec2 m_size;      // Window size
+      m_drawPosition;  // Window position used for drawing (used for animations)
+  ImVec2 m_size;       // Window size
 
   std::function<void()>
-      m_drawCallback; // Callback which will be called when the window is drawn
+      m_drawCallback;  // Callback which will be called when the window is drawn
 };
 
 void to_json(nlohmann::json &j, const Window &e);
 void from_json(const nlohmann::json &j, Window &e);
 
-} // namespace eclipse::gui::imgui
+}  // namespace eclipse::gui::imgui

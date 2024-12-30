@@ -11,10 +11,10 @@ namespace eclipse::gui::cocos {
 /// @tparam Args The constructor arguments.
 template <typename S, typename T, typename U, typename... Args>
 class BaseComponentNode : public T {
-protected:
+ protected:
   std::shared_ptr<U> m_component;
 
-public:
+ public:
   virtual bool init(Args... args) = 0;
 
   static S *create(const std::shared_ptr<Component> &component, Args... args) {
@@ -34,4 +34,4 @@ public:
   }
 };
 
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

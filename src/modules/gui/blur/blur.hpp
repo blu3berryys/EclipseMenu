@@ -26,4 +26,4 @@ struct RenderTexture {
 
 void init();
 void update(float dt);
-} // namespace eclipse::gui::blur
+}  // namespace eclipse::gui::blur

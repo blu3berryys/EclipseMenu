@@ -1,8 +1,7 @@
+#include <Geode/modify/PlayLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/PlayLayer.hpp>
 
 namespace eclipse::hacks::Level {
 
@@ -44,11 +43,10 @@ class $modify(AutoPickupCoinsPLHook, PlayLayer) {
     PlayLayer::resetLevel();
 
     for (auto *coin : m_fields->m_coins) {
-      if (coin == nullptr)
-        continue;
+      if (coin == nullptr) continue;
       this->pickupItem(coin);
       this->destroyObject(coin);
     }
   }
 };
-} // namespace eclipse::hacks::Level
+}  // namespace eclipse::hacks::Level

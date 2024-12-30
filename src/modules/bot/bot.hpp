@@ -11,7 +11,7 @@ struct BotReplay : public gdr::Replay<BotReplay, gdr::Input> {
 };
 
 class Bot {
-public:
+ public:
   /// @brief Set the current state of the bot.
   /// @param state State of the bot.
   void setState(State state);
@@ -54,10 +54,10 @@ public:
 
   [[nodiscard]] std::optional<gdr::Input> getPrevious(bool player1);
 
-protected:
+ protected:
   State m_state = State::DISABLED;
   BotReplay m_replay;
   uint32_t m_inputIndex = 0;
 };
 
-} // namespace eclipse::bot
+}  // namespace eclipse::bot

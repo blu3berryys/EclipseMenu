@@ -1,8 +1,7 @@
+#include <Geode/modify/EditorUI.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditorUI.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -37,7 +36,7 @@ if (m_selectedObjects->count() == 0) {
 gameManager->addNewCustomObject(copyObjects(newSelectedObjs, false, false));
 m_selectedObjectIndex = 0;
 reloadCustomItems();
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator
 }
 }
 ;

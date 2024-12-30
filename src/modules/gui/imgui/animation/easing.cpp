@@ -9,8 +9,7 @@ EasingFunction getEasingFunction(Easing easing, EasingMode mode) {
   auto modeIndex = static_cast<size_t>(mode);
 
   // Check if not out-of-bounds
-  if (easingIndex > 10 || modeIndex > 2)
-    return easing::linear;
+  if (easingIndex > 10 || modeIndex > 2) return easing::linear;
 
   return EASING_FUNCTIONS[easingIndex][modeIndex];
 }
@@ -78,11 +77,9 @@ double easeOutExpo(double t) {
 }
 
 double easeInOutExpo(double t) {
-  if (t == 0.0 || t == 1.0)
-    return t;
+  if (t == 0.0 || t == 1.0) return t;
 
-  if (t < 0.5)
-    return pow(2.0, 20.0 * t - 10.0) / 2.0;
+  if (t < 0.5) return pow(2.0, 20.0 * t - 10.0) / 2.0;
 
   return (2.0 - pow(2.0, -20.0 * t + 10.0)) / 2.0;
 }
@@ -94,8 +91,7 @@ double easeInCirc(double t) { return 1.0 - sqrt(1.0 - t * t); }
 double easeOutCirc(double t) { return sqrt(1.0 - pow((t - 1.0), 2)); }
 
 double easeInOutCirc(double t) {
-  if (t < 0.5)
-    return (1.0 - sqrt(1.0 - pow(2.0 * t, 2))) / 2.0;
+  if (t < 0.5) return (1.0 - sqrt(1.0 - pow(2.0 * t, 2))) / 2.0;
 
   return (sqrt(1.0 - pow(-2.0 * t + 2.0, 2)) + 1.0) / 2.0;
 }
@@ -109,8 +105,7 @@ double easeOutBack(double t) {
 }
 
 double easeInOutBack(double t) {
-  if (t < 0.5)
-    return (pow(2.0 * t, 2) * (7.189819 * t - 2.5949095)) / 2.0;
+  if (t < 0.5) return (pow(2.0 * t, 2) * (7.189819 * t - 2.5949095)) / 2.0;
 
   return (pow(2.0 * t - 2.0, 2) * (3.5949095 * (t * 2.0 - 2.0) + 2.5949095) +
           2.0) /
@@ -120,24 +115,21 @@ double easeInOutBack(double t) {
 /* == Elastic == */
 
 double easeInElastic(double t) {
-  if (t == 0.0 || t == 1.0)
-    return t;
+  if (t == 0.0 || t == 1.0) return t;
 
   const double c4 = (2 * std::numbers::pi) / 3;
   return -pow(2.0, 10.0 * t - 10.0) * sin((t * 10.0 - 10.75) * c4);
 }
 
 double easeOutElastic(double t) {
-  if (t == 0.0 || t == 1.0)
-    return t;
+  if (t == 0.0 || t == 1.0) return t;
 
   const double c4 = (2 * std::numbers::pi) / 3;
   return pow(2.0, -10.0 * t) * sin((t * 10.0 - 0.75) * c4) + 1.0;
 }
 
 double easeInOutElastic(double t) {
-  if (t == 0.0 || t == 1.0)
-    return t;
+  if (t == 0.0 || t == 1.0) return t;
 
   if (t < 0.5)
     return -(pow(2.0, 20.0 * t - 10.0) *
@@ -158,8 +150,7 @@ double easeOutBounce(double t) {
   const double n1 = 7.5625;
   const double d1 = 2.75;
 
-  if (t < 1.0 / d1)
-    return n1 * t * t;
+  if (t < 1.0 / d1) return n1 * t * t;
   if (t < 2.0 / d1) {
     auto t2 = t - 1.5 / d1;
     return n1 * t2 * t2 + 0.75;
@@ -173,10 +164,9 @@ double easeOutBounce(double t) {
 }
 
 double easeInOutBounce(double t) {
-  if (t < 0.5)
-    return (1.0 - easeOutBounce(1.0 - 2.0 * t)) / 2.0;
+  if (t < 0.5) return (1.0 - easeOutBounce(1.0 - 2.0 * t)) / 2.0;
 
   return (1.0 + easeOutBounce(2.0 * t - 1.0)) / 2.0;
 }
-} // namespace easing
-} // namespace eclipse::gui::animation
+}  // namespace easing
+}  // namespace eclipse::gui::animation

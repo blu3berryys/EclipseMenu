@@ -1,7 +1,8 @@
 #include "rendertexture.hpp"
 
-#include <Geode/binding/PlayLayer.hpp>
 #include <Geode/cocos/platform/win32/CCGL.h>
+
+#include <Geode/binding/PlayLayer.hpp>
 #include <modules/utils/SingletonCache.hpp>
 
 namespace eclipse::recorder {
@@ -62,4 +63,4 @@ void RenderTexture::capture(std::mutex &lock, std::vector<uint8_t> &data,
   director->setViewport();
 }
 
-}; // namespace eclipse::recorder
+};  // namespace eclipse::recorder

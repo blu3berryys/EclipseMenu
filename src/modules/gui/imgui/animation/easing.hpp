@@ -243,7 +243,7 @@ double easeOutBounce(double t);
 /// @param t Time from 0 to 1
 /// @return `x` value at time `t`
 double easeInOutBounce(double t);
-} // namespace easing
+}  // namespace easing
 
 /// @brief Easing functions pointers.
 /// Rows are `Easing` types and columns are `EasingMode`.
@@ -267,4 +267,4 @@ const EasingFunction EASING_FUNCTIONS[][3] = {
 /// @param easing The easing.
 /// @return The easing function.
 EasingFunction getEasingFunction(Easing easing, EasingMode mode);
-} // namespace eclipse::gui::animation
+}  // namespace eclipse::gui::animation

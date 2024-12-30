@@ -1,9 +1,9 @@
 #include "popup.hpp"
+
 #include <modules/config/config.hpp>
 #include <modules/gui/cocos/cocos.hpp>
 #include <modules/gui/theming/manager.hpp>
 #include <modules/utils/SingletonCache.hpp>
-
 #include <utility>
 
 #include "content-view.hpp"
@@ -75,8 +75,7 @@ Popup *Popup::create(Tabs const &tabs) {
 
 void Popup::setActiveTab(int idx) const {
   auto tabs = Engine::get()->getTabs();
-  if (idx < 0 || idx >= tabs.size())
-    return;
+  if (idx < 0 || idx >= tabs.size()) return;
   config::set("menu.current_tab", idx);
   m_contentMenu->setContent(tabs[idx]);
 }
@@ -84,15 +83,13 @@ void Popup::setActiveTab(int idx) const {
 void Popup::refreshPage() const {
   auto tabs = Engine::get()->getTabs();
   auto idx = config::get<int>("menu.current_tab", 0);
-  if (idx < 0 || idx >= tabs.size())
-    return;
+  if (idx < 0 || idx >= tabs.size()) return;
   m_contentMenu->setContent(tabs[idx], false);
 }
 
 bool Popup::isAncestorOf(CCNode *node) const {
   while (node) {
-    if (node == this)
-      return true;
+    if (node == this) return true;
     node = node->getParent();
   }
 
@@ -104,4 +101,4 @@ void Popup::onExit() {
   CocosRenderer::get()->shutdown(true);
 }
 
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

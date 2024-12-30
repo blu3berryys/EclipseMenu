@@ -69,4 +69,4 @@ std::string_view getRequiredGlyphRangesString();
 /// @brief Get a list of names of all available languages.
 std::vector<std::string> getAvailableLanguages();
 
-} // namespace eclipse::i18n
+}  // namespace eclipse::i18n

@@ -1,8 +1,7 @@
+#include <Geode/binding/FMODAudioEngine.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/binding/FMODAudioEngine.hpp>
 
 namespace eclipse::hacks::Global {
 
@@ -20,13 +19,12 @@ void setPitch(float pitch) {
     pitchShifter = nullptr;
   }
 
-  if (pitch == 1.f)
-    return;
+  if (pitch == 1.f) return;
 
   system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &pitchShifter);
   // pitchShifter->setParameterFloat(FMOD_DSP_PITCHSHIFT_FFTSIZE, 4096);
   pitchShifter->setParameterFloat(FMOD_DSP_PITCHSHIFT_FFTSIZE,
-                                  0x800); // or 0x457
+                                  0x800);  // or 0x457
   pitchShifter->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, pitch);
   utils::get<FMODAudioEngine>()->m_backgroundMusicChannel->addDSP(0,
                                                                   pitchShifter);
@@ -63,4 +61,4 @@ class PitchShift : public hack::Hack {
 
 REGISTER_HACK(PitchShift)
 
-} // namespace eclipse::hacks::Global
+}  // namespace eclipse::hacks::Global

@@ -1,4 +1,5 @@
 #include "translations.hpp"
+
 #include <modules/config/config.hpp>
 #include <modules/labels/setting.hpp>
 #include <nlohmann/json.hpp>
@@ -48,16 +49,13 @@ void loadFallback(std::string_view code) {
   auto it = std::ranges::find_if(
       langs, [&](auto const &lang) { return lang.code == code; });
 
-  if (it == langs.end())
-    return;
+  if (it == langs.end()) return;
 
   std::ifstream file(it->path);
-  if (!file)
-    return;
+  if (!file) return;
 
   auto json = nlohmann::json::parse(file, nullptr, false);
-  if (json.is_discarded())
-    return;
+  if (json.is_discarded()) return;
 
   g_fallback = json;
 }
@@ -67,16 +65,13 @@ void setLanguage(std::string_view code) {
   auto it = std::ranges::find_if(
       langs, [&](auto const &lang) { return lang.code == code; });
 
-  if (it == langs.end())
-    return;
+  if (it == langs.end()) return;
 
   std::ifstream file(it->path);
-  if (!file)
-    return;
+  if (!file) return;
 
   auto json = nlohmann::json::parse(file, nullptr, false);
-  if (json.is_discarded())
-    return;
+  if (json.is_discarded()) return;
 
   g_translations = json;
   config::setTemp("language.index", std::distance(langs.begin(), it));
@@ -95,15 +90,13 @@ std::string getCurrentLanguage() {
   return g_translations["language-code"];
 }
 
-std::optional<LanguageMetadata>
-getLanguageName(std::filesystem::path const &path) {
+std::optional<LanguageMetadata> getLanguageName(
+    std::filesystem::path const &path) {
   std::ifstream file(path);
-  if (!file)
-    return std::nullopt;
+  if (!file) return std::nullopt;
 
   auto json = nlohmann::json::parse(file, nullptr, false);
-  if (json.is_discarded())
-    return std::nullopt;
+  if (json.is_discarded()) return std::nullopt;
 
   if (!json.contains("language-name") || !json.contains("language-code"))
     return std::nullopt;
@@ -134,8 +127,7 @@ std::vector<LanguageMetadata> fetchAvailableLanguages() {
         continue;
       auto code = filename.substr(0, filename.size() - 10);
       auto name = getLanguageName(entry.path());
-      if (!name)
-        continue;
+      if (!name) continue;
       result.push_back(*name);
     }
   };
@@ -147,13 +139,11 @@ std::vector<LanguageMetadata> fetchAvailableLanguages() {
 }
 
 bool hasBitmapFont(std::string_view font) {
-  if (font == "default")
-    return true;
+  if (font == "default") return true;
 
   static auto fontsPath =
       geode::Mod::get()->getConfigDir() / "bmfonts" / GEODE_MOD_ID;
-  if (!std::filesystem::exists(fontsPath))
-    return false;
+  if (!std::filesystem::exists(fontsPath)) return false;
 
   if (!std::filesystem::exists(fontsPath / fmt::format("font_{}.fnt", font)))
     return false;
@@ -169,8 +159,7 @@ size_t getLanguageIndex() {
     return lang.code == config::get<std::string>("language", "en");
   });
 
-  if (it == langs.end())
-    return 0;
+  if (it == langs.end()) return 0;
   return std::distance(langs.begin(), it);
 }
 
@@ -185,22 +174,14 @@ GlyphRange getRequiredGlyphRanges() {
 
   auto charset = g_translations["language-charset"].get<std::string>();
 
-  if (charset == "greek")
-    return GlyphRange::Greek;
-  if (charset == "korean")
-    return GlyphRange::Korean;
-  if (charset == "japanese")
-    return GlyphRange::Japanese;
-  if (charset == "chinese-full")
-    return GlyphRange::ChineseFull;
-  if (charset == "chinese-simplified")
-    return GlyphRange::ChineseSimplified;
-  if (charset == "cyrillic")
-    return GlyphRange::Cyrillic;
-  if (charset == "thai")
-    return GlyphRange::Thai;
-  if (charset == "vietnamese")
-    return GlyphRange::Vietnamese;
+  if (charset == "greek") return GlyphRange::Greek;
+  if (charset == "korean") return GlyphRange::Korean;
+  if (charset == "japanese") return GlyphRange::Japanese;
+  if (charset == "chinese-full") return GlyphRange::ChineseFull;
+  if (charset == "chinese-simplified") return GlyphRange::ChineseSimplified;
+  if (charset == "cyrillic") return GlyphRange::Cyrillic;
+  if (charset == "thai") return GlyphRange::Thai;
+  if (charset == "vietnamese") return GlyphRange::Vietnamese;
 
   return GlyphRange::Default;
 }
@@ -226,4 +207,4 @@ std::vector<std::string> getAvailableLanguages() {
   }
   return langNamesVec;
 }
-} // namespace eclipse::i18n
+}  // namespace eclipse::i18n

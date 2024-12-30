@@ -1,34 +1,34 @@
 #pragma once
 
-#include "render_settings.hpp"
-
 #include <Geode/loader/Event.hpp>
+
+#include "render_settings.hpp"
 
 namespace ffmpeg::events {
 namespace impl {
 #define DEFAULT_RESULT_ERROR geode::Err("Event was not handled")
 
 class CreateRecorderEvent : public geode::Event {
-public:
+ public:
   CreateRecorderEvent() { m_ptr = nullptr; }
   void setPtr(void *ptr) { m_ptr = ptr; }
   void *getPtr() const { return m_ptr; }
 
-private:
+ private:
   void *m_ptr;
 };
 
 class DeleteRecorderEvent : public geode::Event {
-public:
+ public:
   DeleteRecorderEvent(void *ptr) { m_ptr = ptr; }
   void *getPtr() const { return m_ptr; }
 
-private:
+ private:
   void *m_ptr;
 };
 
 class InitRecorderEvent : public geode::Event {
-public:
+ public:
   InitRecorderEvent(void *ptr, const RenderSettings *settings) {
     m_ptr = ptr;
     m_renderSettings = settings;
@@ -41,37 +41,37 @@ public:
 
   const RenderSettings &getRenderSettings() const { return *m_renderSettings; }
 
-private:
+ private:
   const RenderSettings *m_renderSettings;
   void *m_ptr;
   geode::Result<> m_result = DEFAULT_RESULT_ERROR;
 };
 
 class StopRecorderEvent : public geode::Event {
-public:
+ public:
   StopRecorderEvent(void *ptr) { m_ptr = ptr; }
   void *getPtr() const { return m_ptr; }
 
-private:
+ private:
   void *m_ptr;
 };
 
 struct Dummy {};
 
 class GetWriteFrameFunctionEvent : public geode::Event {
-public:
+ public:
   using writeFrame_t = geode::Result<> (Dummy::*)(std::vector<uint8_t> const &);
   GetWriteFrameFunctionEvent() = default;
 
   void setFunction(writeFrame_t function) { m_function = function; }
   writeFrame_t getFunction() const { return m_function; }
 
-private:
+ private:
   writeFrame_t m_function;
 };
 
 class CodecRecorderEvent : public geode::Event {
-public:
+ public:
   CodecRecorderEvent() = default;
 
   void setCodecs(std::vector<std::string> &&codecs) {
@@ -79,12 +79,12 @@ public:
   }
   const std::vector<std::string> &getCodecs() const { return m_codecs; }
 
-private:
+ private:
   std::vector<std::string> m_codecs;
 };
 
 class MixVideoAudioEvent : public geode::Event {
-public:
+ public:
   MixVideoAudioEvent(const std::filesystem::path &videoFile,
                      const std::filesystem::path &audioFile,
                      const std::filesystem::path &outputMp4File) {
@@ -102,7 +102,7 @@ public:
     return *m_outputMp4File;
   }
 
-private:
+ private:
   const std::filesystem::path *m_videoFile;
   const std::filesystem::path *m_audioFile;
   const std::filesystem::path *m_outputMp4File;
@@ -110,7 +110,7 @@ private:
 };
 
 class MixVideoRawEvent : public geode::Event {
-public:
+ public:
   MixVideoRawEvent(const std::filesystem::path &videoFile,
                    const std::vector<float> &raw,
                    const std::filesystem::path &outputMp4File) {
@@ -130,17 +130,17 @@ public:
     return *m_outputMp4File;
   }
 
-private:
+ private:
   const std::filesystem::path *m_videoFile;
   const std::vector<float> *m_raw;
   const std::filesystem::path *m_outputMp4File;
   geode::Result<> m_result = DEFAULT_RESULT_ERROR;
 };
 #undef DEFAULT_RESULT_ERROR
-} // namespace impl
+}  // namespace impl
 
 class Recorder {
-public:
+ public:
   Recorder() {
     impl::CreateRecorderEvent createEvent;
     createEvent.post();
@@ -199,8 +199,7 @@ public:
       event.post();
       return event.getFunction();
     }();
-    if (!writeFrame)
-      return geode::Err("Failed to call writeFrame function.");
+    if (!writeFrame) return geode::Err("Failed to call writeFrame function.");
     return std::invoke(writeFrame, m_ptr, frameData);
   }
 
@@ -218,12 +217,12 @@ public:
     return codecEvent.getCodecs();
   }
 
-private:
+ private:
   impl::Dummy *m_ptr = nullptr;
 };
 
 class AudioMixer {
-public:
+ public:
   AudioMixer() = delete;
 
   /**
@@ -242,10 +241,10 @@ public:
    * @warning The video file is expected to contain a single video stream. Only
    * the first video stream will be copied.
    */
-  static geode::Result<>
-  mixVideoAudio(std::filesystem::path const &videoFile,
-                std::filesystem::path const &audioFile,
-                std::filesystem::path const &outputMp4File) {
+  static geode::Result<> mixVideoAudio(
+      std::filesystem::path const &videoFile,
+      std::filesystem::path const &audioFile,
+      std::filesystem::path const &outputMp4File) {
     impl::MixVideoAudioEvent mixEvent(videoFile, audioFile, outputMp4File);
     mixEvent.post();
     return mixEvent.getResult();
@@ -267,14 +266,13 @@ public:
    * @warning The video file is expected to contain a single video stream. Only
    * the first video stream will be copied.
    */
-  static geode::Result<>
-  mixVideoRaw(std::filesystem::path const &videoFile,
-              const std::vector<float> &raw,
-              std::filesystem::path const &outputMp4File) {
+  static geode::Result<> mixVideoRaw(
+      std::filesystem::path const &videoFile, const std::vector<float> &raw,
+      std::filesystem::path const &outputMp4File) {
     impl::MixVideoRawEvent mixEvent(videoFile, raw, outputMp4File);
     mixEvent.post();
     return mixEvent.getResult();
   }
 };
 
-} // namespace ffmpeg::events
+}  // namespace ffmpeg::events

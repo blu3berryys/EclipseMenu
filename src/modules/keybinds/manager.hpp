@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Geode/Geode.hpp>
-
 #include <functional>
 #include <memory>
 #include <optional>
@@ -192,7 +191,7 @@ bool isKeyReleased(Keys key);
 /// @brief A keybind that can be used to execute a callback when a key is
 /// pressed.
 class Keybind {
-public:
+ public:
   /// @brief Construct a keybind.
   /// @param key The key of the keybind.
   /// @param id The ID of the keybind.
@@ -201,8 +200,11 @@ public:
   /// @param internal Whether the keybind is internal or not.
   Keybind(Keys key, std::string id, std::string title,
           std::function<void(bool)> callback, bool internal = false)
-      : m_key(key), m_id(std::move(id)), m_title(std::move(title)),
-        m_callback(std::move(callback)), m_internal(internal) {}
+      : m_key(key),
+        m_id(std::move(id)),
+        m_title(std::move(title)),
+        m_callback(std::move(callback)),
+        m_internal(internal) {}
 
   /// @brief Get the key of the keybind.
   [[nodiscard]] Keys getKey() const { return m_key; }
@@ -237,7 +239,7 @@ public:
   /// @brief Set the title of the keybind.
   void setTitle(std::string title) { m_title = std::move(title); }
 
-private:
+ private:
   Keys m_key;
   std::string m_id;
   std::string m_title;
@@ -248,7 +250,7 @@ private:
 
 /// @brief A manager for keybinds.
 class Manager {
-public:
+ public:
   /// @brief Get the keybind manager.
   static std::shared_ptr<Manager> get();
 
@@ -291,8 +293,8 @@ public:
   /// @brief Get a keybind by its ID.
   /// @param id The ID of the keybind.
   /// @return The keybind with the given ID.
-  [[nodiscard]] std::optional<std::reference_wrapper<Keybind>>
-  getKeybind(std::string_view id);
+  [[nodiscard]] std::optional<std::reference_wrapper<Keybind>> getKeybind(
+      std::string_view id);
 
   /// @brief Set whether a keybind is enabled or not.
   /// @param id The ID of the keybind.
@@ -307,7 +309,7 @@ public:
   /// @note This function is called from the key callback hook.
   void registerKeyRelease(Keys key);
 
-private:
+ private:
   std::vector<Keybind> m_keybinds;
   std::unordered_map<Keys, bool> m_keyStates;
   std::unordered_map<Keys, bool> m_lastKeyStates;
@@ -323,4 +325,4 @@ private:
   friend bool isKeyReleased(Keys key);
 };
 
-} // namespace eclipse::keybinds
+}  // namespace eclipse::keybinds

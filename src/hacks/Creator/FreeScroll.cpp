@@ -1,8 +1,7 @@
+#include <Geode/modify/EditorUI.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/EditorUI.hpp>
 
 namespace eclipse::hacks::Creator {
 
@@ -50,4 +49,4 @@ class $modify(FreeScrollEUIHook, EditorUI){
             // objLayer->setPosition({x, y});
         }};
 
-} // namespace eclipse::hacks::Creator
+}  // namespace eclipse::hacks::Creator

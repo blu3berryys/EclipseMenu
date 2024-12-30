@@ -5,11 +5,11 @@
 
 namespace eclipse::gui::cocos {
 class RadioButtonsMenuNode : public cocos2d::CCNode {
-protected:
+ protected:
   std::vector<std::shared_ptr<RadioButtonComponent>> m_radioButtons;
   std::vector<std::pair<CCMenuItemToggler *, int>> m_toggles;
 
-public:
+ public:
   cocos2d::CCSprite *createRadioButton(bool check) {
     const auto tm = ThemeManager::get();
     auto box = cocos2d::CCSprite::create("circle.png"_spr);
@@ -62,8 +62,7 @@ public:
   }
 
   bool init(float width) {
-    if (!CCNode::init())
-      return false;
+    if (!CCNode::init()) return false;
     this->setID(fmt::format("radio-group-{}"_spr, m_radioButtons[0]->getId()));
 
     for (auto const &radioButton : m_radioButtons) {
@@ -82,9 +81,9 @@ public:
     return true;
   }
 
-  static RadioButtonsMenuNode *
-  create(std::vector<std::shared_ptr<RadioButtonComponent>> radioButtons,
-         float width) {
+  static RadioButtonsMenuNode *create(
+      std::vector<std::shared_ptr<RadioButtonComponent>> radioButtons,
+      float width) {
     auto ret = new RadioButtonsMenuNode;
     ret->m_radioButtons = std::move(radioButtons);
     if (ret->init(width)) {
@@ -95,4 +94,4 @@ public:
     return nullptr;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

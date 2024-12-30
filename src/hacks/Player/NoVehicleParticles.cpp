@@ -1,8 +1,7 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include <modules/config/config.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/hack/hack.hpp>
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace eclipse::hacks::Player {
 
@@ -23,8 +22,7 @@ void onHideParticles(bool state) {
 
   auto *bgl = utils::get<GJBaseGameLayer>();
 
-  if (!bgl)
-    return;
+  if (!bgl) return;
 
   change_particles_state(bgl->m_player1, !state);
   change_particles_state(bgl->m_player2, !state);
@@ -51,7 +49,7 @@ class $modify(NoParticlesBGLHook, GJBaseGameLayer){
     void createPlayer(){GJBaseGameLayer::createPlayer();
 
 onHideParticles(config::get<bool>("player.novehicleparticles", false));
-} // namespace eclipse::hacks::Player
+}  // namespace eclipse::hacks::Player
 }
 ;
 }

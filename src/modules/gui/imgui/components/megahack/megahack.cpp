@@ -1,6 +1,7 @@
 #include "megahack.hpp"
 
 #include <imgui.h>
+
 #include <modules/gui/color.hpp>
 #include <modules/gui/gui.hpp>
 #include <modules/gui/theming/manager.hpp>
@@ -29,8 +30,7 @@ bool Megahack::checkbox(const std::string &label, bool &value,
 
   bool toggled =
       ImGui::Button(label.c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0));
-  if (toggled)
-    value = !value;
+  if (toggled) value = !value;
   postDraw();
 
   ImGui::PopStyleColor(4);
@@ -79,8 +79,7 @@ bool Megahack::checkboxWithSettings(const std::string &label, bool &value,
   auto arrowSize = ImVec2(arrowWidth, 0);
 
   bool toggled = ImGui::Button(label.c_str(), buttonSize);
-  if (toggled)
-    value = !value;
+  if (toggled) value = !value;
   postDraw();
 
   ImGui::SameLine(0, 0);
@@ -104,8 +103,7 @@ bool Megahack::checkboxWithSettings(const std::string &label, bool &value,
 
   std::string popupName =
       popupId.empty() ? fmt::format("##{}", label) : popupId;
-  if (openPopup)
-    ImGui::OpenPopup(popupName.c_str());
+  if (openPopup) ImGui::OpenPopup(popupName.c_str());
 
   ImGui::SetNextWindowSizeConstraints(ImVec2(240 * tm->getGlobalScale(), 0),
                                       ImVec2(FLT_MAX, FLT_MAX));
@@ -167,4 +165,4 @@ bool Megahack::button(const std::string &text, bool isSearchedFor) const {
   return pressed;
 }
 
-} // namespace eclipse::gui::imgui::themes
+}  // namespace eclipse::gui::imgui::themes

@@ -4,26 +4,26 @@
 #include <modules/gui/gui.hpp>
 #include <modules/gui/imgui/imgui.hpp>
 
-#define PROPERTY_CS(type, member, name)                                        \
-private:                                                                       \
-  type member;                                                                 \
-                                                                               \
-public:                                                                        \
+#define PROPERTY_CS(type, member, name) \
+ private:                               \
+  type member;                          \
+                                        \
+ public:                                \
   type get##name() const { return member; }
 
-#define CR_PROPERTY_CS(type, member, name)                                     \
-private:                                                                       \
-  type member;                                                                 \
-                                                                               \
-public:                                                                        \
+#define CR_PROPERTY_CS(type, member, name) \
+ private:                                  \
+  type member;                             \
+                                           \
+ public:                                   \
   type const &get##name() const { return member; }
 
-#define PROPERTY(type, member, name)                                           \
-  PROPERTY_CS(type, member, name)                                              \
+#define PROPERTY(type, member, name) \
+  PROPERTY_CS(type, member, name)    \
   void set##name(type value) { member = value; }
 
-#define CR_PROPERTY(type, member, name)                                        \
-  CR_PROPERTY_CS(type, member, name)                                           \
+#define CR_PROPERTY(type, member, name) \
+  CR_PROPERTY_CS(type, member, name)    \
   void set##name(type const &value) { member = value; }
 
 #define COLOR_PROPERTY(member, name) CR_PROPERTY(Color, member, name)
@@ -47,7 +47,7 @@ class ThemeManager {
   void setDefaults();
 
   /// === Saving/loading
-public:
+ public:
   /// @brief Get the theme manager instance
   static std::shared_ptr<ThemeManager> get();
 
@@ -213,7 +213,7 @@ public:
   COLOR_PROPERTY(m_buttonActiveForeground, ButtonActivatedForeground)
 };
 
-} // namespace eclipse::gui
+}  // namespace eclipse::gui
 
 #undef PROPERTY
 #undef CR_PROPERTY

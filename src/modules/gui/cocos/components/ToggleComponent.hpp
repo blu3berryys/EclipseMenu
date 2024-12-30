@@ -1,19 +1,20 @@
 #pragma once
-#include "BaseComponentNode.hpp"
 #include <modules/gui/cocos/popup/options-popup.hpp>
 #include <modules/gui/theming/manager.hpp>
+
+#include "BaseComponentNode.hpp"
 
 namespace eclipse::gui::cocos {
 class ToggleComponentNode
     : public BaseComponentNode<ToggleComponentNode, cocos2d::CCMenu,
                                ToggleComponent, float> {
-protected:
+ protected:
   CCMenuItemToggler *m_toggler = nullptr;
   TranslatedLabel *m_label = nullptr;
   CCMenuItemSpriteExtra *m_extraButton = nullptr;
   CCMenuItemSpriteExtra *m_infoButton = nullptr;
 
-public:
+ public:
   cocos2d::extension::CCScale9Sprite *createButton(bool check) {
     const auto tm = ThemeManager::get();
     // prizm men
@@ -32,8 +33,7 @@ public:
     return box;
   }
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
     const auto tm = ThemeManager::get();
 
     this->setID(fmt::format("toggle-{}"_spr, m_component->getId()));
@@ -86,4 +86,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos

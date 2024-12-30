@@ -1,14 +1,15 @@
 #pragma once
+#include <modules/gui/cocos/popup/options-popup.hpp>
+
 #include "BaseComponentNode.hpp"
 #include "Geode/ui/ColorPickPopup.hpp"
-#include <modules/gui/cocos/popup/options-popup.hpp>
 
 namespace eclipse::gui::cocos {
 class ColorComponentNode
     : public BaseComponentNode<ColorComponentNode, cocos2d::CCMenu,
                                ColorComponent, float>,
       public geode::ColorPickPopupDelegate {
-protected:
+ protected:
   ColorChannelSprite *m_colorSprite = nullptr;
   CCMenuItemSpriteExtra *m_colorBtn = nullptr;
   TranslatedLabel *m_label = nullptr;
@@ -21,10 +22,9 @@ protected:
     m_component->triggerCallback(colorValue);
   }
 
-public:
+ public:
   bool init(float width) override {
-    if (!CCMenu::init())
-      return false;
+    if (!CCMenu::init()) return false;
 
     this->setID(fmt::format("color-{}"_spr, m_component->getId()));
     this->setContentSize({width, 28.f});
@@ -72,4 +72,4 @@ public:
     return true;
   }
 };
-} // namespace eclipse::gui::cocos
+}  // namespace eclipse::gui::cocos
