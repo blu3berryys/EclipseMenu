@@ -3,7 +3,7 @@ add_library(third_party INTERFACE)
 
 # Include libraries
 add_library(imgui INTERFACE)
-CPMAddPackage("gh:EclipseMenu/imgui#1d4c752")
+CPMAddPackage("gh:ocornut/imgui#1d4c752")
 target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR})
 target_sources(imgui INTERFACE
     ${imgui_SOURCE_DIR}/imgui.cpp
@@ -19,13 +19,13 @@ if (NOT ANDROID)
     set(RAPIDJSONTEST OFF)
     CPMAddPackage("gh:EclipseMenu/discord-rpc#1259d3a")
 endif()
-CPMAddPackage("gh:matcool/gd-imgui-cocos#d6fa518")
+CPMAddPackage("gh:matcool/gd-imgui-cocos#e9c24c6")
 CPMAddPackage("gh:maxnut/GDR-converter#b0a04d5")
 set(RIFT_INCLUDE_MATJSON ON)
 CPMAddPackage("gh:EclipseMenu/rift#d6dd2bd")
 CPMAddPackage("gh:SpaghettDev/subprocess#e12740b")
-CPMAddPackage("gh:simdutf/simdutf@6.1.0")
-CPMAddPackage("gh:prevter/sinaps#1663e86")
+CPMAddPackage("gh:simdutf/simdutf@6.2.0")
+CPMAddPackage("gh:Prevter/sinaps#1663e86")
 CPMAddPackage(
     NAME nlohmann_json
     GITHUB_REPOSITORY nlohmann/json
